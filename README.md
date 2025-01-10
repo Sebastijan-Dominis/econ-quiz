@@ -10,3 +10,5 @@ Technologies used:
 - HTML and basic CSS
 - Firebase
 - Node.js (version 11.0.0)
+- Astah UML
+- Figma
