@@ -151,6 +151,57 @@ combining photos, illustrations and patterns can be done
 - use simple words; avoid technical jargon and 'smart-sounding' words
 - break up long text with sub-headings, images, block quotes, bullet points, etc.
 
+## Elements and components
+### general rules
+- start with elements, connect them into components, connect those into layouts, then form a webpage
+- use common elements and components to convey your website's information
+- combine components into layouts using common layout patterns
+- assemble different layout areas into a complete, final page
+
+### elements
+- text
+- buttons
+- images
+- input elements
+- tags
+
+### components
+- breadcrumbs
+- pagination
+- alert and status backgrounds
+- statistics
+- gallery
+- feature box
+- preview and profile cards
+- accordion
+- tables
+- carousel
+- customer testimonials
+- customer logos
+- featured-in logos
+- steps
+- forms
+- tables
+- pricing tables
+- modal windows
+
+### section components
+- navigation
+- hero section
+- footer
+- cta
+- feature row
+
+### layout patterns
+- row of boxes or cards
+- grid of boxes or cards
+- z-pattern
+- f-pattern
+- single-column
+- sidebar
+- multi-column/magazine
+- asymmetry/experimental
+
 # Websites for inspiration:
 1. https://land-book.com/websites/70894-koffiracha-hot-sauce
 2. https://quizizz.com/?lng=en
