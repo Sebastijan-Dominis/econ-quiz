@@ -12,3 +12,5 @@ Technologies used:
 - Node.js (version 11.0.0)
 - Astah UML
 - Figma
+
+Note: Do not download FIGMA and UML_diagrams folders. They are just here to transparently show the full workflow of the project, but will only clog lots of space if downloaded.
