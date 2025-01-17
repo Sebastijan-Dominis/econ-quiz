@@ -34,7 +34,8 @@ module.exports = {
         'gray': '#808080',
         'wg': '#e6e6e6',
         'bg': '#1a1a1a',
-        'bgbtn': 'rgba(0, 0, 0, 0.45)'
+        'bgbtn': 'rgba(0, 0, 0, 0.45)',
+        'bgform': 'rgba(0, 0, 0, 0.7)'
       },
       fontFamily: {
         sans: ['Poppins', 'Arial', 'sans-serif']
