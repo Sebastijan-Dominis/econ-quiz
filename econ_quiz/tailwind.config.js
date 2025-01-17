@@ -30,7 +30,7 @@ module.exports = {
           '900': '#fff6e6',
         },
 
-        // grays
+        // grays; wg = white gray; bg = black gray
         'gray': '#808080',
         'wg': '#e6e6e6',
         'bg': '#1a1a1a',
