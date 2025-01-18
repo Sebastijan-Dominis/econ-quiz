@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <div class="relative min-h-screen p-5">
+  <div class="relative min-h-screen">
     <!-- Background Image -->
     <img src="../src/assets/images/background.jpg" class="fixed top-0 left-0 w-full h-full object-cover z-[-2]" alt="background image showing a map of the world with some pins and money"/>
     <!-- Semi-Transparent Overlay -->
@@ -13,8 +13,3 @@
     <router-view></router-view>
   </div>
 </template>
-
-
-<style scoped>
-
-</style>

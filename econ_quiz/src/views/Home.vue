@@ -54,5 +54,5 @@
 
     <p class="absolute bottom-60 right-4 text-2xl text-brand font-normal">Got Questions?</p>
     <router-link to="faq"><DarkBtn class="absolute bottom-44 right-8">FAQ</DarkBtn></router-link>
-    <img src="../assets/images/faq.png" alt="thinking man on a laptop" class="absolute bottom-0 -right-4 w-64">
+    <img src="../assets/images/faq.png" alt="thinking man on a laptop" class="absolute bottom-0 right-0 w-64">
 </template>
