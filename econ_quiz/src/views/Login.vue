@@ -17,20 +17,20 @@
             <input name="password" type="password" placeholder="Enter your password..." 
                 class="lg:col-span-2 px-4 py-2 rounded-full border border-brand focus:ring-2 focus:ring-brand max-lg:block">
 
-            <button type="submit" class="w-36 h-14 border-bg border-2 bg-brand text-bg rounded-full col-span-3 mx-auto text-xl font-medium max-lg:block max-lg:mt-4">Log In!</button>
+            <button type="submit" class="w-36 h-14 border-bg border-2 bg-brand text-bg rounded-full col-span-3 mx-auto text-xl font-medium max-lg:block max-lg:mt-4 hover:bg-bgbtn hover:border-brand hover:text-wg active:scale-98">Log In!</button>
         </form>
 
         <h2 class="mx-auto text-2xl text-brand mt-12 max-lg:block max-lg:mt-8">Or log in with:</h2>
 
-        <button class="flex items-center justify-center w-56 h-14 bg-bgbtn border-brand border-2 rounded-full space-x-12 mt-4 mx-auto">
+        <button class="flex items-center justify-center w-56 h-14 bg-bgbtn border-brand border-2 rounded-full space-x-12 mt-4 mx-auto hover:bg-brand hover:border-bg active:scale-98 group">
             <img src="../assets/images/google.png" alt="google logo" class="w-10 h-auto">
-            <span class="text-xl text-wg">Google</span>
+            <span class="text-xl text-wg group-hover:text-bg">Google</span>
         </button>
-        <button class="flex items-center justify-center w-56 h-14 bg-bgbtn border-brand border-2 rounded-full space-x-12 mt-4 mx-auto">
+        <button class="flex items-center justify-center w-56 h-14 bg-bgbtn border-brand border-2 rounded-full space-x-12 mt-4 mx-auto hover:bg-brand hover:border-bg active:scale-98 group">
             <img src="../assets/images/facebook.png" alt="google logo" class="w-10 h-auto">
-            <span class="text-xl text-wg">Facebook</span>
+            <span class="text-xl text-wg group-hover:text-bg">Facebook</span>
         </button>
 
-        <button @click="this.$router.back()" class="w-32 h-12 bg-bgbtn border-2 border-brand mt-10 mx-auto rounded-full text-wg text-xl mb-4 max-lg:block">Quit</button>
+        <button @click="this.$router.back()" class="w-32 h-12 bg-bgbtn border-2 border-brand mt-10 mx-auto rounded-full text-wg text-xl mb-4 max-lg:block hover:bg-brand hover:border-bg hover:text-bg active:scale-98">Quit</button>
     </div>
 </template>

@@ -10,6 +10,7 @@
 </script>
 
 <template>
+    <img src="../assets/images/faq.png" alt="thinking man on a laptop" class="absolute bottom-0 right-0 w-64 max-xl:hidden z-[-1]">
     <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-30 z-[-1]"></div>
     <ReturnBtn @click="this.$router.back()"></ReturnBtn>
     <h1 class="text-brand text-6xl justify-self-center">FAQ</h1>
