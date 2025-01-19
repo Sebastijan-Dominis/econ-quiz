@@ -1,16 +1,14 @@
 <script>
-    import ReturnBtn from '../components/ReturnBtn.vue';
+    import PageTop from '../components/PageTop.vue';
 
     export default {
         name: 'Study',
         components: {
-            ReturnBtn
+            PageTop
         }
     }
 </script>
 
 <template>
-    <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-30 z-[-1]"></div>
-    <ReturnBtn @click="this.$router.back()"></ReturnBtn>
-    <h1 class="text-brand text-6xl justify-self-center">Study</h1>
+    <PageTop>Study</PageTop>
 </template>
