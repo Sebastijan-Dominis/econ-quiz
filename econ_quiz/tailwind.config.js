@@ -40,6 +40,9 @@ module.exports = {
       fontFamily: {
         sans: ['Poppins', 'Arial', 'sans-serif']
       },
+      scale: {
+        98: '0.98',
+      },
     },
   },
   variants: {

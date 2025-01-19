@@ -37,7 +37,7 @@
 
     <h1 class="absolute left-1/2 transform -translate-x-1/2 top-96 text-brand text-6xl text-center font-bold">Welcome to Econ Quiz!</h1>
 
-    <router-link to="quiz-choice"><button class="w-56 h-24 rounded-full bg-bgbtn border-brand border-2 font-medium text-wg absolute left-1/2 transform -translate-x-1/2 bottom-64 text-3xl">Play Now!</button></router-link>
+    <router-link to="quiz-choice"><button class="w-56 h-24 rounded-full bg-bgbtn border-brand border-2 font-medium text-wg absolute left-1/2 transform -translate-x-1/2 bottom-64 text-3xl hover:bg-brand hover:text-bg hover:border-bg active:scale-98">Play Now!</button></router-link>
 
     <img src="../assets/images/happy.png" alt="a happy man looking to the right direction" class="absolute bottom-0 left-24 w-56">
     <p class="absolute bottom-0 left-24 text-brand text-2xl font-normal text-center">Learn, test<br>yourself, and have<br>lots of fun!</p>
