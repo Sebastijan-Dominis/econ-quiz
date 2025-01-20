@@ -1,6 +1,6 @@
 <script>
     export default {
-        name: 'darkbtn'
+        name: 'DarkBtn'
     }
 </script>
 
