@@ -13,6 +13,7 @@
                 isLoggedIn: true,
                 isAdmin: true,
                 logoutq: false,
+                hello: "",
             };
         },
         methods: {
@@ -22,8 +23,25 @@
             },
             logoutNo() {
                 this.logoutq = false;
+            },
+            typeHello() {
+                const text = "Hello, Username! :)";
+                this.hello = "";
+                text.split("").forEach((_, i) => {
+                    setTimeout(() => {
+                        this.hello = text.slice(0, i + 1);
+                    }, i * 300);
+                });
+
+                setTimeout(() => {
+                    this.typeHello();
+                }, text.length * 300 + 1000); 
             }
+        },
+        mounted() {
+            this.typeHello();
         }
+
     }
 </script>
 
@@ -32,7 +50,7 @@
     <h1 class="text-brand text-3xl text-center font-bold pt-4 md:hidden">Welcome to Econ Quiz!</h1>
     <p class="text-brand text-center font-bold mt-8 md:hidden">For the best experience, use your desktop computer</p>
     <h2 v-if="!isLoggedIn" class="text-brand text-center font-bold mt-8 text-2xl md:hidden">You are not logged in. Log in to save your results!</h2>
-    <h2 v-else class="text-brand text-center font-bold mt-8 text-2xl md:hidden">Hello, Username! :)</h2>
+    <h2 v-else class="text-brand text-center font-bold mt-8 text-2xl md:hidden">{{ hello }}</h2>
 
     <div v-if="isLoggedIn" class="w-full flex justify-center mt-8 md:hidden">
         <DarkBtn class="w-32 h-12" @click="this.logoutq = true">Logout</DarkBtn>
@@ -52,7 +70,7 @@
 
     <div class="w-full flex mt-8 px-4 pb-8 justify-between md:hidden">
         <router-link to="leaderboard"><DarkBtn class="w-32 h-12">Leaderboard</DarkBtn></router-link>
-        <p class="text-center w-80 text-brand md:hidden">To use Admin options, please use your desktop computer</p>
+        <p v-if="isLoggedIn && isAdmin" class="text-center w-80 text-brand md:hidden">To use Admin options, please use your desktop computer</p>
     </div> 
 
     <div class="w-full flex px-4 pb-8 justify-between md:hidden">
@@ -80,7 +98,7 @@
     </nav>
 
     <p v-if="!isLoggedIn" class="absolute left-1/2 top-40 max-2xl:top-32 max-xl:top-24  text-brand text-3xl max-2xl:text-2xl transform -translate-x-1/2 text-center font-normal max-md:hidden">You are not logged in. Log in to<br>save your results!</p>
-    <p v-else class="absolute left-1/2 top-40 max-2xl:top-32 max-xl:top-24  text-brand text-3xl max-2xl:text-2xl transform -translate-x-1/2 text-center font-normal max-md:hidden">Hello, Username! :)</p>
+    <p v-else class="absolute left-1/2 top-40 max-xl:top-24 max-2xl:top-32 text-brand text-3xl max-2xl:text-2xl transform -translate-x-1/2 text-center font-normal max-md:hidden">{{ hello }}</p>
 
     <h1 class="absolute left-1/2 transform -translate-x-1/2 top-80 text-brand text-6xl max-2xl:text-5xl text-center font-bold max-2xl:top-64 max-xl:top-48 max-md:hidden">Welcome to Econ Quiz!</h1>
 
@@ -88,7 +106,6 @@
 
     <img src="../assets/images/happy.png" alt="a happy man looking to the right direction" class="absolute bottom-0 left-24 w-56 max-lg:hidden">
     <p class="absolute bottom-0 left-24 text-brand text-2xl font-normal text-center max-lg:hidden">Learn, test<br>yourself, and have<br>lots of fun!</p>
-    <p class="text-brand text-base text-center lg:hidden mt-64 max-md:hidden">For the best experience, use your desktop computer</p>
 
     <img src="../assets/icons/arrow.svg" alt="an arrow pointing from the happy man to the play now button" class="absolute left-80 bottom-40 max-lg:hidden">
 
