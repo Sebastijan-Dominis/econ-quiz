@@ -11,28 +11,28 @@
         <form class="mt-6 mx-4 lg:grid lg:grid-cols-3 gap-x-4 gap-y-6 items-center">
             <label for="email" class="text-2xl text-brand text-center pr-4 max-lg:block">Email:</label>
             <input name="email" type="email" placeholder="Enter your email address..." 
-                class="lg:col-span-2 px-4 py-2 rounded-full border border-brand focus:ring-2 focus:ring-brand max-lg:block">
+                class="lg:col-span-2 px-4 py-2 rounded-full border border-brand focus:ring-2 focus:ring-brand max-lg:block" required>
             
             <label for="confirmEmail" class="text-2xl text-brand text-center pr-4 max-lg:block max-lg:mt-2">Confirm Email:</label>
             <input name="confirmEmail" type="email" placeholder="Emails need to match..." 
-                class="lg:col-span-2 px-4 py-2 rounded-full border border-brand focus:ring-2 focus:ring-brand max-lg:block">
+                class="lg:col-span-2 px-4 py-2 rounded-full border border-brand focus:ring-2 focus:ring-brand max-lg:block" required>
 
             <label for="password" class="text-2xl text-brand text-center pr-4 max-lg:block max-lg:mt-2">Password:</label>
             <div class="lg:col-span-2 flex items-center gap-2">
                 <input name="password" type="password" placeholder="Choose a password..." 
-                    class="flex-1 px-4 py-2 rounded-full border border-brand focus:ring-2 focus:ring-brand max-lg:block">
+                    class="flex-1 px-4 py-2 rounded-full border border-brand focus:ring-2 focus:ring-brand max-lg:block" required>
             </div>
 
             <label for="confirmPassword" class="text-2xl text-brand text-center pr-4 max-lg:block max-lg:mt-2">Confirm Password:</label>
             <div class="lg:col-span-2 flex items-center gap-2">
                 <input name="confirmPassword" type="password" placeholder="Passwords need to match..." 
-                    class="flex-1 px-4 py-2 rounded-full border border-brand focus:ring-2 focus:ring-brand max-lg:block">
+                    class="flex-1 px-4 py-2 rounded-full border border-brand focus:ring-2 focus:ring-brand max-lg:block" required>
             </div>
 
             <label for="username" class="text-2xl text-brand text-center pr-4 max-lg:block max-lg:mt-2">Enter Username:</label>
             <div class="lg:col-span-2 flex items-center gap-2">
                 <input name="username" type="text" placeholder="This is how you will appear to the other users..." 
-                    class="flex-1 px-4 py-2 rounded-full border border-brand focus:ring-2 focus:ring-brand max-lg:block">
+                    class="flex-1 px-4 py-2 rounded-full border border-brand focus:ring-2 focus:ring-brand max-lg:block" required>
             </div>
 
             <button type="submit" class="w-36 h-14 border-bg border-2 bg-brand text-bg rounded-full col-span-3 mx-auto text-xl font-medium max-lg:block max-lg:mt-4 hover:bg-bgbtn hover:text-wg hover:border-brand active:scale-98">Sign Up!</button>
