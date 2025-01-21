@@ -14,7 +14,7 @@ export default {
     };
   },
   methods: {
-    switch(label) {
+    setActive(label) {
       this.activeBtn = label;
     },
   },
@@ -24,13 +24,13 @@ export default {
 
 <template>
     <PageTop>Leaderboard</PageTop>
-    <h2 class="text-5xl text-brand text-center mt-16">Top players by cumulative score</h2>
-    <div class="flex justify-between mx-32 mt-24" id="btns">
+    <h2 class="text-5xl text-brand text-center mt-16 max-lg:text-4l max-md:text-3xl">Top players by cumulative score</h2>
+    <div class="flex justify-between mx-32 mt-24 max-xl:mx-16 max-lg:mx-4">
         <LBBtn
       v-for="label in ['Past Month', 'Past Year', 'All Time']"
       :key="label"
       :class="activeBtn === label ? 'active' : 'passive'"
-      @click="switch(label)"
+      @click="setActive(label)"
     >
       {{ label }}
     </LBBtn>
@@ -48,16 +48,15 @@ export default {
         color: #e6e6e6;
         background-color: rgba(0, 0, 0, 0.45);
     }
-    .active:hover {
-        border-color: #ffa550;
-        color: #e6e6e6;
-        background-color: rgba(0, 0, 0, 0.45);
-    }
+    .active:hover,
     .passive:hover {
+        scale: 1.02;
+    }
+    /* .passive:hover {
         border-color: #1a1a1a;
         color: #1a1a1a;
         background-color: #ffa550;
-    }
+    } */
     .active:active,
     .passive:active {
         scale: 0.98;

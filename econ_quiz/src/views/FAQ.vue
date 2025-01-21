@@ -13,8 +13,8 @@
     <img src="../assets/images/faq.png" alt="thinking man on a laptop" class="absolute bottom-0 right-0 w-64 max-xl:hidden z-[-1]">
     <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-30 z-[-1]"></div>
     <ReturnBtn @click="this.$router.back()"></ReturnBtn>
-    <h1 class="text-brand text-6xl justify-self-center">FAQ</h1>
-    <p class="text-2xl text-brand mx-8 my-16 md:mx-16 lg:mx-28 xl:mx-40 2xl:mx-64">Q: How do I know that the provided data is accurate?<br>
+    <h1 class="text-brand text-4xl justify-self-center xl:text-5xl 2xl:text-6xl">FAQ</h1>
+    <p class="text-lg text-brand mx-8 my-16 md:mx-16 lg:mx-28 xl:mx-40 2xl:mx-64 xl:text-xl 2xl:text-2xl">Q: How do I know that the provided data is accurate?<br>
 A: That’s the neat part. You don’t! Just kidding! :) I get this data from the World Bank database, so it is as accurate as they are. Also, keep in mind that it takes some time to calculate and update the data, so for the first couple of months of any given year, the data is probably from the year before previous. This is not something I can impact.
 <br><br>
 Q: Why did you put a quiz about X, but not Y?<br>
