@@ -1,14 +1,17 @@
 <script>
-    import ReturnBtn from '../components/ReturnBtn.vue';
+    import Choice from '../components/Choice.vue';
+    import PageTop from '../components/PageTop.vue';
 
     export default {
         name: 'QuizChoice',
         components: {
-            ReturnBtn
+            PageTop,
+            Choice,
         }
     }
 </script>
 
 <template>
-    <ReturnBtn @click="this.$router.back()"></ReturnBtn>
+    <PageTop>Choose a quiz</PageTop>
+    <Choice></Choice>
 </template>
