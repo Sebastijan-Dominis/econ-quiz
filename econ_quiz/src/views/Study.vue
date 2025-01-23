@@ -1,14 +1,17 @@
 <script>
+    import Choice from '../components/Choice.vue';
     import PageTop from '../components/PageTop.vue';
 
     export default {
         name: 'Study',
         components: {
-            PageTop
+            PageTop,
+            Choice,
         }
     }
 </script>
 
 <template>
-    <PageTop>Study</PageTop>
+    <PageTop>Choose a Topic to Study</PageTop>
+    <Choice></Choice>
 </template>
