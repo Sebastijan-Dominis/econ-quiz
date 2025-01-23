@@ -13,6 +13,6 @@
 
 <template>
     <DarkBtn class="w-56 h-14">
-        {{ label }}
+        <span class="mx-4 block text-center whitespace-pre-line">{{ label }}</span>
     </DarkBtn>
 </template>
