@@ -3,7 +3,7 @@
     import PageTop from '../components/PageTop.vue';
 
     export default {
-        name: 'Study',
+        name: 'StudyChoice',
         components: {
             PageTop,
             Choice,

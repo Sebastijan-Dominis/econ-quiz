@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from '../views/Home.vue';
-import Study from '../views/Study.vue';
+import StudyChoice from '../views/StudyChoice.vue';
 import FAQ from "../views/FAQ.vue";
 import Leaderboard from "../views/Leaderboard.vue";
 import Results from "../views/Results.vue";
@@ -9,10 +9,11 @@ import Add from "../views/Add.vue";
 import Edit from "../views/Edit.vue";
 import Signup from "../views/Signup.vue";
 import Login from "../views/Login.vue";
+import ResultsChoice from "../views/ResultsChoice.vue";
 
 const routes = [
     { path: '/', component: Home },
-    { path: '/study', component: Study },
+    { path: '/study-choice', component: StudyChoice },
     { path: '/faq', component: FAQ },
     { path: '/leaderboard', component: Leaderboard },
     { path: '/results', component: Results},
@@ -20,7 +21,8 @@ const routes = [
     { path: '/add', component: Add },
     { path: '/edit', component: Edit },
     { path: '/signup', component: Signup },
-    { path: '/login', component: Login }
+    { path: '/login', component: Login },
+    { path: '/results-choice', component: ResultsChoice }
 ];
 
 const router = createRouter({

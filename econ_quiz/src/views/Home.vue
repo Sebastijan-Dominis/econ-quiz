@@ -65,7 +65,7 @@
     </div>
 
     <div class="w-full mt-16 pl-4 md:hidden">
-        <router-link to="results"><DarkBtn class="w-32 h-12">Results</DarkBtn></router-link>
+        <router-link to="results-choice"><DarkBtn class="w-32 h-12">Results</DarkBtn></router-link>
     </div>
 
     <div class="w-full flex mt-8 px-4 pb-8 justify-between md:hidden">
@@ -83,9 +83,9 @@
     <router-view />
     <nav class="flex justify-between items-center px-10 py-6 max-md:hidden">
         <div class="flex gap-4">
-            <router-link to="results"><DarkBtn>Results</DarkBtn></router-link>
+            <router-link to="results-choice"><DarkBtn>Results</DarkBtn></router-link>
             <router-link to="leaderboard"><DarkBtn>Leaderboard</DarkBtn></router-link>
-            <router-link to="/study"><DarkBtn>Study</DarkBtn></router-link>
+            <router-link to="study-choice"><DarkBtn>Study</DarkBtn></router-link>
         </div>
 
         <div v-if="!isLoggedIn" class="flex gap-4">
