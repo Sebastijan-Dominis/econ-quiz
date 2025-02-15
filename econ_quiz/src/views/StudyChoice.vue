@@ -1,14 +1,7 @@
-<script>
-    import Choice from '../components/Choice.vue';
-    import PageTop from '../components/PageTop.vue';
-
-    export default {
-        name: 'StudyChoice',
-        components: {
-            PageTop,
-            Choice,
-        }
-    }
+<script setup>
+// components
+import Choice from '../components/Choice.vue';
+import PageTop from '../components/PageTop.vue';
 </script>
 
 <template>

@@ -1,7 +1,9 @@
-<script>
-    export default {
-        name: 'Signup'
-    }
+<script setup>
+// composables
+import {useBack} from '../composables/useBack';
+
+// getting the back function
+const {back} = useBack();
 </script>
 
 <template>
@@ -49,6 +51,6 @@
             <span class="text-xl text-wg group-hover:text-bg">Facebook</span>
         </button>
 
-        <button @click="this.$router.back()" class="w-32 h-12 bg-bgbtn border-2 border-brand mt-10 mx-auto rounded-full text-wg text-xl mb-4 max-lg:block hover:bg-brand hover:border-bg hover:text-bg active:scale-98">Quit</button>
+        <button @click="back" class="w-32 h-12 bg-bgbtn border-2 border-brand mt-10 mx-auto rounded-full text-wg text-xl mb-4 max-lg:block hover:bg-brand hover:border-bg hover:text-bg active:scale-98">Quit</button>
     </div>
 </template>

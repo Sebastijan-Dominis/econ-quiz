@@ -1,18 +1,17 @@
-<script>
-    import PageTop from '../components/PageTop.vue';
-    import ReturnBtn from '../components/ReturnBtn.vue';
-    export default {
-        name: 'Results',
-        components: {
-            PageTop,
-            ReturnBtn,
-        },
-        data() {
-            return {
-                titles: ['Quiz Name', 'Difficulty', 'Result'],
-            }
-        }
-    }
+<script setup>
+// components and composables
+import PageTop from '../components/PageTop.vue';
+import ReturnBtn from '../components/ReturnBtn.vue';
+import {useBack} from '../composables/useBack';
+
+// getting the back function
+const {back} = useBack();
+
+// imports
+import { ref } from 'vue';
+
+// titles
+const titles = ref(['Quiz Name', 'Difficulty', 'Result']);
 </script>
 
 <template>
@@ -33,7 +32,7 @@
  <div class="lg:hidden">
      <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-30 z-[-1]"></div>
      <h1 class="text-brand text-6xl justify-self-center max-lg:text-5xl max-md:text-4xl max-md:w-64 text-center">Results</h1>
-     <ReturnBtn @click="this.$router.back()" class="fixed bottom-12 left-4"></ReturnBtn>
+     <ReturnBtn @click="back" class="fixed bottom-12 left-4"></ReturnBtn>
      <h2 class="text-brand text-3xl lg:text-4xl xl:text-5xl justify-self-center mx-8 my-16 md:mx-16 lg:mx-28 xl:mx-40 2xl:mx-64 text-center">Results: Category Name</h2>
  </div>
 

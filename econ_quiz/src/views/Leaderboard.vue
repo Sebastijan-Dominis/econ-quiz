@@ -1,26 +1,17 @@
-<script>
+<script setup>
+// components
 import PageTop from '../components/PageTop.vue';
 import LBBtn from '../components/LBBtn.vue';
 
-export default {
-  name: 'Leaderboard',
-  components: {
-    PageTop,
-    LBBtn,
-  },
-  data() {
-    return {
-      activeBtn: 'Past Month',
-    };
-  },
-  methods: {
-    setActive(label) {
-      this.activeBtn = label;
-    },
-  },
-};
-</script>
+// imports
+import { ref } from 'vue';
 
+// filtering choice
+const activeBtn = ref('Past Month');
+const setActive = function(label) {
+  activeBtn.value = label;
+}
+</script>
 
 <template>
     <PageTop>Leaderboard</PageTop>

@@ -12,17 +12,17 @@ import Login from "../views/Login.vue";
 import ResultsChoice from "../views/ResultsChoice.vue";
 
 const routes = [
-    { path: '/', component: Home },
-    { path: '/study-choice', component: StudyChoice },
-    { path: '/faq', component: FAQ },
-    { path: '/leaderboard', component: Leaderboard },
-    { path: '/results', component: Results},
-    { path: '/quiz-choice', component: QuizChoice },
-    { path: '/add', component: Add },
-    { path: '/edit', component: Edit },
-    { path: '/signup', component: Signup },
-    { path: '/login', component: Login },
-    { path: '/results-choice', component: ResultsChoice }
+    { path: '/', name: 'home', component: Home },
+    { path: '/study-choice', name: 'study-choice', component: StudyChoice },
+    { path: '/faq', name: 'faq', component: FAQ },
+    { path: '/leaderboard', name: 'leaderboard', component: Leaderboard },
+    { path: '/results', name: 'results', component: Results},
+    { path: '/quiz-choice', name: 'quiz-choice', component: QuizChoice },
+    { path: '/add', name: 'add', component: Add },
+    { path: '/edit', name: 'edit', component: Edit },
+    { path: '/signup', name: 'signup', component: Signup },
+    { path: '/login', name: 'login', component: Login },
+    { path: '/results-choice', name: 'results-choice', component: ResultsChoice }
 ];
 
 const router = createRouter({

@@ -1,14 +1,12 @@
-<script>
-    import ReturnBtn from '../components/ReturnBtn.vue';
+<script setup>
+// components and composables
+import ReturnBtn from '../components/ReturnBtn.vue';
+import { useBack } from '../composables/useBack';
 
-    export default {
-        name: 'Edit',
-        components: {
-            ReturnBtn
-        }
-    }
+// getting the back function
+const {back} = useBack();
 </script>
 
 <template>
-    <ReturnBtn @click="this.$router.back()"></ReturnBtn>
+    <ReturnBtn @click="back"></ReturnBtn>
 </template>
