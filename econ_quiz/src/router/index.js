@@ -10,6 +10,7 @@ import Edit from "../views/Edit.vue";
 import Signup from "../views/Signup.vue";
 import Login from "../views/Login.vue";
 import ResultsChoice from "../views/ResultsChoice.vue";
+import Study from "../views/Study.vue";
 
 const routes = [
     { path: '/', name: 'home', component: Home },
@@ -22,7 +23,8 @@ const routes = [
     { path: '/edit', name: 'edit', component: Edit },
     { path: '/signup', name: 'signup', component: Signup },
     { path: '/login', name: 'login', component: Login },
-    { path: '/results-choice', name: 'results-choice', component: ResultsChoice }
+    { path: '/results-choice', name: 'results-choice', component: ResultsChoice },
+    { path: '/study/:choice', name: 'study', component: Study }
 ];
 
 const router = createRouter({
