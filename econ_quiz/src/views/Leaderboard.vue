@@ -21,7 +21,7 @@ const setActive = function(label) {
       v-for="label in ['Past Month', 'Past Year', 'All Time']"
       :key="label"
       :class="activeBtn === label ? 'active' : 'passive'"
-      @click="setActive(label)"
+      @toggle="setActive(label)"
     >
       {{ label }}
     </LBBtn>

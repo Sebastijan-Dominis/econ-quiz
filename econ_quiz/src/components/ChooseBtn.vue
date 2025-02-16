@@ -1,14 +1,9 @@
-<script>
-    import DarkBtn from './DarkBtn.vue';
-    export default {
-        name: 'ChooseBtn',
-        components: {
-            DarkBtn,
-        },
-        props: {
-            label: String,
-        }
-    }
+<script setup>
+// components
+import DarkBtn from './DarkBtn.vue';
+
+// props
+const props = defineProps(['label']);
 </script>
 
 <template>

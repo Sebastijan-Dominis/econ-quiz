@@ -1,7 +1,5 @@
-<script>
-    export default {
-        name: 'ReturnBtn'
-    }
+<script setup>
+
 </script>
 
 <template>

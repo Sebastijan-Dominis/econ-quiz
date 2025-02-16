@@ -1,18 +1,19 @@
-<script>
-export default {
-    name: 'LBBtn',
-    props: {
-    customClass: {
-        type: String,
-        required: false,
-    },
-    },
-    methods: {
-        handleClick() {
-            this.$emit('toggle');
-        },
-    },
-};
+<script setup>
+// props
+const props = defineProps({
+  customClass: {
+    type: String,
+    required: false
+  }
+});
+
+// emits
+const emits = defineEmits(['toggle']);
+
+// toggle-ing
+const handleClick = function() {
+  emits('toggle');
+}
 </script>
 
 <template>

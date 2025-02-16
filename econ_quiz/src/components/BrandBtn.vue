@@ -1,7 +1,5 @@
-<script>
-    export default {
-        name: 'BrandBtn'
-    }
+<script setup>
+
 </script>
 
 <template>
