@@ -24,8 +24,17 @@ export const useStoreStudy = defineStore('storeStudy', {
                 "Africa Eastern and Southern", "Africa Western and Central", "Arab World", "Aruba", "Bermuda", "Caribbean small states", "Cayman Islands", "Central Europe and the Baltics", "Channel Islands", "Curacao", "Early-demographic dividend", "East Asia & Pacific", "East Asia & Pacific (IDA & IBRD countries)", "East Asia & Pacific (excluding high income)", "Euro area", "Europe & Central Asia", "Europe & Central Asia (IDA & IBRD countries)", "Europe & Central Asia (excluding high income)", "European Union", "Faroe Islands", "Fragile and conflict affected situations", "Heavily indebted poor countries (HIPC)", "High income", "Hong Kong SAR, China", "IBRD only", "IDA & IBRD total", "IDA blend", "IDA only", "IDA total", "Late-demographic dividend", "Latin America & Caribbean", "Latin America & Caribbean (excluding high income)", "Latin America & the Caribbean (IDA & IBRD countries)", "Least developed countries: UN classification", "Low & middle income", "Low income", "Lower middle income", "Macao SAR, China", "Middle East & North Africa", "Middle East & North Africa (IDA & IBRD countries)", "Middle East & North Africa (excluding high income)", "Middle income", "North America", "OECD members", "Other small states", "Pacific island small states", "Post-demographic dividend", "Pre-demographic dividend", "Puerto Rico", "Sint Maarten (Dutch part)", "Small states", "South Asia", "South Asia (IDA & IBRD)", "Sub-Saharan Africa", "Sub-Saharan Africa (IDA & IBRD countries)", "Sub-Saharan Africa (excluding high income)", "Turks and Caicos Islands", "Upper middle income", "World"
             ]);
 
-            // NOMINAL GDP PER CAPITA
-            if (choice === 'Nominal GDP') {
+            // NOMINAL GDP, GDP PPP, NOMINAL GDP P/C
+            if (choice === "Nominal GDP" || choice === "GDP PPP" || choice === "Nominal GDP p/c" || choice === "GDP PPP p/c" || choice === "Exports as % of GDP" || choice === "Imports as % of GDP") {
+                // data
+                let chosenData = "";
+                
+                if (choice === "Nominal GDP") chosenData = "NY.GDP.MKTP.CD";
+                else if (choice === "GDP PPP") chosenData = "NY.GDP.MKTP.PP.CD";
+                else if (choice === "Nominal GDP p/c") chosenData = "NY.GDP.PCAP.CD";
+                else if (choice === "GDP PPP p/c") chosenData = "NY.GDP.PCAP.PP.CD";
+                else if (choice === "Exports as % of GDP") chosenData = "NE.EXP.GNFS.ZS";
+                else if (choice === "Imports as % of GDP") chosenData = "NE.IMP.GNFS.ZS";
                 // clearing the data
                 this.countryData.value = {};
 
@@ -37,7 +46,7 @@ export const useStoreStudy = defineStore('storeStudy', {
                 while (hasMoreData) {
                     try {
 
-                        const response = await fetch(`https://api.worldbank.org/v2/country/all/indicator/NY.GDP.PCAP.CD?date=2023&format=json&page=${page}`);
+                        const response = await fetch(`https://api.worldbank.org/v2/country/all/indicator/${chosenData}?date=2023&format=json&page=${page}`);
     
                         // Check if response is successful (status 200)
                         if (!response.ok) {
@@ -51,11 +60,11 @@ export const useStoreStudy = defineStore('storeStudy', {
                             // Loop through the data for each country
                             data[1].forEach(country => {
                                 const countryName = country.country.value;
-                                const gdpPerCapita = country.value;
+                                const requestedValue = country.value;
     
                                 // Only include country data if it's not a region/group and GDP is valid
-                                if (gdpPerCapita !== null && !nonCountryNames.has(countryName)) {
-                                    this.countryData.value[countryName] = gdpPerCapita;
+                                if (requestedValue !== null && !nonCountryNames.has(countryName)) {
+                                    this.countryData.value[countryName] = requestedValue;
                                 }
                             });
                         }
@@ -71,12 +80,7 @@ export const useStoreStudy = defineStore('storeStudy', {
                 }
 
                 this.loading = false;
-
-                // for (const country in countryData) {
-                //     const value = countryData[country];
-                //     console.log(country, ": ", value);
-                // }
-            }
+            } 
         }
     }
 })
