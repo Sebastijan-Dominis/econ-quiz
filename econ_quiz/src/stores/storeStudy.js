@@ -8,7 +8,10 @@ export const useStoreStudy = defineStore('storeStudy', {
     state: () => {
         return { 
             choice: null,
-            countryData: ref({}),
+            countryData: ref([]),
+            countryDataZA: ref([]),
+            countryDataHL: ref([]),
+            countryDataLH: ref([]),
             loading: ref(false),        // Track loading state
             error: ref(null)            // Track errors if needed
         }
@@ -25,7 +28,7 @@ export const useStoreStudy = defineStore('storeStudy', {
             ]);
 
             // NOMINAL GDP, GDP PPP, NOMINAL GDP P/C
-            if (choice === "Nominal GDP" || choice === "GDP PPP" || choice === "Nominal GDP p/c" || choice === "GDP PPP p/c" || choice === "Exports as % of GDP" || choice === "Imports as % of GDP") {
+            if (choice === "Nominal GDP" || choice === "GDP PPP" || choice === "Nominal GDP p/c" || choice === "GDP PPP p/c" || choice === "Exports as % of GDP" || choice === "Imports as % of GDP" || choice === "Inflation") {
                 // data
                 let chosenData = "";
                 
@@ -35,8 +38,9 @@ export const useStoreStudy = defineStore('storeStudy', {
                 else if (choice === "GDP PPP p/c") chosenData = "NY.GDP.PCAP.PP.CD";
                 else if (choice === "Exports as % of GDP") chosenData = "NE.EXP.GNFS.ZS";
                 else if (choice === "Imports as % of GDP") chosenData = "NE.IMP.GNFS.ZS";
+                else if (choice === "Inflation") chosenData = "FP.CPI.TOTL.ZG";
                 // clearing the data
-                this.countryData.value = {};
+                this.countryData.value = [];
 
                 this.loading = true;
                 this.error = null;
@@ -64,7 +68,7 @@ export const useStoreStudy = defineStore('storeStudy', {
     
                                 // Only include country data if it's not a region/group and GDP is valid
                                 if (requestedValue !== null && !nonCountryNames.has(countryName)) {
-                                    this.countryData.value[countryName] = requestedValue;
+                                    this.countryData.value.push([countryName, requestedValue]);
                                 }
                             });
                         }
@@ -80,6 +84,10 @@ export const useStoreStudy = defineStore('storeStudy', {
                 }
 
                 this.loading = false;
+                
+                this.countryDataZA.value = [...this.countryData.value].reverse();
+                this.countryDataHL.value = [...this.countryData.value].sort((a, b) => b[1] - a[1]);
+                this.countryDataLH.value = [...this.countryData.value].sort((a, b) => a[1] - b[1]);
             } 
         }
     }
