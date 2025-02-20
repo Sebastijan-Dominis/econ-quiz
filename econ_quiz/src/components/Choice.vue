@@ -10,7 +10,7 @@ const columns = ref(
   [
     ['Nominal GDP', 'GDP PPP', 'Nominal GDP p/c', 'GDP PPP p/c', 'Exports as % of GDP', 'Imports as % of GDP', 'Inflation', 'Unemployment'],
     ['Total population', 'Population growth rate', 'Population 65+\n(% of total)', 'Population 0-14\n(% of total)', 'Urban population\n(% of total)', 'Fertility rate', 'Life expectancy', 'Dependency ratio'],
-    ['Literacy rate', 'Poverty headcount ratio', 'Health spending\n(% of GDP)', 'CO2 emissions\n(metric tons p/c)', 'Forest area\n(% of land area)', 'Agricultural land (% of land area)', 'Protected land area\n(% of total)', 'Internet users\n(% of population)'],
+    ['Literacy rate', 'Poverty headcount ratio', 'Health spending\n(% of GDP)', 'Arable land\n(% of land area)', 'Forest area\n(% of land area)', 'Net migration', 'Maternal mortality ratio\n(per 100k births)', 'Internet users\n(% of population)'],
   ]
 )
 
