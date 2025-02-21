@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
+import { getAuth, signInWithCustomToken } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAt5hGUfrjBwKfiBxijaeN4YZpjKLDkXgQ",
@@ -20,6 +21,10 @@ const analytics = getAnalytics(app);
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
 
+// Initialize Firebase Authentication and get a reference to the service
+const auth = getAuth(app);
+
 export {
-    db
+    db,
+    auth
 }

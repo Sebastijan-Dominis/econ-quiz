@@ -1,9 +1,7 @@
 <script setup>
-// components
+// imports
 import PageTop from '../components/PageTop.vue';
 import LBBtn from '../components/LBBtn.vue';
-
-// imports
 import { ref } from 'vue';
 
 // filtering choice

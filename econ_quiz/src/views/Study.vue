@@ -1,8 +1,6 @@
 <script setup>
-// components
-import PageTop from '../components/PageTop.vue';
-
 // imports
+import PageTop from '../components/PageTop.vue';
 import { useRoute } from 'vue-router';
 import { useStoreStudy } from '../stores/storeStudy';
 import { ref, watchEffect, onMounted, onUnmounted, computed } from 'vue';
@@ -63,9 +61,9 @@ const manageScreenSize = computed(() => {
 
 // how the data is displayed
 const largeNumsDollars = ref(new Set(['Nominal GDP', 'GDP PPP', 'Nominal GDP p/c', 'GDP PPP p/c']));
-const smallNumsPercentages = ref(new Set(['Exports as % of GDP', 'Imports as % of GDP', 'Inflation', 'Unemployment', 'Population growth rate', 'Population 65+ (% of total)', 'Population 0-14 (% of total)', 'Urban population (% of total)', 'Literacy rate', 'Poverty headcount ratio', 'Health spending (% of GDP)', 'Arable land (% of land area)', 'Forest area (% of land area)', 'Internet users (% of population)']));
+const smallNumsPercentages = ref(new Set(['Exports as % of GDP', 'Imports as % of GDP', 'Inflation', 'Unemployment', 'Population growth rate', 'Population 65+ (% of total)', 'Population 0-14 (% of total)', 'Urban population (% of total)', 'Literacy rate', 'Poverty headcount ratio', 'Health spending (% of GDP)', 'Arable land (% of land area)', 'Forest area (% of land area)', 'Internet users (% of population)', 'Diabetes as % of people ages 20 to 79']));
 const largeNums = ref(new Set(['Total population', 'Net migration', 'Maternal mortality ratio (per 100k births)']));
-const smallNums = ref(new Set(['Fertility rate', 'Life expectancy', 'Dependency ratio']));
+const smallNums = ref(new Set(['Fertility rate', 'Life expectancy']));
 </script>
 
 <template>
@@ -91,6 +89,9 @@ const smallNums = ref(new Set(['Fertility rate', 'Life expectancy', 'Dependency 
     <!-- cozy tea on a table -->
     <img src="../assets/images/table.png" alt="a table" class="max-lg:hidden fixed bottom-0 right-0 w-56">
     <img src="../assets/gifs/tea.gif" alt="a cup of warm tea" class="max-lg:hidden fixed bottom-28 right-0 w-48">
+
+    <!-- cozy fireplace -->
+    <img src="" alt="candles" class="max-lg:hidden fixed bottom-80 left-0 w-56">
 
     <!-- the sorter  -->
     <div ref="sorter" class="fixed top-6 right-10 border border-brand rounded-2xl border-2 text-wg bg-bgbtn" :class="{'max-lg:!right-4': storeScroll.isFixed}">

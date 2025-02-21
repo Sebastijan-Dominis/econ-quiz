@@ -1,5 +1,5 @@
 <script setup>
-// components and composables
+// imports
 import Choice from '../components/Choice.vue';
 import PageTop from '../components/PageTop.vue';
 </script>

@@ -9,8 +9,8 @@ import {ref} from 'vue';
 const columns = ref(
   [
     ['Nominal GDP', 'GDP PPP', 'Nominal GDP p/c', 'GDP PPP p/c', 'Exports as % of GDP', 'Imports as % of GDP', 'Inflation', 'Unemployment'],
-    ['Total population', 'Population growth rate', 'Population 65+\n(% of total)', 'Population 0-14\n(% of total)', 'Urban population\n(% of total)', 'Fertility rate', 'Life expectancy', 'Dependency ratio'],
-    ['Literacy rate', 'Poverty headcount ratio', 'Health spending\n(% of GDP)', 'Arable land\n(% of land area)', 'Forest area\n(% of land area)', 'Net migration', 'Maternal mortality ratio\n(per 100k births)', 'Internet users\n(% of population)'],
+    ['Total population', 'Population growth rate', 'Population 65+\n(% of total)', 'Population 0-14\n(% of total)', 'Urban population\n(% of total)', 'Fertility rate', 'Life expectancy', 'Net migration'],
+    ['Literacy rate', 'Poverty headcount ratio', 'Health spending\n(% of GDP)', 'Arable land\n(% of land area)', 'Forest area\n(% of land area)', 'Diabetes as % of\npeople ages 20 to 79', 'Maternal mortality ratio\n(per 100k births)', 'Internet users\n(% of population)'],
   ]
 )
 

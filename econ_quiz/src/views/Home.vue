@@ -1,9 +1,7 @@
 <script setup>
-// components
+// imports
 import BrandBtn from '../components/BrandBtn.vue';
 import DarkBtn from '../components/DarkBtn.vue';
-
-// imports
 import { ref, onMounted } from 'vue';
 
 // logging process

@@ -1,5 +1,5 @@
 <script setup>
-// components
+// imports
 import DarkBtn from '../components/DarkBtn.vue';
 import PageTop from '../components/PageTop.vue';
 </script>

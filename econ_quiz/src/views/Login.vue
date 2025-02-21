@@ -1,5 +1,5 @@
 <script setup>
-// components and composables
+// imports
 import {useBack} from '../composables/useBack';
 
 // getting the back function

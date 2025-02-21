@@ -1,9 +1,7 @@
 <script setup>
-// components
+// imports
 import Choice from '../components/Choice.vue';
 import PageTop from '../components/PageTop.vue';
-
-// imports
 import { onMounted, onUnmounted } from 'vue';
 
 // scroll button fixed functionality

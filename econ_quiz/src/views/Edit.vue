@@ -1,12 +1,8 @@
 <script setup>
-// components and composables
+// imports
 import ReturnBtn from '../components/ReturnBtn.vue';
-import { useBack } from '../composables/useBack';
-
-// getting the back function
-const {back} = useBack();
 </script>
 
 <template>
-    <ReturnBtn @click="back"></ReturnBtn>
+    <ReturnBtn></ReturnBtn>
 </template>
