@@ -3,13 +3,16 @@
 import BrandBtn from '../components/BrandBtn.vue';
 import DarkBtn from '../components/DarkBtn.vue';
 import { ref, onMounted } from 'vue';
+import { useStoreAuth } from '../stores/storeAuth';
 
 // logging process
 const isLoggedIn = ref(true);
 const isAdmin = ref(true);
 const logoutq = ref(false);
+const storeAuth = useStoreAuth();
 
 const logoutYes = function() {
+    storeAuth.logoutUser();
     isLoggedIn.value = false;
     logoutq.value = false;
 }

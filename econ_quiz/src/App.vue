@@ -34,8 +34,8 @@ const toggleAudio = function() {
     <router-view></router-view>
 
     <!-- relaxing music -->
-    <div class="fixed top-80 left-0 mx-4 px-4 py-2 w-16 bg-bgbtn border border-brand border-2 rounded-lg">
-      <button @click="toggleAudio" class="flex justify-between items-center w-full">
+    <div @click="toggleAudio" class="fixed top-80 left-0 mx-4 px-4 py-2 w-16 bg-bgbtn border border-brand border-2 rounded-lg cursor-pointer">
+      <button class="flex justify-between items-center w-full">
         <img v-if="!playing" src="/src/assets/icons/speakerOff.svg" alt="music off">
         <img v-else src="/src/assets/icons/speakerOn.svg" alt="music on">
       </button>

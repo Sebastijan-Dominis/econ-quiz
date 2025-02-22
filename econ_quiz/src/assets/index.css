@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 :root {
-    --brand-color: #ffa550;
+    --brand: #ffa550;
     --bgbtn: rgba(0, 0, 0, 0.45);
     --bg: #1a1a1a;
     --wg: #e6e6e6;
