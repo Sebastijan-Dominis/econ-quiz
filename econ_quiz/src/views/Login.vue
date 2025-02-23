@@ -1,10 +1,8 @@
 <script setup>
 // imports
-import {useBack} from '../composables/useBack';
 import { reactive } from 'vue';
-
-// getting the back function
-const {back} = useBack();
+import { useStoreAuth } from '../stores/storeAuth';
+import { RouterLink } from 'vue-router';
 
 ///////////
 // login //
@@ -13,20 +11,19 @@ const credentials = reactive({
     identifier: "",
     password: ""
 })
+const storeAuth = useStoreAuth();
 </script>
 
 <template>
     <div class="h-auto w-auto bg-bgform border-brand border-4 rounded-3xl absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 flex flex-col">
         <h1 class="text-center text-4xl font-bold text-brand mt-6">Log In</h1>
         <p class="text-center text-brand mt-6">Log back into your account!</p>
-        <form class="mt-6 mx-4 md:grid md:grid-cols-3 gap-x-4 gap-y-6 items-center">
-            <label for="email" class="labelForm">Email:</label>
-            <input name="email" type="email" placeholder="Enter your email address..." 
-                class="inputForm" required>
+        <form @submit.prevent="storeAuth.loginUser(credentials)" class="mt-6 mx-4 md:grid md:grid-cols-3 gap-x-4 gap-y-6 items-center">
+            <label for="email" class="labelForm">Email or Username:</label>
+            <input name="email" type="text" placeholder="Enter your email or username" v-model="credentials.identifier" class="inputForm" required>
             
             <label for="password" class="labelForm">Password: </label>
-            <input name="password" type="password" placeholder="Enter your password..." 
-                class="inputForm" required>
+            <input name="password" type="password" placeholder="Enter your password..." v-model="credentials.password" class="inputForm" required>
 
             <button type="submit" class="w-36 h-14 border-bg border-2 bg-brand text-bg rounded-full col-span-3 mx-auto text-xl font-medium max-lg:block hover:bg-bgbtn hover:border-brand hover:text-wg active:scale-98 max-md:mt-4">Log In!</button>
         </form>
@@ -42,7 +39,7 @@ const credentials = reactive({
             <span class="logoName">Facebook</span>
         </button>
 
-        <button @click="back" class="w-32 h-12 bg-bgbtn border-2 border-brand mt-10 mx-auto rounded-full text-wg text-xl mb-4 max-lg:block hover:bg-brand hover:border-bg hover:text-bg active:scale-98">Quit</button>
+        <router-link :to="{name: 'home'}"><button class="w-32 h-12 bg-bgbtn border-2 border-brand mt-10 mx-auto rounded-full text-wg text-xl mb-4 max-lg:block hover:bg-brand hover:border-bg hover:text-bg active:scale-98">Quit</button></router-link>
     </div>
 </template>
 

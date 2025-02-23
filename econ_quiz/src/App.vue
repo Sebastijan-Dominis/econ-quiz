@@ -1,7 +1,10 @@
 <script setup>
-// music
+// imports
 import { ref, onMounted, onUnmounted } from 'vue';
 import musicFile from '../src/assets/music/chillLofiMusic.mp3';
+import { useStoreAuth } from './stores/storeAuth';
+
+// music
 const audio = ref(null);
 const playing = ref(false);
 onMounted(() => {
@@ -23,6 +26,12 @@ const toggleAudio = function() {
     playing.value = false;
   }
 }
+
+// auth state management
+const storeAuth = useStoreAuth();
+onMounted(() => {
+  storeAuth.init();
+})
 </script>
 
 <template>

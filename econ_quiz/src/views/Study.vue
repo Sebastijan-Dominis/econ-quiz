@@ -8,21 +8,51 @@ import { ref, watchEffect, onMounted, onUnmounted, computed } from 'vue';
 // fetching the data
 const route = useRoute();
 const storeStudy = useStoreStudy();
+
+const choiceMap = {
+  "nom_gdp": "Nominal GDP",
+  "gdp_ppp": "GDP PPP",
+  "nom_gdp_pc": "Nominal GDP p/c",
+  "gdp_ppp_pc": "GDP PPP p/c",
+  "exports": "Exports as % of GDP",
+  "imports": "Imports as % of GDP",
+  "inflation": "Inflation",
+  "unemployment": "Unemployment",
+  "population": "Total population",
+  "pop_growth": "Population growth rate",
+  "pop65up": "Population 65+ (% of total)",
+  "pop0014": "Population 0-14 (% of total)",
+  "urban_pop": "Urban population (% of total)",
+  "tfr": "Fertility rate",
+  "life_expectancy": "Life expectancy",
+  "migration": "Net migration",
+  "literacy": "Literacy rate",
+  "poverty_headcount_ratio": "Poverty headcount ratio",
+  "health_spending": "Health spending (% of GDP)",
+  "arable_area": "Arable land (% of land area)",
+  "forest_area": "Forest area (% of land area)",
+  "diabetes_20to79": "Diabetes as % of people ages 20 to 79",
+  "maternal_mortality": "Maternal mortality ratio (per 100k births)",
+  "internet_users": "Internet users (% of population)"
+}
+let originalValue = null;
 watchEffect(() => {
   if(route.params.choice) {
-    storeStudy.fetchData(route.params.choice);
+    originalValue = choiceMap[route.params.choice];
+    storeStudy.fetchData(originalValue);
   }
 })
 
-// scroll button fixed functionality
-import { useScrollStore } from '../stores/storeScroll';
-const storeScroll = useScrollStore();
+// fixed button functionality
+import { useStoreFixedBtn } from '../stores/storeFixedBtn';
+const storeFixedBtn = useStoreFixedBtn();
 onMounted(() => {
-  window.addEventListener('scroll', storeScroll.handleScroll);
+  storeFixedBtn.isFixed = true;
+  storeFixedBtn.isFixedStudy = true;
 })
 onUnmounted(() => {
-  storeScroll.isFixed = false;
-  window.removeEventListener('scroll', storeScroll.handleScroll);
+  storeFixedBtn.isFixed = false;
+  storeFixedBtn.isFixedStudy = false;
 })
 
 // managing sorted by
@@ -43,20 +73,26 @@ onUnmounted(() => {
 
 // managing the sorted by button appearance depending on screen size
 const screenSize = ref(window.innerWidth);
+const scrolled = ref(window.scrollY);
 
 const resized = function() {
   screenSize.value = window.innerWidth;
 }
+const scroll = function() {
+  scrolled.value = window.scrollY;
+}
 
 onMounted(() => {
   window.addEventListener('resize', resized);
+  window.addEventListener('scroll', scroll);
 })
 onUnmounted(() => {
   window.removeEventListener('resize', resized);
+  window.removeEventListener('scroll', scrolled);
 })
 
 const manageScreenSize = computed(() => {
-  return screenSize.value >= 1024 || !storeScroll.isFixed;
+  return screenSize.value >= 1024 || scrolled.value <= 180;
 })
 
 // how the data is displayed
@@ -79,12 +115,12 @@ const smallNums = ref(new Set(['Fertility rate', 'Life expectancy']));
   <!-- once loaded... -->
   <div v-if="!storeStudy.loading && !storeStudy.error">
     <PageTop customH1Class="text-8xl max-xl:text-7xl max-lg:text-6xl max-md:text-6xl font-bold">Library</PageTop>
-    <h1 class="flex justify-center mt-20 text-brand text-4xl xl:text-5xl 2xl:text-6xl font-bold">{{ route.params.choice }}</h1>
+    <h1 class="flex justify-center mt-20 text-brand text-4xl xl:text-5xl 2xl:text-6xl font-bold">{{ originalValue }}</h1>
     <h3 class="flex justify-center mt-6 text-brand text-2xl xl:text-3xl 2xl:text-4xl font-bold gap-x-1">Data from
-      <span v-if="storeStudy.exceptions2022.has(route.params.choice)">2022</span>
-      <span v-if="storeStudy.exceptions2021.has(route.params.choice)">2021</span>
-      <span v-if="storeStudy.exceptions2020.has(route.params.choice)">2020</span>
-      <span v-if="!storeStudy.exceptions2021.has(route.params.choice) && !storeStudy.exceptions2022.has(route.params.choice) && !storeStudy.exceptions2020.has(route.params.choice)">2023</span>
+      <span v-if="storeStudy.exceptions2022.has(originalValue)">2022</span>
+      <span v-if="storeStudy.exceptions2021.has(originalValue)">2021</span>
+      <span v-if="storeStudy.exceptions2020.has(originalValue)">2020</span>
+      <span v-if="!storeStudy.exceptions2021.has(originalValue) && !storeStudy.exceptions2022.has(originalValue) && !storeStudy.exceptions2020.has(originalValue)">2023</span>
     </h3>
     <!-- cozy tea on a table -->
     <img src="../assets/images/table.png" alt="a table" class="max-lg:hidden fixed bottom-0 right-0 w-56">
@@ -94,10 +130,10 @@ const smallNums = ref(new Set(['Fertility rate', 'Life expectancy']));
     <img src="" alt="candles" class="max-lg:hidden fixed bottom-80 left-0 w-56">
 
     <!-- the sorter  -->
-    <div ref="sorter" class="fixed top-6 right-10 border border-brand rounded-2xl border-2 text-wg bg-bgbtn" :class="{'max-lg:!right-4': storeScroll.isFixed}">
-      <div class="w-36 p-4" :class="{'max-lg:w-24': storeScroll.isFixed}">
+    <div ref="sorter" class="fixed top-6 right-10 border border-brand rounded-2xl border-2 text-wg bg-bgbtn" :class="{'max-lg:!right-4': storeFixedBtn.isFixed}">
+      <div class="w-36 p-4" :class="{'max-lg:w-24': storeFixedBtn.isFixed}">
       <!-- Button to toggle sorter box -->
-      <button @click="isOpen = !isOpen" class="flex justify-between items-center w-full text-lg font-bold" :class="{'max-lg:!justify-center': storeScroll.isFixed}">
+      <button @click="isOpen = !isOpen" class="flex justify-between items-center w-full text-lg font-bold" :class="{'max-lg:!justify-center': storeFixedBtn.isFixed}">
         <span v-show="manageScreenSize">Sort By</span>
         <svg :class="{'rotate-90': isOpen}" class="w-6 h-6 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
@@ -134,16 +170,16 @@ const smallNums = ref(new Set(['Fertility rate', 'Life expectancy']));
         <li v-for="[country, value] of storeStudy[sortedBy].value" :key="country" class="flex mx-32 md:mx-40 lg:mx-56 xl:mx-72 2xl:mx-[500px] justify-between my-6 text-brand text-xl xl:text-2xl 2xl:text-3xl font-bold">
           <div>{{ country }}:</div> 
           <div>
-            <div v-if="largeNumsDollars.has(route.params.choice)">
+            <div v-if="largeNumsDollars.has(originalValue)">
               <span>${{ Math.round(value).toLocaleString() }}</span>
             </div>
-            <div v-if="smallNumsPercentages.has(route.params.choice)">
+            <div v-if="smallNumsPercentages.has(originalValue)">
               <span>{{ value.toFixed(2) }}%</span>
             </div>
-            <div v-if="largeNums.has(route.params.choice)">
+            <div v-if="largeNums.has(originalValue)">
               <span>{{ Math.round(value).toLocaleString() }}</span>
             </div>
-            <div v-if="smallNums.has(route.params.choice)">
+            <div v-if="smallNums.has(originalValue)">
               <span>{{ value.toFixed(2) }}</span>
             </div>
           </div>

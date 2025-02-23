@@ -1,12 +1,8 @@
 <script setup>
 // imports
 import { ref, reactive } from 'vue';
-import {useBack} from '../composables/useBack';
 import DarkBtn from '../components/DarkBtn.vue';
 import { useStoreAuth } from '../stores/storeAuth';
-
-// getting the back function
-const {back} = useBack();
 
 // popup warning
 const popup = ref(true);
@@ -98,7 +94,7 @@ const checkPassword = function() {
 // confirm password
 const passwordConfirm = ref(false);
 const checkPasswordConfirm = function() {
-    passwordConfirm.value = credentials.password === credentialsCheck.password && validatePassword(credentials.password);
+    passwordConfirm.value = credentials.password === credentialsCheck.password && passwordGood.value;
 }
 
 // valid username
@@ -198,7 +194,8 @@ const onSubmit = function() {
             <span class="logoName">Facebook</span>
         </button>
 
-        <button @click="back" class="w-32 h-12 bg-bgbtn border-2 border-brand mt-10 mx-auto rounded-full text-wg text-xl mb-4 max-lg:block hover:bg-brand hover:border-bg hover:text-bg active:scale-98">Quit</button>
+        <router-link :to="{name: 'home'}"><button class="w-32 h-12 bg-bgbtn border-2 border-brand mt-10 mx-auto rounded-full text-wg text-xl mb-4 max-lg:block hover:bg-brand hover:border-bg hover:text-bg active:scale-98">Quit</button></router-link>
+        
     </div>
 </template>
 

@@ -5,16 +5,15 @@ import PageTop from '../components/PageTop.vue';
 import { onMounted, onUnmounted } from 'vue';
 
 // scroll button fixed functionality
-import { useScrollStore } from '../stores/storeScroll';
-const storeScroll = useScrollStore();
+import { useStoreFixedBtn } from '../stores/storeFixedBtn';
+const storeFixedBtn = useStoreFixedBtn();
 
 onMounted(() => {
-  window.addEventListener('scroll', storeScroll.handleScroll);
+  storeFixedBtn.isFixed = true;
 })
 
 onUnmounted(() => {
-  storeScroll.isFixed = false;
-  window.removeEventListener('scroll', storeScroll.handleScroll);
+  storeFixedBtn.isFixed = false;
 })
 </script>
 
