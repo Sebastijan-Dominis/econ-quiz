@@ -9,36 +9,10 @@ import { ref, watchEffect, onMounted, onUnmounted, computed } from 'vue';
 const route = useRoute();
 const storeStudy = useStoreStudy();
 
-const choiceMap = {
-  "nom_gdp": "Nominal GDP",
-  "gdp_ppp": "GDP PPP",
-  "nom_gdp_pc": "Nominal GDP p/c",
-  "gdp_ppp_pc": "GDP PPP p/c",
-  "exports": "Exports as % of GDP",
-  "imports": "Imports as % of GDP",
-  "inflation": "Inflation",
-  "unemployment": "Unemployment",
-  "population": "Total population",
-  "pop_growth": "Population growth rate",
-  "pop65up": "Population 65+ (% of total)",
-  "pop0014": "Population 0-14 (% of total)",
-  "urban_pop": "Urban population (% of total)",
-  "tfr": "Fertility rate",
-  "life_expectancy": "Life expectancy",
-  "migration": "Net migration",
-  "literacy": "Literacy rate",
-  "poverty_headcount_ratio": "Poverty headcount ratio",
-  "health_spending": "Health spending (% of GDP)",
-  "arable_area": "Arable land (% of land area)",
-  "forest_area": "Forest area (% of land area)",
-  "diabetes_20to79": "Diabetes as % of people ages 20 to 79",
-  "maternal_mortality": "Maternal mortality ratio (per 100k births)",
-  "internet_users": "Internet users (% of population)"
-}
 let originalValue = null;
 watchEffect(() => {
   if(route.params.choice) {
-    originalValue = choiceMap[route.params.choice];
+    originalValue = storeStudy.reverseChoiceMap[route.params.choice];
     storeStudy.fetchData(originalValue);
   }
 })
