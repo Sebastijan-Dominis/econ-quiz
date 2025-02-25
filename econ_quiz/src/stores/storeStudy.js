@@ -1,4 +1,4 @@
-// stores/storeStudy.js
+// imports
 import { defineStore } from 'pinia'
 
 // other imports

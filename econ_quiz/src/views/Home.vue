@@ -2,18 +2,21 @@
 // imports
 import BrandBtn from '../components/BrandBtn.vue';
 import DarkBtn from '../components/DarkBtn.vue';
-import { ref, onMounted, watchEffect } from 'vue';
+import Popup from '../components/Popup.vue';
+import { ref, watchEffect } from 'vue';
 import { useStoreAuth } from '../stores/storeAuth';
 
 // logging process
 const storeAuth = useStoreAuth();
 
 const logoutYes = function() {
+    document.removeEventListener('click', onClickOutside);
     storeAuth.logoutUser();
     storeAuth.isLoggedIn = false;
     storeAuth.logoutq = false;
 }
 const logoutNo = function() {
+    document.removeEventListener('click', onClickOutside);
     storeAuth.logoutq = false;
 }
 
@@ -41,6 +44,29 @@ watchEffect(() => {
         typeHello();
     }
 })
+
+// closing popup by clicking outside of it
+const confirmation = ref(null);
+const dialog = ref(null);
+watchEffect(() => {
+    if(dialog.value) {
+        confirmation.value = dialog.value.confirmation;
+    }
+})
+const onClickOutside = event => {
+    console.log('triggered')
+    if(confirmation.value && !confirmation.value.contains(event.target)) {
+        console.log('true')
+        storeAuth.logoutq.value = false;
+        document.removeEventListener('click', onClickOutside);
+    }
+}
+const openPopup = () => {
+    storeAuth.logoutq.value = true;
+    setTimeout(() => {
+        document.addEventListener('click', onClickOutside);
+    }, 1)
+}
 </script>
 
 <template>
@@ -51,7 +77,7 @@ watchEffect(() => {
     <h2 v-else class="text-brand text-center font-bold mt-8 text-2xl md:hidden">{{ hello }}</h2>
 
     <div v-if="storeAuth.isLoggedIn" class="w-full flex justify-center mt-8 md:hidden">
-        <DarkBtn class="w-32 h-12" @click="storeAuth.logoutq = true">Logout</DarkBtn>
+        <DarkBtn class="w-32 h-12" @click="openPopup">Logout</DarkBtn>
     </div> 
     <div v-else class="w-full flex px-32 pb-8 mt-8 justify-between md:hidden">
         <router-link :to="{name: 'login'}"><DarkBtn class="w-32 h-12">Login</DarkBtn></router-link>
@@ -123,14 +149,7 @@ watchEffect(() => {
 
         <!-- Logout? -->
         <div v-if="storeAuth.logoutq">
-            <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80"></div>
-            <div class="fixed w-[425px] h-[234px] border border-brand border-4 bg-bgbtn rounded-3xl text-brand absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2">
-                <h1 class="text-3xl text-wg text-center mt-4">Are you sure you want to log out?</h1>
-                <div class="flex flex-row justify-between px-10 mt-12">
-                    <DarkBtn @click="logoutYes" class="w-36 h-14">Yes</DarkBtn>
-                    <BrandBtn @click="logoutNo" class="w-36 h-14">No</BrandBtn>
-                </div>
-            </div>
+            <Popup ref="dialog" @confirm="logoutYes" @decline="logoutNo">Are you sure you want to log out?</Popup>
         </div>
     </div>
     

@@ -23,13 +23,13 @@ export const useStoreAuth = defineStore('storeAuth', {
                     this.isAdmin = true;
                     this.user = user;
                     this.router.push('/');
-                    console.log('user logged in: ', user);
+                    // console.log('user logged in: ', user);
                 } else {
                     this.isLoggedIn = false;
                     this.isAdmin = false;
                     this.user = null;
                     this.router.replace('/');
-                    console.log('user logged out: ', user);
+                    // console.log('user logged out: ', user);
                 }
             })
         },

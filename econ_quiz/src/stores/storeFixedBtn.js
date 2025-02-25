@@ -1,3 +1,4 @@
+// imports
 import { defineStore } from "pinia";
 
 export const useStoreFixedBtn = defineStore('storeFixedBtn', {

@@ -4,7 +4,9 @@ import PageTop from '../components/PageTop.vue';
 import { useRoute } from 'vue-router';
 import { useStoreStudy } from '../stores/storeStudy';
 import DarkBtn from '../components/DarkBtn.vue';
-import { reactive } from 'vue';
+import { nextTick, reactive, ref, watchEffect } from 'vue';
+import { useRouter } from 'vue-router';
+import Popup from '../components/Popup.vue';
 
 // route
 const route = useRoute();
@@ -22,19 +24,54 @@ const difficulties = reactive({
     veryHard: false,
     absoluteMadman: false,
 })
+
+// close popup by clicking outside
+const confirmation = ref(null);
+const dialog = ref(null);
+watchEffect(() => {
+    if(dialog.value) {
+        confirmation.value = dialog.value.confirmation;
+    }
+})
+const onClickOutside = event => {
+    if(confirmation.value && !confirmation.value.contains(event.target)) {
+        showPopup.value = false;
+        document.removeEventListener('click', onClickOutside);
+    }
+}
+
+// starting the quiz
+const router = useRouter();
+const showPopup = ref(false);
+const difficulty = ref('');
+const openPopup = chosenDifficulty => {
+    difficulty.value = chosenDifficulty;
+    showPopup.value = true;
+    setTimeout(() => {
+        document.addEventListener('click', onClickOutside);
+    }, 1)
+}
+const onDecline = () => {
+    showPopup.value = false;
+    document.removeEventListener('click', onClickOutside);
+}
+const start = () => {
+    document.removeEventListener('click', onClickOutside);
+    router.push({name: "quiz", params: {choice: route.params.choice, difficulty: difficulty.value}});
+}
 </script>
 
 <template>
     <PageTop customH1Class="text-5xl max-xl:text-4xl max-lg:text-3xl font-bold">{{ storeStudy.reverseChoiceMap[route.params.choice] }}</PageTop>
     <h2 class="mt-12 lg:mt-16 xl:mt-20 2xl:mt-24 flex justify-center text-brand text-3xl lg:text-4xl xl:text-5xl">Choose difficulty</h2>
     <div class="flex flex-col items-center mt-4 lg:mt-6 xl:mt-8 gap-6">
-        <DarkBtn class="w-56" @mouseover="difficulties.noob = true" @mouseleave="difficulties.noob = false">Noob</DarkBtn>
-        <DarkBtn class="w-56" @mouseover="difficulties.veryEasy = true" @mouseleave="difficulties.veryEasy = false">Very Easy</DarkBtn>
-        <DarkBtn class="w-56" @mouseover="difficulties.easy = true" @mouseleave="difficulties.easy = false">Easy</DarkBtn>
-        <DarkBtn class="w-56" @mouseover="difficulties.normal = true" @mouseleave="difficulties.normal = false">Normal</DarkBtn>
-        <DarkBtn class="w-56" @mouseover="difficulties.hard = true" @mouseleave="difficulties.hard = false">Hard</DarkBtn>
-        <DarkBtn class="w-56" @mouseover="difficulties.veryHard = true" @mouseleave="difficulties.veryHard = false">Very hard</DarkBtn>
-        <DarkBtn class="w-56" @mouseover="difficulties.absoluteMadman = true" @mouseleave="difficulties.absoluteMadman = false">Absolute madman</DarkBtn>
+        <DarkBtn class="w-56" @mouseover="difficulties.noob = true" @mouseleave="difficulties.noob = false" @click="openPopup('noob')">Noob</DarkBtn>
+        <DarkBtn class="w-56" @mouseover="difficulties.veryEasy = true" @mouseleave="difficulties.veryEasy = false" @click="openPopup('veryEasy')">Very Easy</DarkBtn>
+        <DarkBtn class="w-56" @mouseover="difficulties.easy = true" @mouseleave="difficulties.easy = false" @click="openPopup('easy')">Easy</DarkBtn>
+        <DarkBtn class="w-56" @mouseover="difficulties.normal = true" @mouseleave="difficulties.normal = false" @click="openPopup('normal')">Normal</DarkBtn>
+        <DarkBtn class="w-56" @mouseover="difficulties.hard = true" @mouseleave="difficulties.hard = false" @click="openPopup('hard')">Hard</DarkBtn>
+        <DarkBtn class="w-56" @mouseover="difficulties.veryHard = true" @mouseleave="difficulties.veryHard = false" @click="openPopup('veryHard')">Very hard</DarkBtn>
+        <DarkBtn class="w-56" @mouseover="difficulties.absoluteMadman = true" @mouseleave="difficulties.absoluteMadman = false" @click="openPopup('absoluteMadman')">Absolute madman</DarkBtn>
     </div>
 
     
@@ -78,15 +115,18 @@ const difficulties = reactive({
     <transition name="fade" class="max-xl:hidden">
         <div v-show="difficulties.veryHard">
             <img src="../assets/images/difficulties/veryHard/veryHard.png" alt="a man running while papers are falling around him" class="fixed right-24 top-64 w-80">
-            <p class="fixed top-2/3 left-32 text-brand text-2xl 2xl:text-3xl text-center">Prepare for suffering.<br>Only the strong survive.</p>
+            <p class="fixed top-2/3 left-32 text-brand text-2xl 2xl:text-3xl text-center">Prepare for suffering.<br>Only the strong survive!</p>
         </div>
     </transition>
     <transition name="fade" class="max-xl:hidden">
         <div v-show="difficulties.absoluteMadman">
             <img src="../assets/images/difficulties/absoluteMadman/absoluteMadman.png" alt="a skull with a hand above it, coming from the dark" class="fixed left-12 bottom-32 w-[450px]">
-            <p class="fixed bottom-1/2 right-32 text-brand text-2xl 2xl:text-3xl text-center">You have chosen PAIN.<br>Godspeed, you maniac.</p>
+            <p class="fixed bottom-1/2 right-32 text-brand text-2xl 2xl:text-3xl text-center">You have chosen PAIN!<br>Godspeed, you maniac!</p>
         </div>
     </transition>
+    <div v-show="showPopup">
+        <Popup ref="dialog" @confirm="start" @decline="onDecline">Start quiz?</Popup>
+    </div>
 </template>
 
 <style scoped>
