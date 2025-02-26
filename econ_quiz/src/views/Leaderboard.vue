@@ -19,7 +19,7 @@ const setActive = function(label) {
       v-for="label in ['Past Month', 'Past Year', 'All Time']"
       :key="label"
       :class="activeBtn === label ? 'active' : 'passive'"
-      @toggle="setActive(label)"
+      @click="setActive(label)"
     >
       {{ label }}
     </LBBtn>
@@ -28,26 +28,7 @@ const setActive = function(label) {
 
 <style scoped>
     .active {
-        border-color: #1a1a1a;
-        color: #1a1a1a;
-        background-color: #ffa550;
-    }
-    .passive {
-        border-color: #ffa550;
-        color: #e6e6e6;
-        background-color: rgba(0, 0, 0, 0.45);
-    }
-    .active:hover,
-    .passive:hover {
-        scale: 1.02;
-    }
-    /* .passive:hover {
-        border-color: #1a1a1a;
-        color: #1a1a1a;
-        background-color: #ffa550;
-    } */
-    .active:active,
-    .passive:active {
-        scale: 0.98;
+        color: var(--bg);
+        background-color: var(--brand);
     }
 </style>

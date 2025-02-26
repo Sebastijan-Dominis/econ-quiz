@@ -3,7 +3,7 @@
 import BrandBtn from '../components/BrandBtn.vue';
 import DarkBtn from '../components/DarkBtn.vue';
 import Popup from '../components/Popup.vue';
-import { ref, watchEffect } from 'vue';
+import { nextTick, onMounted, onUnmounted, ref, watchEffect } from 'vue';
 import { useStoreAuth } from '../stores/storeAuth';
 
 // logging process
@@ -16,7 +16,7 @@ const logoutYes = function() {
     storeAuth.logoutq = false;
 }
 const logoutNo = function() {
-    document.removeEventListener('click', onClickOutside);
+    document.removeEventListener('click', onClickOutside2);
     storeAuth.logoutq = false;
 }
 
@@ -46,6 +46,7 @@ watchEffect(() => {
 })
 
 // closing popup by clicking outside of it
+// the solution with nextTick() didn't work, and setTimeout is not optimal
 const confirmation = ref(null);
 const dialog = ref(null);
 watchEffect(() => {
@@ -54,18 +55,18 @@ watchEffect(() => {
     }
 })
 const onClickOutside = event => {
-    console.log('triggered')
+    document.removeEventListener('mousedown', onClickOutside);
+    document.addEventListener('click', onClickOutside2);
+}
+const onClickOutside2 = event => {
     if(confirmation.value && !confirmation.value.contains(event.target)) {
-        console.log('true')
-        storeAuth.logoutq.value = false;
-        document.removeEventListener('click', onClickOutside);
+        storeAuth.logoutq = false;    
+        document.removeEventListener('click', onClickOutside2);
     }
 }
 const openPopup = () => {
-    storeAuth.logoutq.value = true;
-    setTimeout(() => {
-        document.addEventListener('click', onClickOutside);
-    }, 1)
+    storeAuth.logoutq = true;
+    document.addEventListener('mousedown', onClickOutside);
 }
 </script>
 
@@ -112,14 +113,7 @@ const openPopup = () => {
                 <router-link :to="{name: 'leaderboard'}"><DarkBtn>Leaderboard</DarkBtn></router-link>
                 <router-link :to="{name: 'study-choice'}"><DarkBtn>Study</DarkBtn></router-link>
             </div>
-
-            <div v-if="!storeAuth.isLoggedIn" class="flex gap-4">
-                <router-link :to="{name: 'login'}"><DarkBtn>Login</DarkBtn></router-link>
-                <router-link :to="{name: 'signup'}"><BrandBtn>Sign Up</BrandBtn></router-link>
-            </div>
-            <div v-else>
-                <DarkBtn @click="storeAuth.logoutq = true">Logout</DarkBtn>
-            </div>
+            <DarkBtn @click="openPopup">Logout</DarkBtn>
         </nav>
 
         <p v-if="!storeAuth.isLoggedIn" class="absolute left-1/2 top-96 lg:top-24 xl:top-32 2xl:top-40 text-brand text-3xl max-2xl:text-2xl transform -translate-x-1/2 text-center font-normal">You are not logged in. Log in to<br>save your results!</p>
@@ -147,10 +141,10 @@ const openPopup = () => {
         <router-link :to="{name: 'faq'}"><DarkBtn class="absolute bottom-44 max-xl:bottom-16 right-8">FAQ</DarkBtn></router-link>
         <img src="../assets/images/faq.png" alt="thinking man on a laptop" class="absolute bottom-0 right-0 w-64 max-xl:hidden">
 
-        <!-- Logout? -->
-        <div v-if="storeAuth.logoutq">
-            <Popup ref="dialog" @confirm="logoutYes" @decline="logoutNo">Are you sure you want to log out?</Popup>
-        </div>
+    </div>
+    <!-- Logout? -->
+    <div v-show="storeAuth.logoutq">
+        <Popup ref="dialog" @confirm="logoutYes" @decline="logoutNo" customClass="mt-2 max-md:mt-4">Are you sure you want to log out?</Popup>
     </div>
     
 </template>

@@ -4,9 +4,10 @@ import PageTop from '../components/PageTop.vue';
 import { useRoute } from 'vue-router';
 import { useStoreStudy } from '../stores/storeStudy';
 import DarkBtn from '../components/DarkBtn.vue';
-import { nextTick, reactive, ref, watchEffect } from 'vue';
+import { reactive, ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 import Popup from '../components/Popup.vue';
+import { useStoreQuiz } from '../stores/storeQuiz';
 
 // route
 const route = useRoute();
@@ -34,9 +35,13 @@ watchEffect(() => {
     }
 })
 const onClickOutside = event => {
+    document.removeEventListener('mousedown', onClickOutside);
+    document.addEventListener('click', onClickOutside2);
+}
+const onClickOutside2 = event => {
     if(confirmation.value && !confirmation.value.contains(event.target)) {
-        showPopup.value = false;
-        document.removeEventListener('click', onClickOutside);
+        showPopup.value = false;    
+        document.removeEventListener('click', onClickOutside2);
     }
 }
 
@@ -47,17 +52,19 @@ const difficulty = ref('');
 const openPopup = chosenDifficulty => {
     difficulty.value = chosenDifficulty;
     showPopup.value = true;
-    setTimeout(() => {
-        document.addEventListener('click', onClickOutside);
-    }, 1)
+    storeQuiz.fetchQuiz(route.params.choice, difficulty.value);
+    document.addEventListener('mousedown', onClickOutside);
 }
 const onDecline = () => {
+    storeQuiz.questions = [null];
     showPopup.value = false;
-    document.removeEventListener('click', onClickOutside);
+    document.removeEventListener('click', onClickOutside2);
 }
+
+const storeQuiz = useStoreQuiz();
 const start = () => {
     document.removeEventListener('click', onClickOutside);
-    router.push({name: "quiz", params: {choice: route.params.choice, difficulty: difficulty.value}});
+    router.push({name: "quiz", params: {choice: route.params.choice, difficulty: difficulty.value, current: 1}});
 }
 </script>
 
@@ -121,11 +128,11 @@ const start = () => {
     <transition name="fade" class="max-xl:hidden">
         <div v-show="difficulties.absoluteMadman">
             <img src="../assets/images/difficulties/absoluteMadman/absoluteMadman.png" alt="a skull with a hand above it, coming from the dark" class="fixed left-12 bottom-32 w-[450px]">
-            <p class="fixed bottom-1/2 right-32 text-brand text-2xl 2xl:text-3xl text-center">You have chosen PAIN!<br>Godspeed, you maniac!</p>
+            <p class="fixed bottom-1/2 right-32 text-brand text-2xl 2xl:text-3xl text-center">You have chosen PAIN.<br>Godspeed, you maniac!</p>
         </div>
     </transition>
     <div v-show="showPopup">
-        <Popup ref="dialog" @confirm="start" @decline="onDecline">Start quiz?</Popup>
+        <Popup ref="dialog" @confirm="start" @decline="onDecline" customClass="mt-8 max-md:mt-6">Start quiz?</Popup>
     </div>
 </template>
 

@@ -28,7 +28,7 @@ const routes = [
     { path: '/results-choice', name: 'results-choice', component: ResultsChoice },
     { path: '/study/:choice', name: 'study', component: Study },
     { path: '/quiz-difficulty-choice/:choice', name: 'quiz-difficulty-choice', component: QuizDifficultyChoice },
-    { path: '/quiz/:choice/:difficulty', name: 'quiz', component: Quiz }
+    { path: '/quiz/:choice/:difficulty/:current', name: 'quiz', component: Quiz }
 ];
 
 const router = createRouter({
