@@ -82,10 +82,7 @@ export const useStoreStudy = defineStore('storeStudy', {
             let chosenData = "";
             
             // year
-            let year = "2023";
-            if(this.exceptions2022.has(choice)) year = "2022";
-            if(this.exceptions2021.has(choice)) year = "2021";
-            if(this.exceptions2020.has(choice)) year = "2020";
+            const year = this.getYear(choice);
 
             // key
             if (choice === "Nominal GDP") chosenData = "NY.GDP.MKTP.CD";
@@ -162,6 +159,14 @@ export const useStoreStudy = defineStore('storeStudy', {
             this.countryDataZA.value = [...this.countryData.value].reverse();
             this.countryDataHL.value = [...this.countryData.value].sort((a, b) => b[1] - a[1]);
             this.countryDataLH.value = [...this.countryData.value].sort((a, b) => a[1] - b[1]);
+        },
+        getYear(choice) {
+            let year = "2023";
+            console.log(choice)
+            if (this.exceptions2022.has(choice)) year = "2022";
+            if (this.exceptions2021.has(choice)) year = "2021";
+            if (this.exceptions2020.has(choice)) year = "2020";
+            return year;
         }
     }
 })

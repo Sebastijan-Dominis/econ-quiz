@@ -49,6 +49,7 @@ const onClickOutside2 = event => {
 const router = useRouter();
 const showPopup = ref(false);
 const difficulty = ref('');
+const year = ref(storeStudy.getYear(storeStudy.reverseChoiceMap[route.params.choice]));
 const openPopup = chosenDifficulty => {
     difficulty.value = chosenDifficulty;
     showPopup.value = true;
@@ -133,6 +134,7 @@ const start = () => {
     </transition>
     <div v-show="showPopup">
         <Popup ref="dialog" @confirm="start" @decline="onDecline" customClass="mt-8 max-md:mt-6">Start quiz?</Popup>
+        <p class="fixed bottom-20 left-1/2 translate-x-[-50%] text-brand text-base font-bold text-center 2xl:bottom-32 2xl:text-xl">Note: the data for this quiz<br>is from {{ year }}</p>
     </div>
 </template>
 

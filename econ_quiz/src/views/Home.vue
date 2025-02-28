@@ -133,7 +133,6 @@ const openPopup = () => {
             <nav class="flex flex-col gap-6">
                 <router-link :to="{name: 'add'}"><DarkBtn>Add</DarkBtn></router-link>
                 <router-link :to="{name: 'edit'}"><DarkBtn>Edit</DarkBtn></router-link>
-                <router-link :to="{name: 'faq'}"><DarkBtn>FAQ</DarkBtn></router-link>
             </nav>
         </div>
 
