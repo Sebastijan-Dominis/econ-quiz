@@ -13,6 +13,7 @@ import ResultsChoice from "../views/ResultsChoice.vue";
 import Study from "../views/Study.vue";
 import QuizDifficultyChoice from "../views/QuizDifficultyChoice.vue";
 import Quiz from "../views/Quiz.vue";
+import Create from "../views/Create.vue";
 
 const routes = [
     { path: '/', name: 'home', component: Home },
@@ -28,7 +29,8 @@ const routes = [
     { path: '/results-choice', name: 'results-choice', component: ResultsChoice },
     { path: '/study/:choice', name: 'study', component: Study },
     { path: '/quiz-difficulty-choice/:choice', name: 'quiz-difficulty-choice', component: QuizDifficultyChoice },
-    { path: '/quiz/:choice/:difficulty/:current', name: 'quiz', component: Quiz }
+    { path: '/quiz/:choice/:difficulty/:current', name: 'quiz', component: Quiz },
+    { path: '/create', name: 'create', component: Create }
 ];
 
 const router = createRouter({

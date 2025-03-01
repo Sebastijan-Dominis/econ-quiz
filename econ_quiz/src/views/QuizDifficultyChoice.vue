@@ -53,7 +53,6 @@ const year = ref(storeStudy.getYear(storeStudy.reverseChoiceMap[route.params.cho
 const openPopup = chosenDifficulty => {
     difficulty.value = chosenDifficulty;
     showPopup.value = true;
-    storeQuiz.fetchQuiz(route.params.choice, difficulty.value);
     document.addEventListener('mousedown', onClickOutside);
 }
 const onDecline = () => {
@@ -63,8 +62,9 @@ const onDecline = () => {
 }
 
 const storeQuiz = useStoreQuiz();
-const start = () => {
+const start = async() => {
     document.removeEventListener('click', onClickOutside);
+    await storeQuiz.fetchQuiz(route.params.choice, difficulty.value);
     router.push({name: "quiz", params: {choice: route.params.choice, difficulty: difficulty.value, current: 1}});
 }
 </script>

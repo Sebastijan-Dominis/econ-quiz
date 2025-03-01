@@ -7,7 +7,6 @@ import { ref } from 'vue';
 export const useStoreStudy = defineStore('storeStudy', {
     state: () => {
         return { 
-            choice: null,
             countryData: ref([]),
             countryDataZA: ref([]),
             countryDataHL: ref([]),
@@ -79,90 +78,91 @@ export const useStoreStudy = defineStore('storeStudy', {
     },
     actions: {
         async fetchData(choice) {// data
-            let chosenData = "";
-            
-            // year
-            const year = this.getYear(choice);
-
-            // key
-            if (choice === "Nominal GDP") chosenData = "NY.GDP.MKTP.CD";
-            else if (choice === "GDP PPP") chosenData = "NY.GDP.MKTP.PP.CD";
-            else if (choice === "Nominal GDP p/c") chosenData = "NY.GDP.PCAP.CD";
-            else if (choice === "GDP PPP p/c") chosenData = "NY.GDP.PCAP.PP.CD";
-            else if (choice === "Exports as % of GDP") chosenData = "NE.EXP.GNFS.ZS";
-            else if (choice === "Imports as % of GDP") chosenData = "NE.IMP.GNFS.ZS";
-            else if (choice === "Inflation") chosenData = "FP.CPI.TOTL.ZG";
-            else if (choice === "Unemployment") chosenData = "SL.UEM.TOTL.ZS";
-            else if (choice === "Total population") chosenData = "SP.POP.TOTL";
-            else if (choice === "Population growth rate") chosenData = "SP.POP.GROW";
-            else if (choice === "Population 65+ (% of total)") chosenData = "SP.POP.65UP.TO.ZS";
-            else if (choice === "Population 0-14 (% of total)") chosenData = "SP.POP.0014.TO.ZS";
-            else if (choice === "Urban population (% of total)") chosenData = "SP.URB.TOTL.IN.ZS";
-            else if (choice === "Fertility rate") chosenData = "SP.DYN.TFRT.IN";
-            else if (choice === "Life expectancy") chosenData = "SP.DYN.LE00.IN";
-            else if (choice === "Literacy rate") chosenData = "SE.ADT.LITR.ZS";
-            else if (choice === "Poverty headcount ratio") chosenData = "SI.POV.DDAY";
-            else if (choice === "Health spending (% of GDP)") chosenData = "SH.XPD.CHEX.GD.ZS";
-            else if (choice === "Arable land (% of land area)") chosenData = "AG.LND.ARBL.ZS";
-            else if (choice === "Forest area (% of land area)") chosenData = "AG.LND.FRST.ZS";
-            else if (choice === "Net migration") chosenData = "SM.POP.NETM";
-            else if (choice === "Maternal mortality ratio (per 100k births)") chosenData = "SH.STA.MMRT";
-            else if (choice === "Internet users (% of population)") chosenData = "IT.NET.USER.ZS";
-            else if (choice === "Diabetes as % of people ages 20 to 79") chosenData = "SH.STA.DIAB.ZS";
-
-            // clearing the data
-            this.countryData.value = [];
-
-            this.loading = true;
-            this.error = null;
-            let page = 1;
-            let hasMoreData = true;
-
-            while (hasMoreData) {
+            return new Promise(async (resolve, reject) => {
                 try {
-
-                    const response = await fetch(`https://api.worldbank.org/v2/country/all/indicator/${chosenData}?date=${year}&format=json&page=${page}`);
-
-                    // Check if response is successful (status 200)
-                    if (!response.ok) {
-                        console.error("Error fetching data:", response.status);
-                        break;
-                    }
-
-                    const data = await response.json();
-
-                    if (data[1]) { // Ensure data[1] exists before accessing it
-                        // Loop through the data for each country
-                        data[1].forEach(country => {
-                            const countryName = country.country.value;
-                            const requestedValue = country.value;
-
-                            // Only include country data if it's not a region/group and GDP is valid
-                            if (requestedValue !== null && !this.nonCountryNames.has(countryName)) {
-                                this.countryData.value.push([countryName, requestedValue]);
+                    let chosenData = "";
+                    
+                    // year
+                    const year = this.getYear(choice);
+        
+                    // key
+                    if (choice === "Nominal GDP") chosenData = "NY.GDP.MKTP.CD";
+                    else if (choice === "GDP PPP") chosenData = "NY.GDP.MKTP.PP.CD";
+                    else if (choice === "Nominal GDP p/c") chosenData = "NY.GDP.PCAP.CD";
+                    else if (choice === "GDP PPP p/c") chosenData = "NY.GDP.PCAP.PP.CD";
+                    else if (choice === "Exports as % of GDP") chosenData = "NE.EXP.GNFS.ZS";
+                    else if (choice === "Imports as % of GDP") chosenData = "NE.IMP.GNFS.ZS";
+                    else if (choice === "Inflation") chosenData = "FP.CPI.TOTL.ZG";
+                    else if (choice === "Unemployment") chosenData = "SL.UEM.TOTL.ZS";
+                    else if (choice === "Total population") chosenData = "SP.POP.TOTL";
+                    else if (choice === "Population growth rate") chosenData = "SP.POP.GROW";
+                    else if (choice === "Population 65+ (% of total)") chosenData = "SP.POP.65UP.TO.ZS";
+                    else if (choice === "Population 0-14 (% of total)") chosenData = "SP.POP.0014.TO.ZS";
+                    else if (choice === "Urban population (% of total)") chosenData = "SP.URB.TOTL.IN.ZS";
+                    else if (choice === "Fertility rate") chosenData = "SP.DYN.TFRT.IN";
+                    else if (choice === "Life expectancy") chosenData = "SP.DYN.LE00.IN";
+                    else if (choice === "Literacy rate") chosenData = "SE.ADT.LITR.ZS";
+                    else if (choice === "Poverty headcount ratio") chosenData = "SI.POV.DDAY";
+                    else if (choice === "Health spending (% of GDP)") chosenData = "SH.XPD.CHEX.GD.ZS";
+                    else if (choice === "Arable land (% of land area)") chosenData = "AG.LND.ARBL.ZS";
+                    else if (choice === "Forest area (% of land area)") chosenData = "AG.LND.FRST.ZS";
+                    else if (choice === "Net migration") chosenData = "SM.POP.NETM";
+                    else if (choice === "Maternal mortality ratio (per 100k births)") chosenData = "SH.STA.MMRT";
+                    else if (choice === "Internet users (% of population)") chosenData = "IT.NET.USER.ZS";
+                    else if (choice === "Diabetes as % of people ages 20 to 79") chosenData = "SH.STA.DIAB.ZS";
+        
+                    // clearing the data
+                    this.countryData.value = [];
+        
+                    this.loading = true;
+                    this.error = null;
+                    let page = 1;
+                    let hasMoreData = true;
+        
+                    while (hasMoreData) {
+                            const response = await fetch(`https://api.worldbank.org/v2/country/all/indicator/${chosenData}?date=${year}&format=json&page=${page}`);
+        
+                            // Check if response is successful (status 200)
+                            if (!response.ok) {
+                                console.error("Error fetching data:", response.status);
+                                break;
                             }
-                        });
+        
+                            const data = await response.json();
+        
+                            if (data[1]) { // Ensure data[1] exists before accessing it
+                                // Loop through the data for each country
+                                data[1].forEach(country => {
+                                    const countryName = country.country.value;
+                                    const requestedValue = country.value;
+        
+                                    // Only include country data if it's not a region/group and GDP is valid
+                                    if (requestedValue !== null && !this.nonCountryNames.has(countryName)) {
+                                        this.countryData.value.push([countryName, requestedValue]);
+                                    }
+                                });
+                            }
+        
+                            // Check if there are more pages
+                            hasMoreData = page < data[0].pages;
+                            page++;
                     }
-
-                    // Check if there are more pages
-                    hasMoreData = page < data[0].pages;
-                    page++;
-                } catch(error) {
+                    this.loading = false;
+        
+                    this.countryDataZA.value = [...this.countryData.value].reverse();
+                    this.countryDataHL.value = [...this.countryData.value].sort((a, b) => b[1] - a[1]);
+                    this.countryDataLH.value = [...this.countryData.value].sort((a, b) => a[1] - b[1]);
+                
+                    resolve();
+                } catch (error) {
                     this.error = error.message;
                     this.loading = false;
-                    return;
+                    reject(error);
                 }
-            }
-
-            this.loading = false;
-            
-            this.countryDataZA.value = [...this.countryData.value].reverse();
-            this.countryDataHL.value = [...this.countryData.value].sort((a, b) => b[1] - a[1]);
-            this.countryDataLH.value = [...this.countryData.value].sort((a, b) => a[1] - b[1]);
+            })
         },
         getYear(choice) {
             let year = "2023";
-            console.log(choice)
             if (this.exceptions2022.has(choice)) year = "2022";
             if (this.exceptions2021.has(choice)) year = "2021";
             if (this.exceptions2020.has(choice)) year = "2020";
