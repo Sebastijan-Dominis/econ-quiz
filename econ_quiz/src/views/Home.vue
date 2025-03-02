@@ -3,7 +3,7 @@
 import BrandBtn from '../components/BrandBtn.vue';
 import DarkBtn from '../components/DarkBtn.vue';
 import Popup from '../components/Popup.vue';
-import { nextTick, onMounted, onUnmounted, ref, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { useStoreAuth } from '../stores/storeAuth';
 
 // logging process
@@ -12,7 +12,6 @@ const storeAuth = useStoreAuth();
 const logoutYes = function() {
     document.removeEventListener('click', onClickOutside);
     storeAuth.logoutUser();
-    storeAuth.isLoggedIn = false;
     storeAuth.logoutq = false;
 }
 const logoutNo = function() {
@@ -26,7 +25,7 @@ let username = "Username";
 
 const hello = ref("");
 const typeHello = async function() {
-    const text = `Welcome, ${username}! :)`;
+    const text = `Hello, ${username}! :)`;
     hello.value = "";
     text.split('').forEach((_, i) => {
         setTimeout(() => {
@@ -113,7 +112,13 @@ const openPopup = () => {
                 <router-link :to="{name: 'leaderboard'}"><DarkBtn>Leaderboard</DarkBtn></router-link>
                 <router-link :to="{name: 'study-choice'}"><DarkBtn>Study</DarkBtn></router-link>
             </div>
-            <DarkBtn @click="openPopup">Logout</DarkBtn>
+            <div v-if="storeAuth.isLoggedIn">
+                <DarkBtn @click="openPopup">Logout</DarkBtn>
+            </div>
+            <div v-else class="flex gap-4">
+                <router-link :to="{name: 'login'}"><DarkBtn>Login</DarkBtn></router-link>
+                <router-link :to="{name: 'signup'}"><BrandBtn>Sign up</BrandBtn></router-link>
+            </div>
         </nav>
 
         <p v-if="!storeAuth.isLoggedIn" class="absolute left-1/2 top-96 lg:top-24 xl:top-32 2xl:top-40 text-brand text-3xl max-2xl:text-2xl transform -translate-x-1/2 text-center font-normal">You are not logged in. Log in to<br>save your results!</p>

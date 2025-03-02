@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 // imports
 import { useStoreGenerator } from '../stores/storeGenerator';
 import { useStoreStudy } from '../stores/storeStudy';
@@ -14,7 +14,7 @@ onBeforeMount(() => {
 
 const generated = ref('waiting...');
 const fetchAnswer = async() => {
-    const response = await storeGenerator.generate(storeStudy.countryData.value);
+    const response = await storeGenerator.generate("Nominal GDP", "noob", storeStudy.countryData.value);
     generated.value = response;
 }
 </script>
@@ -22,4 +22,6 @@ const fetchAnswer = async() => {
 <template>
 <DarkBtn @click="fetchAnswer"></DarkBtn>
 <h1 class="text-xl text-brand font-bold">{{ generated }}</h1>
-</template>
+</template> -->
+
+<template></template>

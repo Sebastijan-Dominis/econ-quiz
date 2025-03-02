@@ -1,8 +1,5 @@
 // imports
 import { defineStore } from 'pinia';
-// import { doc, getDocs, collection, query, where, getDoc } from 'firebase/firestore';
-// import { db } from "../js/firebase";
-import { useStoreGenerator } from './storeGenerator';
 import { useStoreStudy } from './storeStudy';
 
 export const useStoreQuiz = defineStore('storeQuiz', {
@@ -11,7 +8,65 @@ export const useStoreQuiz = defineStore('storeQuiz', {
             questions: [],
             correctAnswers: 0,
             loading: false,
-            error: null
+            error: null,
+            // noob: 100x - 500x
+            // veryEasy: 20x - 100x
+            // easy: 5x - 20x
+            // normal: 2x - 5x
+            // hard: 30% - 100%
+            // veryHard: 5% - 30%
+            // absoluteMadman: 0.01% - 5%
+            multipliers: {
+                "noob": [{
+                    "min": 0.002,
+                    "max": 0.010
+                }, {
+                    "min": 100.000,
+                    "max": 500.000
+                }],
+                "veryEasy": [{
+                    "min": 0.010,
+                    "max": 0.050
+                }, {
+                    "min": 20.000,
+                    "max": 100.000
+                }],
+                "easy": [{
+                    "min": 0.050,
+                    "max": 0.200
+                }, {
+                    "min": 5.000,
+                    "max": 20.000
+                }],
+                "normal": [{
+                    "min": 0.200,
+                    "max": 0.500
+                }, {
+                    "min": 2.000,
+                    "max": 5.000
+                }],
+                "hard": [{
+                    "min": 0.500,
+                    "max": 0.760
+                }, {
+                    "min": 1.300,
+                    "max": 2.000
+                }],
+                "veryHard": [{
+                    "min": 0.760,
+                    "max": 0.960
+                }, {
+                    "min": 1.050,
+                    "max": 1.300
+                }],
+                "absoluteMadman": [{
+                    "min": 0.960,
+                    "max": 0.999
+                }, {
+                    "min": 1.001,
+                    "max": 1.050
+                }]
+            }
         }
     },
     actions: {
@@ -21,57 +76,45 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                 let j = Math.floor(Math.random() * (i + 1)); 
                 [array[i], array[j]] = [array[j], array[i]];
             }
+            return array;
         },
-        // this was an old idea
-
-        // async fetchQuiz(choice, difficulty) {
-        //     const quiz = await getDocs(collection(db, "quizzes", choice, difficulty));
-        //     quiz.forEach(doc => {
-        //         const temp = [];
-        //         temp.push(doc.data().optionA);
-        //         temp.push(doc.data().optionB);
-        //         temp.push(doc.data().optionC);
-        //         temp.push(doc.data().optionD);
-        //         this.shuffle(temp);
-        //         const q = {
-        //             question: doc.data().question,
-        //             answer: doc.data().correct,
-        //             A: temp[0],
-        //             B: temp[1],
-        //             C: temp[2],
-        //             D: temp[3],
-        //         }
-        //         this.questions.push(q);
-        //     })
-        //     this.shuffle(this.questions);
-        //     // O(n), but so is shuffle, and this simplifies the rest of the quiz logic
-        //     this.questions.unshift(null);
-        // }
-
-        async fetchQuiz(choice, difficulty) {
+        random(min, max, decimals) {
+            const rand = Math.random() * (max - min) + min;
+            const factor = Math.pow(10, decimals);
+            return Math.round(rand * factor) / factor;
+        },
+        async createQuiz(choice, difficulty) {
             this.loading = true;
             try {
-                console.log("started")
                 const storeStudy = useStoreStudy();
                 await storeStudy.fetchData(choice);
-                const numbers = storeStudy.countryData;
-                console.log("fetched the numbers")
-                console.log(numbers)
-                this.shuffle(numbers);
-                console.log("shuffled the numbers")
-                const storeGenerator = useStoreGenerator();
-                const newQuiz = await storeGenerator.generate(choice, difficulty, numbers);
-                console.log("generated quiz")
-                this.shuffle(newQuiz);
-                console.log("shuffled quiz")
-                newQuiz.forEach(question => {
-                    this.shuffle(question.options);
-                });
-                console.log("shuffled questions")
-                this.questions = newQuiz;
-                this.questions.unshift(null);
-                console.log("done");
-                return true;
+                storeStudy.shuffleCountryData();
+                const numbers = [...storeStudy.countryData.value];
+                const chosenCountries = new Set();
+                while(chosenCountries.size <= 20) {
+                    const curr = this.random(0, numbers.length-1, 0);
+                    chosenCountries.add(numbers[curr]);
+                }
+                for(const country of chosenCountries) {
+                    const current = {};
+                    const question = `What is the ${choice} value for ${country[0]}?`;
+                    const correct = `${country[1]}`;
+                    const options = [correct];
+                    for(let i = 0; i < 3; i++) {
+                        const upOrDown = this.random(0, 1, 0);
+                        const minFactor = this.multipliers[difficulty][upOrDown].min;
+                        const maxFactor = this.multipliers[difficulty][upOrDown].max;
+                        const min = minFactor * correct;
+                        const max = maxFactor * correct;
+                        const answer = this.random(min, max, 4);
+                        options.push(answer);
+                    }
+                    this.shuffle(options);
+                    current.question = question;
+                    current.options = options;
+                    current.correct = correct;
+                    this.questions.push(current);
+                }
             } catch(error) {
                 console.log(error)
                 this.error = error;

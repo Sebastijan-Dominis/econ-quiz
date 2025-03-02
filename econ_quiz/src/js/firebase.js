@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 const firebaseConfig = {
     apiKey: "AIzaSyAt5hGUfrjBwKfiBxijaeN4YZpjKLDkXgQ",
     authDomain: "econquiz-f39cc.firebaseapp.com",
@@ -24,7 +24,12 @@ const db = getFirestore(firebaseApp);
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(firebaseApp);
 
+// google provider
+const googleProvider = new GoogleAuthProvider();
+
 export {
     db,
-    auth
+    auth,
+    googleProvider,
+    signInWithPopup
 }

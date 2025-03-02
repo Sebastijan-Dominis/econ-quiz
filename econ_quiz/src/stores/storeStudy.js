@@ -1,8 +1,7 @@
 // imports
 import { defineStore } from 'pinia'
-
-// other imports
 import { ref } from 'vue';
+import { useStoreQuiz } from './storeQuiz';
 
 export const useStoreStudy = defineStore('storeStudy', {
     state: () => {
@@ -17,7 +16,7 @@ export const useStoreStudy = defineStore('storeStudy', {
             // We use a set in order to reduce the time complexity to O(n), instead of iterating through an array, which would be O(n^2). It is not possible to further improve this at the moment, but this should suffice, as the database for every indicator has just a few hundred entries, so the delay is minimal
             // We only fetch data for the widely recognized UN member states
             nonCountryNames: ref(new Set([
-                "Africa Eastern and Southern", "Africa Western and Central", "Arab World", "Aruba", "Bermuda", "Caribbean small states", "Cayman Islands", "Central Europe and the Baltics", "Channel Islands", "Curacao", "Early-demographic dividend", "East Asia & Pacific", "East Asia & Pacific (IDA & IBRD countries)", "East Asia & Pacific (excluding high income)", "Euro area", "Europe & Central Asia", "Europe & Central Asia (IDA & IBRD countries)", "Europe & Central Asia (excluding high income)", "European Union", "Faroe Islands", "Fragile and conflict affected situations", "Heavily indebted poor countries (HIPC)", "High income", "Hong Kong SAR, China", "IBRD only", "IDA & IBRD total", "IDA blend", "IDA only", "IDA total", "Late-demographic dividend", "Latin America & Caribbean", "Latin America & Caribbean (excluding high income)", "Latin America & the Caribbean (IDA & IBRD countries)", "Least developed countries: UN classification", "Low & middle income", "Low income", "Lower middle income", "Macao SAR, China", "Middle East & North Africa", "Middle East & North Africa (IDA & IBRD countries)", "Middle East & North Africa (excluding high income)", "Middle income", "North America", "OECD members", "Other small states", "Pacific island small states", "Post-demographic dividend", "Pre-demographic dividend", "Puerto Rico", "Sint Maarten (Dutch part)", "Small states", "South Asia", "South Asia (IDA & IBRD)", "Sub-Saharan Africa", "Sub-Saharan Africa (IDA & IBRD countries)", "Sub-Saharan Africa (excluding high income)", "Turks and Caicos Islands", "Upper middle income", "World"
+                "Africa Eastern and Southern", "Africa Western and Central", "American Samoa", "Arab World", "Aruba", "Bermuda", "British Virgin Islands", "Caribbean small states", "Cayman Islands", "Central Europe and the Baltics", "Channel Islands", "Curacao", "Early-demographic dividend", "East Asia & Pacific", "East Asia & Pacific (IDA & IBRD countries)", "East Asia & Pacific (excluding high income)", "Euro area", "Europe & Central Asia", "Europe & Central Asia (IDA & IBRD countries)", "Europe & Central Asia (excluding high income)", "European Union", "Faroe Islands", "Fragile and conflict affected situations", "French Polynesia", "Greenland", "Heavily indebted poor countries (HIPC)", "High income", "Hong Kong SAR, China", "IBRD only", "IDA & IBRD total", "IDA blend", "IDA only", "IDA total", "Isle of Man", "Late-demographic dividend", "Latin America & Caribbean", "Latin America & Caribbean (excluding high income)", "Latin America & the Caribbean (IDA & IBRD countries)", "Least developed countries: UN classification", "Low & middle income", "Low income", "Lower middle income", "Macao SAR, China", "Middle East & North Africa", "Middle East & North Africa (IDA & IBRD countries)", "Middle East & North Africa (excluding high income)", "Middle income", "North America", "Northern Mariana Islands", "New Caledonia", "OECD members", "Other small states", "Pacific island small states", "Post-demographic dividend", "Pre-demographic dividend", "Puerto Rico", "Sint Maarten (Dutch part)", "Small states", "South Asia", "South Asia (IDA & IBRD)", "St. Martin (French part)", "Sub-Saharan Africa", "Sub-Saharan Africa (IDA & IBRD countries)", "Sub-Saharan Africa (excluding high income)", "Turks and Caicos Islands", "Upper middle income", "Virgin Islands (U.S.)", "World"
             ])),
             exceptions2022: ref(new Set(["Fertility rate", "Life expectancy", "Literacy rate", "Poverty headcount ratio", "Arable land (% of land area)", "Forest area (% of land area)", "Internet users (% of population)"])),
             exceptions2021: ref(new Set(["Health spending (% of GDP)", "Diabetes as % of people ages 20 to 79"])),
@@ -73,7 +72,11 @@ export const useStoreStudy = defineStore('storeStudy', {
                 "diabetes_20to79": "Diabetes as % of people ages 20 to 79",
                 "maternal_mortality": "Maternal mortality ratio (per 100k births)",
                 "internet_users": "Internet users (% of population)"
-            }
+            },
+            largeNumsDollars: ref(new Set(['Nominal GDP', 'GDP PPP', 'Nominal GDP p/c', 'GDP PPP p/c'])),
+            smallNumsPercentages: ref(new Set(['Exports as % of GDP', 'Imports as % of GDP', 'Inflation', 'Unemployment', 'Population growth rate', 'Population 65+ (% of total)', 'Population 0-14 (% of total)', 'Urban population (% of total)', 'Literacy rate', 'Poverty headcount ratio', 'Health spending (% of GDP)', 'Arable land (% of land area)', 'Forest area (% of land area)', 'Internet users (% of population)', 'Diabetes as % of people ages 20 to 79'])),
+            largeNums: ref(new Set(['Total population', 'Net migration', 'Maternal mortality ratio (per 100k births)'])),
+            smallNums: ref(new Set(['Fertility rate', 'Life expectancy'])),
         }
     },
     actions: {
@@ -81,7 +84,6 @@ export const useStoreStudy = defineStore('storeStudy', {
             return new Promise(async (resolve, reject) => {
                 try {
                     let chosenData = "";
-                    
                     // year
                     const year = this.getYear(choice);
         
@@ -152,7 +154,6 @@ export const useStoreStudy = defineStore('storeStudy', {
                     this.countryDataZA.value = [...this.countryData.value].reverse();
                     this.countryDataHL.value = [...this.countryData.value].sort((a, b) => b[1] - a[1]);
                     this.countryDataLH.value = [...this.countryData.value].sort((a, b) => a[1] - b[1]);
-                
                     resolve();
                 } catch (error) {
                     this.error = error.message;
@@ -167,6 +168,10 @@ export const useStoreStudy = defineStore('storeStudy', {
             if (this.exceptions2021.has(choice)) year = "2021";
             if (this.exceptions2020.has(choice)) year = "2020";
             return year;
+        },
+        shuffleCountryData() {
+            const storeQuiz = useStoreQuiz();
+            storeQuiz.shuffle(this.countryData.value);
         }
     }
 })

@@ -1,9 +1,9 @@
 // imports
 import { defineStore } from "pinia";
-import { auth } from '../js/firebase';
+import { auth, db, googleProvider, signInWithPopup } from '../js/firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, deleteUser, onAuthStateChanged } from "firebase/auth";
 import { setDoc, doc, getDocs, collection, query, where } from "firebase/firestore";
-import { db } from "../js/firebase";
+import { GoogleAuthProvider } from "firebase/auth/web-extension";
 
 export const useStoreAuth = defineStore('storeAuth', {
     state: () => {
@@ -23,13 +23,11 @@ export const useStoreAuth = defineStore('storeAuth', {
                     this.isAdmin = true;
                     this.user = user;
                     this.router.push('/');
-                    // console.log('user logged in: ', user);
                 } else {
                     this.isLoggedIn = false;
                     this.isAdmin = false;
                     this.user = null;
                     this.router.replace('/');
-                    // console.log('user logged out: ', user);
                 }
             })
         },
@@ -73,7 +71,8 @@ export const useStoreAuth = defineStore('storeAuth', {
                 const userRef = doc(db, 'users', user.uid);
                 await setDoc(userRef, {
                     username: credentials.username,
-                    email: credentials.email
+                    email: credentials.email,
+                    isAdmin: false
                 });
             } catch(error) {
                 console.error("Error during user registration: ", error);
@@ -119,7 +118,7 @@ export const useStoreAuth = defineStore('storeAuth', {
                 }
 
                 // signing in
-                const userCredential = await signInWithEmailAndPassword(auth, email, credentials.password);
+                await signInWithEmailAndPassword(auth, email, credentials.password);
             } catch(error) { 
                 if(error.code === "auth/invalid-credential") {
                     alert("Incorrect password. Please try again.");
@@ -140,6 +139,46 @@ export const useStoreAuth = defineStore('storeAuth', {
             } finally {
                 this.loading = false;
             }
+        },
+        async signInWithGoogle() {
+            let user = null;
+
+            try {
+                const result = await signInWithPopup(auth, googleProvider);
+                user = result.user;
+
+                const existingUser = await signInWithEmailAndPassword(auth, user.email, "dummy password");
+
+                if(existingUser) {
+                    const credential = GoogleAuthProvider.credential(result.credential.idToken);
+                    await existingUser.user.linkWithCredential(credential);
+                    console.log("Successfully linked Google account to existing user.");
+                } else {
+                    const userRef = doc(db, 'users', user.uid);
+                    await setDoc(userRef, {
+                        username: user.displayName,
+                        email: user.email,
+                        isAdmin: false
+                    });
+                }
+
+            } catch (error) {
+                console.error("Error during user registration: ", error);
+                alert("An error occured during registration. Please try again.");
+
+                if (user) {
+                    try {
+                        await deleteUser(user);
+                        console.log("Orphaned user deleted from firebase.");
+                    } catch(error) {
+                        console.log("Failed to delete orphaned user with id: ", user.uid);
+                        console.log("Error: ", error);
+                    }
+                }
+            }
         }
     }
 })
+
+
+// TODO: popraviti ovu funkciju sa google autentifikacijom da provjerava ispravno

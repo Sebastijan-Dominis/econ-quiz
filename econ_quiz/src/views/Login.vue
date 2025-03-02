@@ -30,13 +30,9 @@ const storeAuth = useStoreAuth();
 
         <h2 class="mx-auto text-2xl text-brand mt-12 max-lg:block">Or log in with:</h2>
 
-        <button class="altSignUp group">
+        <button class="altSignUp group" @click="storeAuth.signInWithGoogle()">
             <img src="../assets/images/google.png" alt="google logo" class="logo">
             <span class="logoName">Google</span>
-        </button>
-        <button class="altSignUp group">
-            <img src="../assets/images/facebook.png" alt="facebook logo" class="logo">
-            <span class="logoName">Facebook</span>
         </button>
 
         <router-link :to="{name: 'home'}"><button class="w-32 h-12 bg-bgbtn border-2 border-brand mt-10 mx-auto rounded-full text-wg text-xl mb-4 max-lg:block hover:bg-brand hover:border-bg hover:text-bg active:scale-98">Quit</button></router-link>

@@ -68,12 +68,6 @@ onUnmounted(() => {
 const manageScreenSize = computed(() => {
   return screenSize.value >= 1024 || scrolled.value <= 180;
 })
-
-// how the data is displayed
-const largeNumsDollars = ref(new Set(['Nominal GDP', 'GDP PPP', 'Nominal GDP p/c', 'GDP PPP p/c']));
-const smallNumsPercentages = ref(new Set(['Exports as % of GDP', 'Imports as % of GDP', 'Inflation', 'Unemployment', 'Population growth rate', 'Population 65+ (% of total)', 'Population 0-14 (% of total)', 'Urban population (% of total)', 'Literacy rate', 'Poverty headcount ratio', 'Health spending (% of GDP)', 'Arable land (% of land area)', 'Forest area (% of land area)', 'Internet users (% of population)', 'Diabetes as % of people ages 20 to 79']));
-const largeNums = ref(new Set(['Total population', 'Net migration', 'Maternal mortality ratio (per 100k births)']));
-const smallNums = ref(new Set(['Fertility rate', 'Life expectancy']));
 </script>
 
 <template>
@@ -144,16 +138,16 @@ const smallNums = ref(new Set(['Fertility rate', 'Life expectancy']));
         <li v-for="[country, value] of storeStudy[sortedBy].value" :key="country" class="flex mx-32 md:mx-40 lg:mx-56 xl:mx-72 2xl:mx-[500px] justify-between my-6 text-brand text-xl xl:text-2xl 2xl:text-3xl font-bold">
           <div>{{ country }}:</div> 
           <div>
-            <div v-if="largeNumsDollars.has(originalValue)">
+            <div v-if="storeStudy.largeNumsDollars.has(originalValue)">
               <span>${{ Math.round(value).toLocaleString() }}</span>
             </div>
-            <div v-if="smallNumsPercentages.has(originalValue)">
+            <div v-if="storeStudy.smallNumsPercentages.has(originalValue)">
               <span>{{ value.toFixed(2) }}%</span>
             </div>
-            <div v-if="largeNums.has(originalValue)">
+            <div v-if="storeStudy.largeNums.has(originalValue)">
               <span>{{ Math.round(value).toLocaleString() }}</span>
             </div>
-            <div v-if="smallNums.has(originalValue)">
+            <div v-if="storeStudy.smallNums.has(originalValue)">
               <span>{{ value.toFixed(2) }}</span>
             </div>
           </div>
