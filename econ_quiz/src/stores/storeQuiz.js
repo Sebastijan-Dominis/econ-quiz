@@ -83,6 +83,15 @@ export const useStoreQuiz = defineStore('storeQuiz', {
             const factor = Math.pow(10, decimals);
             return Math.round(rand * factor) / factor;
         },
+        addOrSubtract(number, choice) {
+            let rand = Math.random();
+            let change;
+            const storeStudy = useStoreStudy();
+            if(storeStudy.largeNumsDollars.has(choice) || storeStudy.largeNums.has(choice)) change = 1;
+            else change = 0.01;
+            if (rand >= 0.5) return (Number(number) + change).toFixed(2);
+            return (Number(number) - change).toFixed(2);
+        },
         async createQuiz(choice, difficulty) {
             this.loading = true;
             try {
@@ -98,16 +107,33 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                 for(const country of chosenCountries) {
                     const current = {};
                     const question = `What is the ${choice} value for ${country[0]}?`;
-                    const correct = `${country[1]}`;
+                    const correct = Number(`${country[1]}`).toFixed(2);
                     const options = [correct];
-                    for(let i = 0; i < 3; i++) {
+                    const same = new Set();
+                    same.add(correct);
+                    for(let i = 0; i < 3; ) {
                         const upOrDown = this.random(0, 1, 0);
                         const minFactor = this.multipliers[difficulty][upOrDown].min;
                         const maxFactor = this.multipliers[difficulty][upOrDown].max;
                         const min = minFactor * correct;
                         const max = maxFactor * correct;
-                        const answer = this.random(min, max, 4);
+                        let answer = this.random(min, max, 4);
+                        answer = Number(answer).toFixed(2);
+                        if(storeStudy.cannotOver100.has(choice) && answer >= 100) {
+                            answer = '100.00';
+                            console.log(answer, same, same.has(answer));
+                            while(same.has(answer)) {
+                                const diminish = this.random(0.01, 9, 2);
+                                answer = Number(answer - diminish).toFixed(2);
+                            }
+                        } else {
+                            while(same.has(answer)) {
+                                answer = this.addOrSubtract(answer, choice);
+                            }
+                        }
+                        same.add(answer);
                         options.push(answer);
+                        i++;
                     }
                     this.shuffle(options);
                     current.question = question;

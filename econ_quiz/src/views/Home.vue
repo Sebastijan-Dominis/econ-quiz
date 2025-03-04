@@ -38,7 +38,7 @@ const typeHello = async function() {
 }
 
 watchEffect(() => {
-    if(storeAuth.user) {
+    if(storeAuth.user && storeAuth.user.displayName !== null) {
         username = storeAuth.user.displayName;
         typeHello();
     }

@@ -1,8 +1,8 @@
 // imports
 import { defineStore } from "pinia";
-import { auth, db, googleProvider, signInWithPopup } from '../js/firebase';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, deleteUser, onAuthStateChanged } from "firebase/auth";
-import { setDoc, doc, getDocs, collection, query, where } from "firebase/firestore";
+import { auth, db, googleProvider } from '../js/firebase';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, deleteUser, onAuthStateChanged, linkWithPopup, signInWithPopup } from "firebase/auth";
+import { setDoc, doc, getDocs, collection, query, where, getDoc } from "firebase/firestore";
 import { GoogleAuthProvider } from "firebase/auth/web-extension";
 
 export const useStoreAuth = defineStore('storeAuth', {
@@ -141,44 +141,25 @@ export const useStoreAuth = defineStore('storeAuth', {
             }
         },
         async signInWithGoogle() {
-            let user = null;
-
             try {
+                auth.useDeviceLanguage();
                 const result = await signInWithPopup(auth, googleProvider);
-                user = result.user;
-
-                const existingUser = await signInWithEmailAndPassword(auth, user.email, "dummy password");
-
-                if(existingUser) {
-                    const credential = GoogleAuthProvider.credential(result.credential.idToken);
-                    await existingUser.user.linkWithCredential(credential);
-                    console.log("Successfully linked Google account to existing user.");
-                } else {
-                    const userRef = doc(db, 'users', user.uid);
-                    await setDoc(userRef, {
-                        username: user.displayName,
-                        email: user.email,
-                        isAdmin: false
-                    });
-                }
-
-            } catch (error) {
-                console.error("Error during user registration: ", error);
-                alert("An error occured during registration. Please try again.");
-
-                if (user) {
-                    try {
-                        await deleteUser(user);
-                        console.log("Orphaned user deleted from firebase.");
-                    } catch(error) {
-                        console.log("Failed to delete orphaned user with id: ", user.uid);
-                        console.log("Error: ", error);
+                const user = result.user;
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, where("email", "==", user.email));
+                const snapshot = await getDocs(q);
+                
+                if(!snapshot.empty) {
+                    const firestoreUsername = snapshot.docs[0].data().username;
+                    if(firestoreUsername && firestoreUsername !== user.displayName) {
+                        await updateProfile(user, {
+                            displayName: firestoreUsername
+                        })
                     }
                 }
+            } catch(error) {
+                console.error(error);
             }
         }
     }
 })
-
-
-// TODO: popraviti ovu funkciju sa google autentifikacijom da provjerava ispravno

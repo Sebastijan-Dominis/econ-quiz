@@ -77,6 +77,7 @@ export const useStoreStudy = defineStore('storeStudy', {
             smallNumsPercentages: ref(new Set(['Exports as % of GDP', 'Imports as % of GDP', 'Inflation', 'Unemployment', 'Population growth rate', 'Population 65+ (% of total)', 'Population 0-14 (% of total)', 'Urban population (% of total)', 'Literacy rate', 'Poverty headcount ratio', 'Health spending (% of GDP)', 'Arable land (% of land area)', 'Forest area (% of land area)', 'Internet users (% of population)', 'Diabetes as % of people ages 20 to 79'])),
             largeNums: ref(new Set(['Total population', 'Net migration', 'Maternal mortality ratio (per 100k births)'])),
             smallNums: ref(new Set(['Fertility rate', 'Life expectancy'])),
+            cannotOver100: ref(new Set(['Unemployment', 'Population 65+ (% of total)', 'Population 0-14 (% of total)', 'Urban population (% of total)', 'Literacy rate', 'Poverty headcount ratio', 'Health spending (% of GDP)', 'Arable land (% of land area)', 'Forest area (% of land area)', 'Internet users (% of population)', 'Diabetes as % of people ages 20 to 79']))
         }
     },
     actions: {

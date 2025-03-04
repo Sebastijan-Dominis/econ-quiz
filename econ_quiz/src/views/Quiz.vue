@@ -99,13 +99,13 @@ onBeforeUnmount(() => {
               <span>${{ Math.round(option).toLocaleString() }}</span>
             </div>
             <div v-if="storeStudy.smallNumsPercentages.has(originalValue)">
-              <span>{{ Number(option).toFixed(2) }}%</span>
+              <span>{{ option }}%</span>
             </div>
             <div v-if="storeStudy.largeNums.has(originalValue)">
               <span>{{ Math.round(option).toLocaleString() }}</span>
             </div>
             <div v-if="storeStudy.smallNums.has(originalValue)">
-              <span>{{ Number(option).toFixed(2) }}</span>
+              <span>{{ option }}</span>
             </div>
         </QuizBtn>
         </div>
