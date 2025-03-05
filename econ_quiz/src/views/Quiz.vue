@@ -1,13 +1,16 @@
 <script setup>
 // imports
 import { useStoreQuiz } from '../stores/storeQuiz';
-import { onBeforeUnmount, ref, watchEffect } from 'vue';
+import { onBeforeUnmount, onMounted, ref, watchEffect } from 'vue';
 import QuizBtn from '../components/QuizBtn.vue';
 import NavBtn from '../components/NavBtn.vue';
 import { useRouter } from 'vue-router';
 import Popup from '../components/Popup.vue';
 import { useStoreStudy } from '../stores/storeStudy';
 import { useRoute } from 'vue-router';
+import { collection, addDoc, Timestamp } from 'firebase/firestore';
+import { db } from '../js/firebase';
+import CenterMessage from '../components/CenterMessage.vue';
 
 // initializing pinia stores
 const storeQuiz = useStoreQuiz();
@@ -53,6 +56,12 @@ const quitNo = () => {
 }
 
 // managing the quiz flow
+const start = ref(null);
+const end = ref(null);
+onMounted(() => {
+    start.value = new Date();
+})
+
 const curr = ref(1);
 const usersChoice = ref(new Array(storeQuiz.questions));
 const chooseAnswer = function(option) {
@@ -73,11 +82,30 @@ const openFinish = () => {
     finishQ.value = true;
     document.addEventListener('mousedown', onClickOutside);
 }
-const finish = () => {
+const savingFnDone = ref(false);
+const finish = async() => {
+    end.value = new Date();
     if(storeQuiz.questions[curr.value].correct === usersChoice.value[curr.value]) storeQuiz.correctAnswers++;
     document.removeEventListener('click', onClickOutside2);
     finishQ.value = false;
     done.value = true;
+    try {
+        const topic = storeStudy.reverseChoiceMap[route.params.choice];
+        const resultsRef = collection(db, 'results');
+        await addDoc(resultsRef, {
+            score: storeQuiz.correctAnswers,
+            timeTaken: Math.floor((end.value - start.value)/1000),
+            type: "Multiple Choice",
+            topic: topic,
+            difficulty: route.params.difficulty,
+            timestamp: Timestamp.fromDate(end.value)
+        })
+    } catch(error) {
+        alert("Sorry. An error occurred and your results were not saved :/");
+        console.error(error);
+    } finally {
+        savingFnDone.value = true;
+    }
 }
 onBeforeUnmount(() => {
     document.removeEventListener('click', onClickOutside2);
@@ -127,14 +155,17 @@ onBeforeUnmount(() => {
         <Popup ref="dialog" @confirm="finish" @decline="quitNo" customClass="mt-2 max-md:mt-4">Are you sure you want to finish?</Popup>
     </div>
 
+    <!-- waiting to see if the results will be saved properly -->
+    <CenterMessage v-if="done && storeQuiz && !savingFnDone">Loading your results...</CenterMessage>
+
     <!-- display results -->
-    <div v-if="done && !storeQuiz.error" class="flex flex-col text-center items-center justify-center pt-12 px-24 2xl:pt-20">
+    <div v-if="done && !storeQuiz.error && savingFnDone" class="flex flex-col text-center items-center justify-center pt-12 px-24 2xl:pt-20">
     <h1 class="text-2xl text-brand font-bold 2xl:text-3xl">You have answered {{ storeQuiz.correctAnswers }} out of {{ storeQuiz.questions.length-1 }} questions correctly!</h1>
     <NavBtn @click="router.push('/')" :class="'mt-24 2xl:mt-32'">Ok</NavBtn>
     </div>
 
     <!-- error handling -->
-     <div v-if="storeQuiz.error" class="fixed left-1/2 translate-x-[-50%] top-1/2 translate-y-[-50%] text-brand text-3xl font-bold">{{ storeQuiz.error }}</div>
+     <CenterMessage v-if="storeQuiz.error">{{ storeQuiz.error }}</CenterMessage>
 </template>
 
 <style scoped>

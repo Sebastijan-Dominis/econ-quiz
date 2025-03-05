@@ -25,11 +25,11 @@ let username = "Username";
 
 const hello = ref("");
 const typeHello = async function() {
-    const text = `Hello, ${username}! :)`;
+    const text = `Hello, ${username}! :) `;
     hello.value = "";
     text.split('').forEach((_, i) => {
         setTimeout(() => {
-            hello.value = text.slice(0, i+1);
+            hello.value = text.slice(0, i);
         }, i*300);
     })
     setTimeout(() => {
@@ -108,7 +108,7 @@ const openPopup = () => {
     <div class="max-md:hidden">
         <nav class="flex justify-between items-center px-10 py-6">
             <div class="flex gap-4">
-                <router-link :to="{name: 'results-choice'}"><DarkBtn>Results</DarkBtn></router-link>
+                <router-link :to="{name: 'results'}"><DarkBtn>Results</DarkBtn></router-link>
                 <router-link :to="{name: 'leaderboard'}"><DarkBtn>Leaderboard</DarkBtn></router-link>
                 <router-link :to="{name: 'study-choice'}"><DarkBtn>Study</DarkBtn></router-link>
             </div>
@@ -152,3 +152,6 @@ const openPopup = () => {
     </div>
     
 </template>
+
+
+<!-- add two more types of quizzes - one with time flow and one with inputting numbers as close to the accurate as possible -->

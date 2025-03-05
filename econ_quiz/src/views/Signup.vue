@@ -126,7 +126,7 @@ const onSubmit = function() {
 
 <template>
     <!-- popup -->
-    <div v-if="popup" class="fixed top-1/2 transform -translate-y-1/2 left-1/2 -translate-x-1/2 bg-bgpopup w-96 h-96 z-10 rounded-2xl border border-brand flex flex-col items-center justify-center">
+    <div v-if="popup" class="fixed top-1/2 transform -translate-y-[50%] left-1/2 -translate-x-[50%] bg-bgpopup w-96 h-96 z-10 rounded-2xl border border-brand flex flex-col items-center justify-center">
         <div class="px-12 pb-6 text-lg text-brand">
             <h1 class="flex justify-center text-2xl font-bold mb-2">Note:</h1> 
             <p>- <b><i>Password</i></b> should be between <b>8</b> and <b>20</b> characters and contain at least one <b>uppercase</b> letter, one <b>lowercase</b> letter, one <b>number</b> and one <b>special character</b> </p>
@@ -190,7 +190,7 @@ const onSubmit = function() {
             <span class="logoName">Google</span>
         </button>
 
-        <router-link :to="{name: 'home'}"><button class="w-32 h-12 bg-bgbtn border-2 border-brand mt-10 mx-auto rounded-full text-wg text-xl mb-4 max-lg:block hover:bg-brand hover:border-bg hover:text-bg active:scale-98">Quit</button></router-link>
+        <router-link :to="{name: 'home'}"><button class="w-32 h-12 bg-bgbtn border-2 border-brand mt-10 mx-auto rounded-full text-wg text-xl mb-4 block hover:bg-brand hover:border-bg hover:text-bg active:scale-98">Quit</button></router-link>
         
     </div>
 </template>

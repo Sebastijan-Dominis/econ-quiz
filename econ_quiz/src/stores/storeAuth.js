@@ -1,7 +1,7 @@
 // imports
 import { defineStore } from "pinia";
 import { auth, db, googleProvider } from '../js/firebase';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, deleteUser, onAuthStateChanged, linkWithPopup, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, deleteUser, onAuthStateChanged, linkWithPopup, signInWithPopup, sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
 import { setDoc, doc, getDocs, collection, query, where, getDoc } from "firebase/firestore";
 import { GoogleAuthProvider } from "firebase/auth/web-extension";
 
@@ -74,6 +74,11 @@ export const useStoreAuth = defineStore('storeAuth', {
                     email: credentials.email,
                     isAdmin: false
                 });
+
+                await sendEmailVerification(user);
+                alert("A verification email has been sent. Please check your inbox.");
+
+                await signOut(auth);
             } catch(error) {
                 console.error("Error during user registration: ", error);
                 alert("An error occured during registration. Please try again.");
@@ -118,7 +123,14 @@ export const useStoreAuth = defineStore('storeAuth', {
                 }
 
                 // signing in
-                await signInWithEmailAndPassword(auth, email, credentials.password);
+                const userCredential = await signInWithEmailAndPassword(auth, email, credentials.password);
+                const user = userCredential.user;
+
+                if(!user.emailVerified) {
+                    alert("Please verify your email before logging in.");
+                    await signOut(auth);
+                    return;
+                }
             } catch(error) { 
                 if(error.code === "auth/invalid-credential") {
                     alert("Incorrect password. Please try again.");
@@ -127,6 +139,26 @@ export const useStoreAuth = defineStore('storeAuth', {
                 }
             } finally {
                 this.loading = false;
+            }
+        },
+        async resendVerificationEmail(credentials) {
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, credentials.email, credentials.password);
+                const user = userCredential.user;
+
+                if(user.emailVerified) {
+                    alert("Your email is already verified. You can log in normally.");
+                    await auth.signOut();
+                    return;
+                }
+
+                await sendEmailVerification(user);
+                alert("A new verification email has been sent. Please check your inbox.");
+
+                await auth.signOut();
+            } catch(error) {
+                console.error("Error resending verification email: ", error);
+                alert("Failed to send verification email. Check your email and password.");
             }
         },
         async logoutUser() {
@@ -156,9 +188,34 @@ export const useStoreAuth = defineStore('storeAuth', {
                             displayName: firestoreUsername
                         })
                     }
+                } else {
+                    const userRef = doc(db, 'users', user.uid);
+                    await setDoc(userRef, {
+                        username: user.displayName,
+                        email: user.email,
+                        isAdmin: false
+                    });
                 }
             } catch(error) {
                 console.error(error);
+            }
+        },
+        async resetPassword(email) {
+            try {
+                const usersRef = collection(db, 'users');
+                const q = query(usersRef, where("email", "==", email));
+                const snapshot = await getDocs(q);
+                if(!snapshot.empty) {
+                    console.log(snapshot)
+                    await sendPasswordResetEmail(auth, email);
+                    alert("Password reset email sent. Check your inbox.");
+                    this.router.push('/')
+                } else {
+                    alert("User with this email does not exist.");
+                }
+            } catch(error) {
+                console.error("Error sending password reset email: ", error);
+                alert("Failed to send password reset email. Please try again.");
             }
         }
     }

@@ -14,6 +14,8 @@ import Study from "../views/Study.vue";
 import QuizDifficultyChoice from "../views/QuizDifficultyChoice.vue";
 import Quiz from "../views/Quiz.vue";
 import Create from "../views/Create.vue";
+import Resend from "../views/Resend.vue";
+import Reset from "../views/Reset.vue";
 
 const routes = [
     { path: '/', name: 'home', component: Home },
@@ -30,7 +32,9 @@ const routes = [
     { path: '/study/:choice', name: 'study', component: Study },
     { path: '/quiz-difficulty-choice/:choice', name: 'quiz-difficulty-choice', component: QuizDifficultyChoice },
     { path: '/quiz/:choice/:difficulty/:current', name: 'quiz', component: Quiz },
-    { path: '/create', name: 'create', component: Create }
+    { path: '/create', name: 'create', component: Create },
+    { path: '/resend', name: 'resend', component: Resend },
+    { path: '/reset', name: 'reset', component: Reset }
 ];
 
 const router = createRouter({

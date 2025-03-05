@@ -10,3 +10,36 @@
     --wg: #e6e6e6;
     --gray: #808080;
 }
+
+.labelForm {
+    font-size: 1.5rem;
+    color: var(--brand);
+    text-align: center;
+    padding-right: 1rem;
+}
+@media (max-width: 768px) {
+    .labelForm {
+        display: block;
+    }
+}
+
+.inputForm {
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border: solid 2px var(--brand);
+    transition: box-shadow 0.2s ease-in-out; 
+}
+@media (min-width: 768px) {
+    .inputForm {
+        grid-column: span 2;
+    }
+}
+@media (max-width: 768px) {
+    .inputForm {
+        display: block;
+    }
+}
+.inputForm:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--brand);
+}
