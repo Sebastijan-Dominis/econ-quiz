@@ -11,10 +11,12 @@ import { useRoute } from 'vue-router';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { db } from '../js/firebase';
 import CenterMessage from '../components/CenterMessage.vue';
+import { useStoreAuth } from '../stores/storeAuth';
 
 // initializing pinia stores
 const storeQuiz = useStoreQuiz();
 const storeStudy = useStoreStudy();
+const storeAuth = useStoreAuth();
 
 // initializing route and getting the choice
 const route = useRoute();
@@ -93,11 +95,12 @@ const finish = async() => {
         const topic = storeStudy.reverseChoiceMap[route.params.choice];
         const resultsRef = collection(db, 'results');
         await addDoc(resultsRef, {
+            userID: storeAuth.user.uid,
             score: storeQuiz.correctAnswers,
             timeTaken: Math.floor((end.value - start.value)/1000),
             type: "Multiple Choice",
             topic: topic,
-            difficulty: route.params.difficulty,
+            difficulty: storeQuiz.difficultiesMap[route.params.difficulty],
             timestamp: Timestamp.fromDate(end.value)
         })
     } catch(error) {
@@ -124,13 +127,13 @@ onBeforeUnmount(() => {
         :class="usersChoice[curr] === option ? 'chosenAnswer' : ''"
         @click="chooseAnswer(option)">
             <div v-if="storeStudy.largeNumsDollars.has(originalValue)">
-              <span>${{ Math.round(option).toLocaleString() }}</span>
+              <span>${{ option.toLocaleString() }}</span>
             </div>
             <div v-if="storeStudy.smallNumsPercentages.has(originalValue)">
               <span>{{ option }}%</span>
             </div>
             <div v-if="storeStudy.largeNums.has(originalValue)">
-              <span>{{ Math.round(option).toLocaleString() }}</span>
+              <span>{{ option.toLocaleString() }}</span>
             </div>
             <div v-if="storeStudy.smallNums.has(originalValue)">
               <span>{{ option }}</span>

@@ -75,7 +75,7 @@ const start = async() => {
         <h2 class="mt-12 lg:mt-16 xl:mt-20 2xl:mt-24 flex justify-center text-brand text-3xl lg:text-4xl xl:text-5xl">Choose difficulty</h2>
         <div class="flex flex-col items-center mt-4 lg:mt-6 xl:mt-8 gap-6">
             <DarkBtn class="w-56" @mouseover="difficulties.noob = true" @mouseleave="difficulties.noob = false" @click="openPopup('noob')">Noob</DarkBtn>
-            <DarkBtn class="w-56" @mouseover="difficulties.veryEasy = true" @mouseleave="difficulties.veryEasy = false" @click="openPopup('veryEasy')">Very Easy</DarkBtn>
+            <DarkBtn class="w-56" @mouseover="difficulties.veryEasy = true" @mouseleave="difficulties.veryEasy = false" @click="openPopup('veryEasy')">Very easy</DarkBtn>
             <DarkBtn class="w-56" @mouseover="difficulties.easy = true" @mouseleave="difficulties.easy = false" @click="openPopup('easy')">Easy</DarkBtn>
             <DarkBtn class="w-56" @mouseover="difficulties.normal = true" @mouseleave="difficulties.normal = false" @click="openPopup('normal')">Normal</DarkBtn>
             <DarkBtn class="w-56" @mouseover="difficulties.hard = true" @mouseleave="difficulties.hard = false" @click="openPopup('hard')">Hard</DarkBtn>

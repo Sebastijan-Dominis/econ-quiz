@@ -77,44 +77,51 @@ export const useStoreStudy = defineStore('storeStudy', {
             smallNumsPercentages: ref(new Set(['Exports as % of GDP', 'Imports as % of GDP', 'Inflation', 'Unemployment', 'Population growth rate', 'Population 65+ (% of total)', 'Population 0-14 (% of total)', 'Urban population (% of total)', 'Literacy rate', 'Poverty headcount ratio', 'Health spending (% of GDP)', 'Arable land (% of land area)', 'Forest area (% of land area)', 'Internet users (% of population)', 'Diabetes as % of people ages 20 to 79'])),
             largeNums: ref(new Set(['Total population', 'Net migration', 'Maternal mortality ratio (per 100k births)'])),
             smallNums: ref(new Set(['Fertility rate', 'Life expectancy'])),
-            cannotOver100: ref(new Set(['Unemployment', 'Population 65+ (% of total)', 'Population 0-14 (% of total)', 'Urban population (% of total)', 'Literacy rate', 'Poverty headcount ratio', 'Health spending (% of GDP)', 'Arable land (% of land area)', 'Forest area (% of land area)', 'Internet users (% of population)', 'Diabetes as % of people ages 20 to 79']))
+            cannotOver100: ref(new Set(['Unemployment', 'Population 65+ (% of total)', 'Population 0-14 (% of total)', 'Urban population (% of total)', 'Literacy rate', 'Poverty headcount ratio', 'Health spending (% of GDP)', 'Arable land (% of land area)', 'Forest area (% of land area)', 'Internet users (% of population)', 'Diabetes as % of people ages 20 to 79'])),
+            chosenDataMap: {
+                "Nominal GDP": "NY.GDP.MKTP.CD",
+                "GDP PPP": "NY.GDP.MKTP.PP.CD",
+                "Nominal GDP p/c": "NY.GDP.PCAP.CD",
+                "GDP PPP p/c": "NY.GDP.PCAP.PP.CD",
+                "Exports as % of GDP": "NE.EXP.GNFS.ZS",
+                "Imports as % of GDP": "NE.IMP.GNFS.ZS",
+                "Inflation": "FP.CPI.TOTL.ZG",
+                "Unemployment": "SL.UEM.TOTL.ZS",
+                "Total population": "SP.POP.TOTL",
+                "Population growth rate": "SP.POP.GROW",
+                "Population 65+ (% of total)": "SP.POP.65UP.TO.ZS",
+                "Population 0-14 (% of total)": "SP.POP.0014.TO.ZS",
+                "Urban population (% of total)": "SP.URB.TOTL.IN.ZS",
+                "Fertility rate": "SP.DYN.TFRT.IN",
+                "Life expectancy": "SP.DYN.LE00.IN",
+                "Literacy rate": "SE.ADT.LITR.ZS",
+                "Poverty headcount ratio": "SI.POV.DDAY",
+                "Health spending (% of GDP)": "SH.XPD.CHEX.GD.ZS",
+                "Arable land (% of land area)": "AG.LND.ARBL.ZS",
+                "Forest area (% of land area)": "AG.LND.FRST.ZS",
+                "Net migration": "SM.POP.NETM",
+                "Maternal mortality ratio (per 100k births)": "SH.STA.MMRT",
+                "Internet users (% of population)": "IT.NET.USER.ZS",
+                "Diabetes as % of people ages 20 to 79": "SH.STA.DIAB.ZS"
+            }
         }
     },
     actions: {
         async fetchData(choice) {// data
-            return new Promise(async (resolve, reject) => {
                 try {
-                    let chosenData = "";
                     // year
                     const year = this.getYear(choice);
         
                     // key
-                    if (choice === "Nominal GDP") chosenData = "NY.GDP.MKTP.CD";
-                    else if (choice === "GDP PPP") chosenData = "NY.GDP.MKTP.PP.CD";
-                    else if (choice === "Nominal GDP p/c") chosenData = "NY.GDP.PCAP.CD";
-                    else if (choice === "GDP PPP p/c") chosenData = "NY.GDP.PCAP.PP.CD";
-                    else if (choice === "Exports as % of GDP") chosenData = "NE.EXP.GNFS.ZS";
-                    else if (choice === "Imports as % of GDP") chosenData = "NE.IMP.GNFS.ZS";
-                    else if (choice === "Inflation") chosenData = "FP.CPI.TOTL.ZG";
-                    else if (choice === "Unemployment") chosenData = "SL.UEM.TOTL.ZS";
-                    else if (choice === "Total population") chosenData = "SP.POP.TOTL";
-                    else if (choice === "Population growth rate") chosenData = "SP.POP.GROW";
-                    else if (choice === "Population 65+ (% of total)") chosenData = "SP.POP.65UP.TO.ZS";
-                    else if (choice === "Population 0-14 (% of total)") chosenData = "SP.POP.0014.TO.ZS";
-                    else if (choice === "Urban population (% of total)") chosenData = "SP.URB.TOTL.IN.ZS";
-                    else if (choice === "Fertility rate") chosenData = "SP.DYN.TFRT.IN";
-                    else if (choice === "Life expectancy") chosenData = "SP.DYN.LE00.IN";
-                    else if (choice === "Literacy rate") chosenData = "SE.ADT.LITR.ZS";
-                    else if (choice === "Poverty headcount ratio") chosenData = "SI.POV.DDAY";
-                    else if (choice === "Health spending (% of GDP)") chosenData = "SH.XPD.CHEX.GD.ZS";
-                    else if (choice === "Arable land (% of land area)") chosenData = "AG.LND.ARBL.ZS";
-                    else if (choice === "Forest area (% of land area)") chosenData = "AG.LND.FRST.ZS";
-                    else if (choice === "Net migration") chosenData = "SM.POP.NETM";
-                    else if (choice === "Maternal mortality ratio (per 100k births)") chosenData = "SH.STA.MMRT";
-                    else if (choice === "Internet users (% of population)") chosenData = "IT.NET.USER.ZS";
-                    else if (choice === "Diabetes as % of people ages 20 to 79") chosenData = "SH.STA.DIAB.ZS";
+                    const chosenData = this.chosenDataMap[choice];
         
-                    // clearing the data
+                    // abort previous request if it exists
+                    if(this.abortController) this.abortController.abort();
+
+                    this.abortController = new AbortController();
+                    const { signal } = this.abortController;
+
+                    // clear the existing data
                     this.countryData.value = [];
         
                     this.loading = true;
@@ -123,8 +130,13 @@ export const useStoreStudy = defineStore('storeStudy', {
                     let hasMoreData = true;
         
                     while (hasMoreData) {
-                            const response = await fetch(`https://api.worldbank.org/v2/country/all/indicator/${chosenData}?date=${year}&format=json&page=${page}`);
+                            const response = await fetch(`https://api.worldbank.org/v2/country/all/indicator/${chosenData}?date=${year}&format=json&page=${page}`, { signal });
         
+                            if(signal.aborted) {
+                                console.log("Request was aborted after fetch, stopping execution...");
+                                return;
+                            }
+
                             // Check if response is successful (status 200)
                             if (!response.ok) {
                                 console.error("Error fetching data:", response.status);
@@ -133,6 +145,11 @@ export const useStoreStudy = defineStore('storeStudy', {
         
                             const data = await response.json();
         
+                            if(signal.aborted) {
+                                console.log("Request was aborted after parsing JSON, stopping execution...");
+                                return;
+                            }
+
                             if (data[1]) { // Ensure data[1] exists before accessing it
                                 // Loop through the data for each country
                                 data[1].forEach(country => {
@@ -150,18 +167,21 @@ export const useStoreStudy = defineStore('storeStudy', {
                             hasMoreData = page < data[0].pages;
                             page++;
                     }
+
+                    if(signal.aborted) {
+                        console.log("Request was aborted before sorting, stopping, execution...");
+                        return;
+                    }
+
                     this.loading = false;
         
                     this.countryDataZA.value = [...this.countryData.value].reverse();
                     this.countryDataHL.value = [...this.countryData.value].sort((a, b) => b[1] - a[1]);
                     this.countryDataLH.value = [...this.countryData.value].sort((a, b) => a[1] - b[1]);
-                    resolve();
                 } catch (error) {
                     this.error = error.message;
                     this.loading = false;
-                    reject(error);
                 }
-            })
         },
         getYear(choice) {
             let year = "2023";

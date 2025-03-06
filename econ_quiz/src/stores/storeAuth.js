@@ -1,9 +1,8 @@
 // imports
 import { defineStore } from "pinia";
 import { auth, db, googleProvider } from '../js/firebase';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, deleteUser, onAuthStateChanged, linkWithPopup, signInWithPopup, sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
-import { setDoc, doc, getDocs, collection, query, where, getDoc } from "firebase/firestore";
-import { GoogleAuthProvider } from "firebase/auth/web-extension";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, deleteUser, onAuthStateChanged, signInWithPopup, sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
+import { setDoc, doc, getDocs, collection, query, where } from "firebase/firestore";
 
 export const useStoreAuth = defineStore('storeAuth', {
     state: () => {
