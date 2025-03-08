@@ -13,7 +13,8 @@ const router = useRouter();
 // sending the choice information
 const storeStudy = useStoreStudy();
 const whatToDo = () => {
-    const urlValue = storeStudy.choiceMap[props.label];
+    const topic = props.label.replace(/\n/g, ' ');
+    const urlValue = storeStudy.choiceMap[topic];
     if(router.currentRoute.value.fullPath === "/study-choice") {
         router.push({name: 'study', params: {choice: urlValue}});
     } else if (router.currentRoute.value.fullPath === "/quiz-choice") {

@@ -49,7 +49,7 @@ const onClickOutside2 = event => {
 const router = useRouter();
 const showPopup = ref(false);
 const difficulty = ref('');
-const year = ref(storeStudy.getYear(storeStudy.reverseChoiceMap[route.params.choice]));
+const year = ref(storeStudy.year[storeStudy.reverseChoiceMap[route.params.choice]]);
 const openPopup = chosenDifficulty => {
     difficulty.value = chosenDifficulty;
     showPopup.value = true;

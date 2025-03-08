@@ -91,11 +91,25 @@ const finish = async() => {
     document.removeEventListener('click', onClickOutside2);
     finishQ.value = false;
     done.value = true;
+    if(!storeAuth.user) {
+        savingFnDone.value = true;
+        return;
+    }
     try {
         const topic = storeStudy.reverseChoiceMap[route.params.choice];
-        const resultsRef = collection(db, 'results');
-        await addDoc(resultsRef, {
-            userID: storeAuth.user.uid,
+        const resultsGlobalRef = collection(db, 'results');
+        await addDoc(resultsGlobalRef, {
+            username: storeAuth.user.displayName,
+            score: storeQuiz.correctAnswers,
+            timeTaken: Math.floor((end.value - start.value)/1000),
+            type: "Multiple Choice",
+            topic: topic,
+            difficulty: storeQuiz.difficultiesMap[route.params.difficulty],
+            timestamp: Timestamp.fromDate(end.value)
+        })
+
+        const resultsUserRef = collection(db, 'users', storeAuth.user.uid, 'results');
+        await addDoc(resultsUserRef, {
             score: storeQuiz.correctAnswers,
             timeTaken: Math.floor((end.value - start.value)/1000),
             type: "Multiple Choice",

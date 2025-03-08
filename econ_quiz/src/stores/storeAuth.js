@@ -74,6 +74,9 @@ export const useStoreAuth = defineStore('storeAuth', {
                     isAdmin: false
                 });
 
+                // Create the results subcollection
+                const resultsRef = collection(userRef, 'results');
+
                 await sendEmailVerification(user);
                 alert("A verification email has been sent. Please check your inbox.");
 
@@ -135,6 +138,7 @@ export const useStoreAuth = defineStore('storeAuth', {
                     alert("Incorrect password. Please try again.");
                 } else {
                     alert("An unexpected error occurred. Please try again.");
+                    console.error(error)
                 }
             } finally {
                 this.loading = false;

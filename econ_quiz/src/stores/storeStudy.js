@@ -2,6 +2,8 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue';
 import { useStoreQuiz } from './storeQuiz';
+import { collection, getDocs, query } from 'firebase/firestore';
+import { db } from '../js/firebase';
 
 export const useStoreStudy = defineStore('storeStudy', {
     state: () => {
@@ -18,103 +20,77 @@ export const useStoreStudy = defineStore('storeStudy', {
             nonCountryNames: ref(new Set([
                 "Africa Eastern and Southern", "Africa Western and Central", "American Samoa", "Arab World", "Aruba", "Bermuda", "British Virgin Islands", "Caribbean small states", "Cayman Islands", "Central Europe and the Baltics", "Channel Islands", "Curacao", "Early-demographic dividend", "East Asia & Pacific", "East Asia & Pacific (IDA & IBRD countries)", "East Asia & Pacific (excluding high income)", "Euro area", "Europe & Central Asia", "Europe & Central Asia (IDA & IBRD countries)", "Europe & Central Asia (excluding high income)", "European Union", "Faroe Islands", "Fragile and conflict affected situations", "French Polynesia", "Greenland", "Heavily indebted poor countries (HIPC)", "High income", "Hong Kong SAR, China", "IBRD only", "IDA & IBRD total", "IDA blend", "IDA only", "IDA total", "Isle of Man", "Late-demographic dividend", "Latin America & Caribbean", "Latin America & Caribbean (excluding high income)", "Latin America & the Caribbean (IDA & IBRD countries)", "Least developed countries: UN classification", "Low & middle income", "Low income", "Lower middle income", "Macao SAR, China", "Middle East & North Africa", "Middle East & North Africa (IDA & IBRD countries)", "Middle East & North Africa (excluding high income)", "Middle income", "North America", "Northern Mariana Islands", "New Caledonia", "OECD members", "Other small states", "Pacific island small states", "Post-demographic dividend", "Pre-demographic dividend", "Puerto Rico", "Sint Maarten (Dutch part)", "Small states", "South Asia", "South Asia (IDA & IBRD)", "St. Martin (French part)", "Sub-Saharan Africa", "Sub-Saharan Africa (IDA & IBRD countries)", "Sub-Saharan Africa (excluding high income)", "Turks and Caicos Islands", "Upper middle income", "Virgin Islands (U.S.)", "World"
             ])),
-            exceptions2022: ref(new Set(["Fertility rate", "Life expectancy", "Literacy rate", "Poverty headcount ratio", "Arable land (% of land area)", "Forest area (% of land area)", "Internet users (% of population)"])),
-            exceptions2021: ref(new Set(["Health spending (% of GDP)", "Diabetes as % of people ages 20 to 79"])),
-            exceptions2020: ref(new Set(["Maternal mortality ratio (per 100k births)"])),
-            choiceMap: {
-                "Nominal GDP": "nom_gdp",
-                "GDP PPP": "gdp_ppp",
-                "Nominal GDP p/c": "nom_gdp_pc",
-                "GDP PPP p/c": "gdp_ppp_pc",
-                "Exports as % of GDP": "exports",
-                "Imports as % of GDP": "imports",
-                "Inflation": "inflation",
-                "Unemployment": "unemployment",
-                "Total population": "population",
-                "Population growth rate": "pop_growth",
-                "Population 65+ (% of total)": "pop65up",
-                "Population 0-14 (% of total)": "pop0014",
-                "Urban population (% of total)": "urban_pop",
-                "Fertility rate": "tfr",
-                "Life expectancy": "life_expectancy",
-                "Net migration": "migration",
-                "Literacy rate": "literacy",
-                "Poverty headcount ratio": "poverty_headcount_ratio",
-                "Health spending (% of GDP)": "health_spending",
-                "Arable land (% of land area)": "arable_area",
-                "Forest area (% of land area)": "forest_area",
-                "Diabetes as % of people ages 20 to 79": "diabetes_20to79",
-                "Maternal mortality ratio (per 100k births)": "maternal_mortality",
-                "Internet users (% of population)": "internet_users"
-            },
-            reverseChoiceMap: {
-                "nom_gdp": "Nominal GDP",
-                "gdp_ppp": "GDP PPP",
-                "nom_gdp_pc": "Nominal GDP p/c",
-                "gdp_ppp_pc": "GDP PPP p/c",
-                "exports": "Exports as % of GDP",
-                "imports": "Imports as % of GDP",
-                "inflation": "Inflation",
-                "unemployment": "Unemployment",
-                "population": "Total population",
-                "pop_growth": "Population growth rate",
-                "pop65up": "Population 65+ (% of total)",
-                "pop0014": "Population 0-14 (% of total)",
-                "urban_pop": "Urban population (% of total)",
-                "tfr": "Fertility rate",
-                "life_expectancy": "Life expectancy",
-                "migration": "Net migration",
-                "literacy": "Literacy rate",
-                "poverty_headcount_ratio": "Poverty headcount ratio",
-                "health_spending": "Health spending (% of GDP)",
-                "arable_area": "Arable land (% of land area)",
-                "forest_area": "Forest area (% of land area)",
-                "diabetes_20to79": "Diabetes as % of people ages 20 to 79",
-                "maternal_mortality": "Maternal mortality ratio (per 100k births)",
-                "internet_users": "Internet users (% of population)"
-            },
-            largeNumsDollars: ref(new Set(['Nominal GDP', 'GDP PPP', 'Nominal GDP p/c', 'GDP PPP p/c'])),
-            smallNumsPercentages: ref(new Set(['Exports as % of GDP', 'Imports as % of GDP', 'Inflation', 'Unemployment', 'Population growth rate', 'Population 65+ (% of total)', 'Population 0-14 (% of total)', 'Urban population (% of total)', 'Literacy rate', 'Poverty headcount ratio', 'Health spending (% of GDP)', 'Arable land (% of land area)', 'Forest area (% of land area)', 'Internet users (% of population)', 'Diabetes as % of people ages 20 to 79'])),
-            largeNums: ref(new Set(['Total population', 'Net migration', 'Maternal mortality ratio (per 100k births)'])),
-            smallNums: ref(new Set(['Fertility rate', 'Life expectancy'])),
-            cannotOver100: ref(new Set(['Unemployment', 'Population 65+ (% of total)', 'Population 0-14 (% of total)', 'Urban population (% of total)', 'Literacy rate', 'Poverty headcount ratio', 'Health spending (% of GDP)', 'Arable land (% of land area)', 'Forest area (% of land area)', 'Internet users (% of population)', 'Diabetes as % of people ages 20 to 79'])),
-            chosenDataMap: {
-                "Nominal GDP": "NY.GDP.MKTP.CD",
-                "GDP PPP": "NY.GDP.MKTP.PP.CD",
-                "Nominal GDP p/c": "NY.GDP.PCAP.CD",
-                "GDP PPP p/c": "NY.GDP.PCAP.PP.CD",
-                "Exports as % of GDP": "NE.EXP.GNFS.ZS",
-                "Imports as % of GDP": "NE.IMP.GNFS.ZS",
-                "Inflation": "FP.CPI.TOTL.ZG",
-                "Unemployment": "SL.UEM.TOTL.ZS",
-                "Total population": "SP.POP.TOTL",
-                "Population growth rate": "SP.POP.GROW",
-                "Population 65+ (% of total)": "SP.POP.65UP.TO.ZS",
-                "Population 0-14 (% of total)": "SP.POP.0014.TO.ZS",
-                "Urban population (% of total)": "SP.URB.TOTL.IN.ZS",
-                "Fertility rate": "SP.DYN.TFRT.IN",
-                "Life expectancy": "SP.DYN.LE00.IN",
-                "Literacy rate": "SE.ADT.LITR.ZS",
-                "Poverty headcount ratio": "SI.POV.DDAY",
-                "Health spending (% of GDP)": "SH.XPD.CHEX.GD.ZS",
-                "Arable land (% of land area)": "AG.LND.ARBL.ZS",
-                "Forest area (% of land area)": "AG.LND.FRST.ZS",
-                "Net migration": "SM.POP.NETM",
-                "Maternal mortality ratio (per 100k births)": "SH.STA.MMRT",
-                "Internet users (% of population)": "IT.NET.USER.ZS",
-                "Diabetes as % of people ages 20 to 79": "SH.STA.DIAB.ZS"
-            }
+            year: {},
+            choiceMap: {},
+            reverseChoiceMap: {},
+            largeNumsDollars: ref(new Set([])),
+            smallNumsPercentages: ref(new Set([])),
+            largeNums: ref(new Set([])),
+            smallNums: ref(new Set([])),
+            cannotOver100: ref(new Set([])),
+            chosenDataMap: {},
+            columns: ref(
+                [
+                    [],
+                    [],
+                    [],
+                ]
+            ),
+            allTopics: ref([]),
+            allTypes: ref(["Multiple Choice"])
         }
     },
     actions: {
+        async fetchQuizInfo() {
+            const collectionRef = collection(db, "topics");
+            const q = query(collectionRef);
+            const topics = await getDocs(q);
+
+            topics.forEach(doc => {
+                // storing the data in variables
+                const data = doc.data();
+                const name = data.name;
+                const shortName = data.shortName;
+                const key = data.key;
+                const year = data.year;
+                const display = data.display;
+                const indicator = data.indicator;
+                const cannotOver100 = data.cannotOver100;
+                const displayName = data.displayName;
+
+                // saving display names for the buttons
+                if(data.indicator === "economic") this.columns[0].push(displayName.replace(/\\n/g, '\n'));
+                else if (data.indicator === "demographic") this.columns[1].push(displayName.replace(/\\n/g, '\n'));
+                else if(data.indicator === "other") this.columns[2].push(displayName.replace(/\\n/g, '\n'));
+
+                // saving the keys
+                this.chosenDataMap[name] = key;
+
+                // saving the years
+                this.year[name] = year;
+
+                // adding to cannotOver100 to prevent the quiz algorithm from creating options that are above 100 for topics where it is impossible
+                if(cannotOver100) this.cannotOver100.add(name);
+
+                // managing how the data will be displayed
+                if(display === "largeNumsDollars") this.largeNumsDollars.add(name);
+                else if(display === "largeNums") this.largeNums.add(name);
+                else if(display === "smallNumsPercentages") this.smallNumsPercentages.add(name);
+                else if (display === "smallNums") this.smallNums.add(name);
+
+                // creating the choice map and the reverse choice map in order to have prettier urls
+                this.choiceMap[name] = shortName;
+                this.reverseChoiceMap[shortName] = name;
+
+                // storing all of the topics in one place to make results filtering easier
+                this.allTopics.push(name);
+            })
+        },
         async fetchData(choice) {// data
                 try {
-                    // year
-                    const year = this.getYear(choice);
-        
                     // key
                     const chosenData = this.chosenDataMap[choice];
-        
+                    
                     // abort previous request if it exists
                     if(this.abortController) this.abortController.abort();
 
@@ -130,7 +106,7 @@ export const useStoreStudy = defineStore('storeStudy', {
                     let hasMoreData = true;
         
                     while (hasMoreData) {
-                            const response = await fetch(`https://api.worldbank.org/v2/country/all/indicator/${chosenData}?date=${year}&format=json&page=${page}`, { signal });
+                            const response = await fetch(`https://api.worldbank.org/v2/country/all/indicator/${chosenData}?date=${this.year[choice]}&format=json&page=${page}`, { signal });
         
                             if(signal.aborted) {
                                 console.log("Request was aborted after fetch, stopping execution...");
@@ -182,13 +158,6 @@ export const useStoreStudy = defineStore('storeStudy', {
                     this.error = error.message;
                     this.loading = false;
                 }
-        },
-        getYear(choice) {
-            let year = "2023";
-            if (this.exceptions2022.has(choice)) year = "2022";
-            if (this.exceptions2021.has(choice)) year = "2021";
-            if (this.exceptions2020.has(choice)) year = "2020";
-            return year;
         },
         shuffleCountryData() {
             const storeQuiz = useStoreQuiz();

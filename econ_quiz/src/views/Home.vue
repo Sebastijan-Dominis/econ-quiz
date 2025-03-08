@@ -136,7 +136,7 @@ const openPopup = () => {
         <div v-if="storeAuth.isLoggedIn && storeAuth.isAdmin" class="absolute top-56 right-6 flex flex-col gap-6 items-center">
             <h2 class="text-2xl text-brand font-normal">Admin Options</h2>
             <nav class="flex flex-col gap-6">
-                <router-link :to="{name: 'create'}"><DarkBtn>Add</DarkBtn></router-link>
+                <router-link :to="{name: 'add'}"><DarkBtn>Add</DarkBtn></router-link>
                 <router-link :to="{name: 'edit'}"><DarkBtn>Edit</DarkBtn></router-link>
             </nav>
         </div>

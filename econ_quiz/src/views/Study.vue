@@ -85,10 +85,7 @@ const manageScreenSize = computed(() => {
     <PageTop customH1Class="text-8xl max-xl:text-7xl max-lg:text-6xl max-md:text-6xl font-bold">Library</PageTop>
     <h1 class="flex justify-center mt-20 text-brand text-4xl xl:text-5xl 2xl:text-6xl font-bold">{{ originalValue }}</h1>
     <h3 class="flex justify-center mt-6 text-brand text-2xl xl:text-3xl 2xl:text-4xl font-bold gap-x-1">Data from
-      <span v-if="storeStudy.exceptions2022.has(originalValue)">2022</span>
-      <span v-if="storeStudy.exceptions2021.has(originalValue)">2021</span>
-      <span v-if="storeStudy.exceptions2020.has(originalValue)">2020</span>
-      <span v-if="!storeStudy.exceptions2021.has(originalValue) && !storeStudy.exceptions2022.has(originalValue) && !storeStudy.exceptions2020.has(originalValue)">2023</span>
+      <span>{{ storeStudy.year[originalValue] }}</span>
     </h3>
     <!-- cozy tea on a table -->
     <img src="../assets/images/table.png" alt="a table" class="max-lg:hidden fixed bottom-0 right-0 w-56">

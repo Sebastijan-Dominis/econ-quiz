@@ -13,9 +13,9 @@ import ResultsChoice from "../views/ResultsChoice.vue";
 import Study from "../views/Study.vue";
 import QuizDifficultyChoice from "../views/QuizDifficultyChoice.vue";
 import Quiz from "../views/Quiz.vue";
-import Create from "../views/Create.vue";
 import Resend from "../views/Resend.vue";
 import Reset from "../views/Reset.vue";
+import { useStoreAuth } from "../stores/storeAuth";
 
 const routes = [
     { path: '/', name: 'home', component: Home },
@@ -32,7 +32,6 @@ const routes = [
     { path: '/study/:choice', name: 'study', component: Study },
     { path: '/quiz-difficulty-choice/:choice', name: 'quiz-difficulty-choice', component: QuizDifficultyChoice },
     { path: '/quiz/:choice/:difficulty/:current', name: 'quiz', component: Quiz },
-    { path: '/create', name: 'create', component: Create },
     { path: '/resend', name: 'resend', component: Resend },
     { path: '/reset', name: 'reset', component: Reset }
 ];
@@ -42,4 +41,17 @@ const router = createRouter({
     routes,
 })
 
+// navigation guards
+router.beforeEach(async (to, from) => {
+    const storeAuth = useStoreAuth();
+
+    if(storeAuth.user && (to.name === 'login' || to.name === 'signup')) {
+        return { name: from.name };
+    }
+
+    return true;
+})
+
 export default router;
+
+// refreshing and typing the link directly doesn't work, gpt not helpful
