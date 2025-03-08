@@ -9,12 +9,12 @@ export const useStoreQuiz = defineStore('storeQuiz', {
             correctAnswers: 0,
             loading: false,
             error: null,
-            // noob: 100% - 900%
-            // veryEasy: 75% - 400%
-            // easy: 45% - 250%
-            // normal: 25% - 120%
-            // hard: 15% - 80%
-            // veryHard: 5% - 30%
+            // noob: 100% - 900%; 70%
+            // veryEasy: 75% - 400%; 55%
+            // easy: 45% - 250%; 35%
+            // normal: 25% - 120%; 15%
+            // hard: 15% - 80%; 10%
+            // veryHard: 5% - 30%; 3%
             // absoluteMadman: 0.01% - 5%
             multipliers: {
                 "noob": [{
@@ -67,6 +67,32 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                     "max": 1.050
                 }]
             },
+            closeValues: {
+                "noob": {
+                    "higherFactor": 1.700,
+                    "lowerFactor": 0.588
+                },
+                "veryEasy": {
+                    "higherFactor": 1.550,
+                    "lowerFactor": 0.645
+                },
+                "easy": {
+                    "higherFactor": 1.350,
+                    "lowerFactor": 0.740
+                },
+                "normal": {
+                    "higherFactor": 1.150,
+                    "lowerFactor": 0.870
+                },
+                "hard": {
+                    "higherFactor": 1.100,
+                    "lowerFactor":0.909
+                },
+                "veryHard": {
+                    "higherFactor": 1.030,
+                    "lowerFactor": 0.971
+                }
+            },
             big: true,
             difficultiesMap: {
                 noob: 1,
@@ -97,11 +123,15 @@ export const useStoreQuiz = defineStore('storeQuiz', {
             }
             return array;
         },
+
+        // helps to take random countries, so they are unique each time a new quiz is created
         random(min, max, decimals) {
             const rand = Math.random() * (max - min) + min;
             const factor = Math.pow(10, decimals);
             return Math.round(rand * factor) / factor;
         },
+
+        // prevents identical values, which is especially important for the absolute madman difficulty, which has a very small multiplier
         addOrSubtract(number) {
             let rand = Math.random();
             let change;
@@ -116,6 +146,28 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                 else return (Number(number) - change).toFixed(2);
             }
         },
+        
+        // prevents values that are too similar to each, thus implying an answer, but still doesn't create an overly wide range of values for the difficulty in question
+        checkIfTooClose(answer, difficulty, same) {
+            if(difficulty === "absoluteMadman") return answer;
+            const lowerFactor = this.closeValues[difficulty].lowerFactor;
+            const higherFactor = this.closeValues[difficulty].higherFactor;
+            for(const existingAnswer of same) {
+                const low = answer * lowerFactor;
+                const high = answer * higherFactor;
+
+                if(existingAnswer > low && existingAnswer < high) {
+                    const rand = Math.random();
+                    answer = rand >= 0.5 ? answer * lowerFactor : answer * higherFactor;
+
+                    return this.checkIfTooClose(answer, difficulty, same);
+                }
+            }
+            
+            return this.big ? Math.round(answer) : Number(answer).toFixed(2);
+        },
+
+        // main function that creates a quiz
         async createQuiz(choice, difficulty) {
             this.loading = true;
             try {
@@ -179,6 +231,7 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                         let answer = this.random(min, max, 4);
                         if(this.big) answer = Math.round(answer);
                         else answer = Number(answer).toFixed(2);
+                        answer = this.checkIfTooClose(answer, difficulty, same);
                         if(storeStudy.cannotOver100.has(choice) && answer >= 100) {
                             if(this.big) answer = '100';
                             else answer = '100.00';
@@ -211,5 +264,3 @@ export const useStoreQuiz = defineStore('storeQuiz', {
         }
     }
 })
-
-// improve the algorithm to prevent numbers that are too close to each other in value
