@@ -43,3 +43,18 @@
     outline: none;
     box-shadow: 0 0 0 2px var(--brand);
 }
+
+/* text-brand text-2xl 2xl:text-3xl text-center */
+.transitionNote {
+    color: var(--brand);
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+    text-align: center;
+    position: fixed;
+}
+@media (min-width: 1536px) {
+    .transitionNote {
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+    }
+}

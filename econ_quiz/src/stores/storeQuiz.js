@@ -5,6 +5,7 @@ import { useStoreStudy } from './storeStudy';
 export const useStoreQuiz = defineStore('storeQuiz', {
     state: () => {
         return {
+            type: null,
             questions: [],
             correctAnswers: 0,
             loading: false,
@@ -203,6 +204,8 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                     const curr = this.random(0, numbers.length-1, 0);
                     chosenCountries.add(numbers[curr]);
                 }
+
+                // multiple choice quizzes
                 for(const country of chosenCountries) {
                     if (signal.aborted) {
                         console.log("Quiz creation aborted while generating questions.");

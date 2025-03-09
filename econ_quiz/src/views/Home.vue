@@ -5,6 +5,8 @@ import DarkBtn from '../components/DarkBtn.vue';
 import Popup from '../components/Popup.vue';
 import { ref, watchEffect } from 'vue';
 import { useStoreAuth } from '../stores/storeAuth';
+import { useStoreQuiz } from '../stores/storeQuiz';
+import { useRouter } from 'vue-router';
 
 // logging process
 const storeAuth = useStoreAuth();
@@ -67,6 +69,16 @@ const openPopup = () => {
     storeAuth.logoutq = true;
     document.addEventListener('mousedown', onClickOutside);
 }
+
+// choosing quiz type
+const typePopup = ref(false);
+const hoverType = ref(false);
+const storeQuiz = useStoreQuiz();
+const router = useRouter();
+const chooseType = function(type) {
+    storeQuiz.type = type;
+    router.push('/quiz-choice');
+}
 </script>
 
 <template>
@@ -85,7 +97,7 @@ const openPopup = () => {
     </div> 
 
     <div class="w-full flex justify-center mt-16 md:hidden">
-        <router-link :to="{name: 'quiz-choice'}"><DarkBtn class="w-48 h-20">Play Now!</DarkBtn></router-link>
+        <DarkBtn class="w-48 h-20" @click="typePopup = true">Play Now!</DarkBtn>
     </div>
 
     <div class="w-full mt-16 pl-4 md:hidden">
@@ -126,7 +138,7 @@ const openPopup = () => {
 
         <h1 class="absolute left-1/2 transform -translate-x-1/2 top-80 text-brand text-6xl max-2xl:text-5xl text-center font-bold max-2xl:top-64 max-xl:top-48">Welcome to Econ Quiz!</h1>
 
-        <router-link :to="{name: 'quiz-choice'}"><button class="w-56 h-24 2xl:w-72 2xl:h-32 rounded-full bg-bgbtn border-brand border-2 font-medium text-wg absolute left-1/2 transform -translate-x-1/2 bottom-64 text-3xl hover:bg-brand hover:text-bg hover:border-bg active:scale-98 max-lg:bottom-16">Play Now!</button></router-link>
+        <button class="w-56 h-24 2xl:w-72 2xl:h-32 rounded-full bg-bgbtn border-brand border-2 font-medium text-wg absolute left-1/2 transform -translate-x-1/2 bottom-64 text-3xl hover:bg-brand hover:text-bg hover:border-bg active:scale-98 max-lg:bottom-16" @click="typePopup = true">Play Now!</button>
 
         <img src="../assets/images/happy.png" alt="a happy man looking to the right direction" class="absolute bottom-0 left-24 w-56 max-lg:hidden">
         <p class="absolute bottom-0 left-24 text-brand text-2xl font-normal text-center max-lg:hidden">Learn, test<br>yourself, and have<br>lots of fun!</p>
@@ -150,8 +162,55 @@ const openPopup = () => {
     <div v-show="storeAuth.logoutq">
         <Popup ref="dialog" @confirm="logoutYes" @decline="logoutNo" customClass="mt-2 max-md:mt-4">Are you sure you want to log out?</Popup>
     </div>
+
+    <!-- type choice -->
+    <div v-show="typePopup" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-95">
+        <h2 class="flex justify-center text-center text-brand text-xl mt-16">What kind of a quiz do you want to play?</h2>
+        <div class="flex flex-col items-center gap-12 mt-24">
+            <DarkBtn @click="chooseType('Multiple Choice')" @mouseover="hoverType = 'Multiple Choice'" @mouseleave="hoverType=null" class="w-56">Multiple Choice</DarkBtn>
+            <DarkBtn @click="chooseType('Timed')" @mouseover="hoverType = 'Timed'" @mouseleave="hoverType=null" class="w-56">Timed</DarkBtn>
+            <DarkBtn @click="chooseType('Manual Input')" @mouseover="hoverType = 'Manual Input'" @mouseleave="hoverType=null" class="w-56">Manual Input</DarkBtn>
+        </div>
+        <div class="flex justify-center mt-32">
+            <DarkBtn @click="typePopup = false">Close</DarkBtn>
+        </div>
+        <transition name="fade" class="max-xl:hidden">
+            <div v-show="hoverType === 'Multiple Choice'">
+                <div class="fixed left-12 bottom-64 w-[450px] grid grid-cols-2 gap-4">
+                    <div class="w-36 h-14 rounded-full bg-bgbtn border-gray border-2 font-medium text-gray text-center">?</div>
+                    <div class="w-36 h-14 rounded-full bg-bgbtn border-gray border-2 font-medium text-gray text-center">?</div>
+                    <div class="w-36 h-14 rounded-full bg-bgbtn border-gray border-2 font-medium text-gray text-center">?</div>
+                    <div class="w-36 h-14 rounded-full bg-bgbtn border-gray border-2 font-medium text-gray text-center">?</div>
+                </div>
+                <p class="bottom-1/2 right-32 transitionNote">You prefer classic quiz format with<br>multiple options? This is it!</p>
+            </div>
+        </transition>
+        <transition name="fade" class="max-xl:hidden">
+            <div v-show="hoverType === 'Timed'">
+                <img src="../assets/images/types/sandclock.png" alt="sandclock" class="fixed right-24 top-64 w-40 2xl:w-64">
+                <p class="top-2/3 left-32 transitionNote">You want to see how quickly<br>you can remember those numbers?<br>This one's for you!</p>
+            </div>
+        </transition>
+        <transition name="fade" class="max-xl:hidden">
+            <div v-show="hoverType === 'Manual Input'">
+                <img src="../assets/images/types/notebook.png" alt="a notebook" class="fixed left-8 top-[40%] w-32 2xl:left-20 2xl:w-48">
+                <img src="../assets/images/types/pencil.png" alt="a pencil" class="fixed left-24 top-1/2 w-40 2xl:left-40 2xl:w-64">
+                <p class="top-[40%] right-32 transitionNote">You know the numbers by heart?<br>Try this one out!</p>
+            </div>
+        </transition>
+    </div>
     
 </template>
 
 
-<!-- add two more types of quizzes - one with time flow and one with inputting numbers as close to the accurate as possible -->
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 300ms ease-in-out;
+}
+.fade-enter-from, .fade-leave-to {
+    opacity: 0;
+}
+.fade-enter-to, .fade-leave-from {
+    opacity: 1;
+}
+</style>

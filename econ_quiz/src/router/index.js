@@ -33,7 +33,7 @@ const routes = [
     { path: '/quiz-difficulty-choice/:choice', name: 'quiz-difficulty-choice', component: QuizDifficultyChoice },
     { path: '/quiz/:choice/:difficulty/:current', name: 'quiz', component: Quiz },
     { path: '/resend', name: 'resend', component: Resend },
-    { path: '/reset', name: 'reset', component: Reset }
+    { path: '/reset', name: 'reset', component: Reset },
 ];
 
 const router = createRouter({
