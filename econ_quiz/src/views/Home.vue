@@ -84,16 +84,16 @@ const chooseType = function(type) {
 </script>
 
 <template>
-    <!-- Mobile -->
+    <!-- Small screens -->
     <h1 class="text-brand text-3xl text-center font-bold pt-4 md:hidden">Welcome to Econ Quiz!</h1>
     <p class="text-brand text-center font-bold mt-8 md:hidden">For the best experience, use your desktop computer</p>
-    <h2 v-if="!storeAuth.isLoggedIn" class="text-brand text-center font-bold mt-8 text-2xl md:hidden">You are not logged in. Log in to save your results!</h2>
-    <h2 v-else class="text-brand text-center font-bold mt-8 text-2xl md:hidden">{{ hello }}</h2>
+    <h2 v-if="!storeAuth.isLoggedIn" class="text-brand text-center font-bold fixed top-32 left-1/2 transform -translate-x-1/2 text-lg md:hidden">You are not logged in. Log in to save your results!</h2>
+    <h2 v-else class="text-brand text-center font-bold fixed top-32 left-1/2 transform -translate-x-1/2 text-lg md:hidden">{{ hello }}</h2>
 
-    <div v-if="storeAuth.isLoggedIn" class="w-full flex justify-center mt-8 md:hidden">
+    <div v-if="storeAuth.isLoggedIn" class="w-full flex justify-center mt-16 md:hidden">
         <DarkBtn class="w-32 h-12" @click="openPopup">Logout</DarkBtn>
     </div> 
-    <div v-else class="w-full flex px-32 pb-8 mt-8 justify-between md:hidden">
+    <div v-else class="w-full flex px-32 pb-8 mt-16 justify-between md:hidden">
         <router-link :to="{name: 'login'}"><DarkBtn class="w-32 h-12">Login</DarkBtn></router-link>
         <router-link :to="{name: 'signup'}"><BrandBtn class="w-32 h-12">Sign Up</BrandBtn></router-link>
     </div> 

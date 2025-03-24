@@ -8,6 +8,7 @@ export const useStoreQuiz = defineStore('storeQuiz', {
             type: null,
             questions: [],
             correctAnswers: 0,
+            manualScore: null,
             loading: false,
             error: null,
             // noob: 100% - 900%; 70%
@@ -188,7 +189,125 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                     return;
                 }
 
-                // TODO: maknuti teske drzave
+                // choosing countries by how difficult they are (subjective)
+                const cleared = [];
+
+                // noob and veryEasy difficulties -> ideally only very easy countries
+                if(difficulty === "noob" || difficulty === "veryEasy") {
+                    for(const [country, value] of storeStudy.countryData.value) {
+                        if(storeStudy.veryEasyCountries.has(country)) cleared.push([country, value]);
+                    }
+                    if(cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.easyCountries.has(country)) cleared.push([country, value]);
+                            if(cleared.length === 21) break;
+                        }
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.mediumCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.hardCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.veryHardCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
+                    }
+                }
+
+                // easy difficulty -> ideally only very easy and easy countries
+                else if(difficulty === "easy") {
+                    for (const [country, value] of storeStudy.countryData.value) {
+                        if (storeStudy.veryEasyCountries.has(country) || storeStudy.easyCountries.has(country)) cleared.push([country, value]);
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.mediumCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.hardCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.veryHardCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
+                    }
+                }
+
+                // normal and hard difficulties -> ideally no hard and very hard countries
+                else if(difficulty === "normal" || difficulty === "hard") {
+                    for (const [country, value] of storeStudy.countryData.value) {
+                        if (!storeStudy.hardCountries.has(country) && !storeStudy.veryHardCountries.has(country)) cleared.push([country, value]);
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.hardCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.veryHardCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
+                    }
+                }
+
+                // very hard difficulty -> ideally no very easy and very hard countries; add very hard first if not enough
+                else if(difficulty === "veryHard") {
+                    for (const [country, value] of storeStudy.countryData.value) {
+                        if (!storeStudy.veryEasyCountries.has(country) && !storeStudy.veryHardCountries.has(country)) cleared.push([country, value]);
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.veryHardCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.veryEasyCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
+                    }
+                }
+
+                // absolute madman difficulty -> ideally no very easy and easy countries
+                else if(difficulty === "absoluteMadman") {
+                    for (const [country, value] of storeStudy.countryData.value) {
+                        if (!storeStudy.veryEasyCountries.has(country) && !storeStudy.easyCountries.has(country)) cleared.push([country, value]);
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.easyCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.veryEasyCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
+                    }
+                }
+
+                // update the data in storeStudy
+                storeStudy.countryData.value = cleared;
+
                 storeStudy.shuffleCountryData();
                 if (signal.aborted) {
                     console.log("Quiz creation aborted after shuffling data.");
@@ -206,58 +325,79 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                     chosenCountries.add(numbers[curr]);
                 }
 
-                // multiple choice quizzes
-                for(const country of chosenCountries) {
-                    if (signal.aborted) {
-                        console.log("Quiz creation aborted while generating questions.");
-                        return;
-                    }
-
-                    const current = {};
-                    const question = `What is the ${choice} value for ${country[0]}?`;
-                    let correct;
-                    if(this.big) correct = Math.round(Number(`${country[1]}`));
-                    else correct = Number(`${country[1]}`).toFixed(2);
-                    const options = [correct];
-                    const same = new Set();
-                    same.add(correct);
-                    for(let i = 0; i < 3; ) {
+                // multiple choice quizzes and timed quizzes
+                if(type === "multiple-choice" || type === "timed") {
+                    for(const country of chosenCountries) {
                         if (signal.aborted) {
-                            console.log("Quiz creation aborted while generating options.");
+                            console.log("Quiz creation aborted while generating questions.");
+                            return;
+                        }
+    
+                        const current = {};
+                        const question = `What is the ${choice} value for ${country[0]}?`;
+                        let correct;
+                        if(this.big) correct = Math.round(Number(`${country[1]}`));
+                        else correct = Number(`${country[1]}`).toFixed(2);
+                        const options = [correct];
+                        const same = new Set();
+                        same.add(correct);
+                        for(let i = 0; i < 3; ) {
+                            if (signal.aborted) {
+                                console.log("Quiz creation aborted while generating options.");
+                                return;
+                            }
+    
+                            const upOrDown = this.random(0, 1, 0);
+                            const minFactor = this.multipliers[difficulty][upOrDown].min;
+                            const maxFactor = this.multipliers[difficulty][upOrDown].max;
+                            const min = minFactor * correct;
+                            const max = maxFactor * correct;
+                            let answer = this.random(min, max, 4);
+                            if(this.big) answer = Math.round(answer);
+                            else answer = Number(answer).toFixed(2);
+                            answer = this.checkIfTooClose(answer, difficulty, same);
+                            if(storeStudy.cannotOver100.has(choice) && answer >= 100) {
+                                if(this.big) answer = '100';
+                                else answer = '100.00';
+                                while(same.has(answer)) {
+                                    const diminish = this.random(0.01, 9, 2);
+                                    if(this.big) answer = Math.round(Number(answer-diminish));
+                                    else answer = Number(answer - diminish).toFixed(2);
+                                }
+                            } else {
+                                while(same.has(answer)) {
+                                    answer = this.addOrSubtract(answer, choice);
+                                }
+                            }
+                            same.add(answer);
+                            options.push(answer);
+                            i++;
+                        }
+                        this.shuffle(options);
+                        current.question = question;
+                        current.options = options;
+                        current.correct = correct;
+                        this.questions.push(current);
+                    }
+                }
+
+                // manual input quizzes
+                else if(type === "manual-input") {
+                    for (const country of chosenCountries) {
+                        if (signal.aborted) {
+                            console.log("Quiz creation aborted while generating questions.");
                             return;
                         }
 
-                        const upOrDown = this.random(0, 1, 0);
-                        const minFactor = this.multipliers[difficulty][upOrDown].min;
-                        const maxFactor = this.multipliers[difficulty][upOrDown].max;
-                        const min = minFactor * correct;
-                        const max = maxFactor * correct;
-                        let answer = this.random(min, max, 4);
-                        if(this.big) answer = Math.round(answer);
-                        else answer = Number(answer).toFixed(2);
-                        answer = this.checkIfTooClose(answer, difficulty, same);
-                        if(storeStudy.cannotOver100.has(choice) && answer >= 100) {
-                            if(this.big) answer = '100';
-                            else answer = '100.00';
-                            while(same.has(answer)) {
-                                const diminish = this.random(0.01, 9, 2);
-                                if(this.big) answer = Math.round(Number(answer-diminish));
-                                else answer = Number(answer - diminish).toFixed(2);
-                            }
-                        } else {
-                            while(same.has(answer)) {
-                                answer = this.addOrSubtract(answer, choice);
-                            }
-                        }
-                        same.add(answer);
-                        options.push(answer);
-                        i++;
+                        const current = {};
+                        const question = `What is the ${choice} value for ${country[0]}?`;
+                        let correct;
+                        if (this.big) correct = Math.round(Number(`${country[1]}`));
+                        else correct = Number(`${country[1]}`).toFixed(2);
+                        current.question = question;
+                        current.correct = correct;
+                        this.questions.push(current);
                     }
-                    this.shuffle(options);
-                    current.question = question;
-                    current.options = options;
-                    current.correct = correct;
-                    this.questions.push(current);
                 }
             } catch(error) {
                 console.log(error)

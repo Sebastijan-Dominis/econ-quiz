@@ -1,7 +1,7 @@
 <script setup>
 // imports
 import { useStoreQuiz } from '../stores/storeQuiz';
-import { onBeforeUnmount, onMounted, onUnmounted, ref, watchEffect } from 'vue';
+import { onBeforeUnmount, onMounted, onUnmounted, ref, watchEffect, computed } from 'vue';
 import QuizBtn from '../components/QuizBtn.vue';
 import NavBtn from '../components/NavBtn.vue';
 import { useRouter } from 'vue-router';
@@ -69,6 +69,8 @@ const usersChoice = ref(new Array(storeQuiz.questions));
 const chooseAnswer = function(option) {
     usersChoice.value[curr.value] = option;
 }
+
+// timed quizzes
 const countdownNum = ref(null);
 let countdownInterval = null;
 if(route.params.type === "timed") {
@@ -101,13 +103,65 @@ if(route.params.type === "timed") {
         }
     })
 }
+
+// used for multiple choice and timed quizzes
 const nextQ = () => {
     if(storeQuiz.questions[curr.value].correct === usersChoice.value[curr.value]) storeQuiz.correctAnswers++;
     curr.value++;
 }
+
+//used for multiple choice quizzes
 const prevQ = () => {
     if(curr.value > 1) curr.value--;
     if(storeQuiz.questions[curr.value].correct === usersChoice.value[curr.value]) storeQuiz.correctAnswers--;
+}
+
+// manual input quizzes
+const number = ref(new Array(21).fill(0));
+const keyModifier = ref(1);
+const shiftPressed = ref(false);
+
+const formattedNumber = computed(() => number.value[curr.value].toFixed(2));
+
+const modifyWholeNumber = amount => {
+    number.value[curr.value] += amount * keyModifier.value;
+};
+
+const modifyDecimal = amount => {
+    const step = shiftPressed.value ? 0.10 : 0.01;
+    number.value[curr.value] = parseFloat((number.value[curr.value] + amount * step).toFixed(2));
+};
+
+const handleKeydown = event => {
+    if(event.key.match(/[1-9]/)) {
+        keyModifier.value = Math.pow(10, parseInt(event.key))
+    }
+    if(event.shiftKey) {
+        shiftPressed.value = true;
+    }
+};
+
+const handleKeyup = () => {
+    keyModifier.value = 1;
+    shiftPressed.value = false;
+};
+
+if(route.params.type === "manual-input") {
+    onMounted(() => {
+        window.addEventListener("keydown", handleKeydown);
+        window.addEventListener("keyup", handleKeyup);
+    });
+    onUnmounted(() => {
+        window.removeEventListener("keydown", handleKeydown);
+        window.removeEventListener("keyup", handleKeyup);
+    });
+};
+
+const nextQMan = () => {
+    curr.value++;
+}
+const prevQMan = () => {
+    if(curr.value > 1) curr.value--;
 }
 
 // finishing
@@ -119,7 +173,7 @@ const openFinish = () => {
 const savingFnDone = ref(false);
 const finish = async() => {
     end.value = new Date();
-    if(storeQuiz.questions[curr.value].correct === usersChoice.value[curr.value]) storeQuiz.correctAnswers++;
+    if(storeQuiz.questions[curr.value].correct === usersChoice.value[curr.value] && storeQuiz.type !== "Manual Input") storeQuiz.correctAnswers++;
     document.removeEventListener('click', onClickOutside2);
     finishQ.value = false;
     done.value = true;
@@ -129,7 +183,32 @@ const finish = async() => {
     }
     try {
         const topic = storeStudy.reverseChoiceMap[route.params.choice];
-        const score = (storeQuiz.correctAnswers/20)*100;
+        let score;
+        if(storeQuiz.type !== "Manual Input") {
+            score = (storeQuiz.correctAnswers/20)*100;
+        } else {
+            let closeness = [];
+            for(let i = 1; i < number.value.length; i++) {
+                const currNum = number.value[i];
+                const currCorr = storeQuiz.questions[i].correct;
+                if(currNum < currCorr) {
+                    closeness.push((currNum/currCorr).toFixed(2));
+                } else {
+                    const diff = currNum - currCorr;
+                    const divider = currCorr - diff;
+                    if(divider < 0) closeness.push(0.00);
+                    else closeness.push((divider/currCorr).toFixed(2));
+                }
+            }
+            let total = 0;
+            for(let i = 0; i < closeness.length; i++) {
+                total += Number((closeness[i] * 100).toFixed(2));
+            }
+            console.log(total);
+            score = (total/20).toFixed(2);
+            storeQuiz.manualScore = score;
+            console.log(score, storeQuiz.manualScore);
+        }
         const resultsGlobalRef = collection(db, 'results');
         let indicator;
         if(storeStudy.economic.has(topic)) indicator = "economic";
@@ -174,7 +253,9 @@ onBeforeUnmount(() => {
     <!-- quiz flow -->
     <div v-if="!done && !storeQuiz.error">
         <h1 class="pt-8 text-brand text-base font-bold flex text-center justify-center md:text-xl md:pt-10 md:text-3xl lg:pt-12 xl:text-4xl 2xl:text-5xl">{{ storeQuiz.questions[curr].question }}</h1>
-        <div class="grid grid-cols-1 gap-y-12 mt-16 md:grid-cols-2 md:gap-y-28 md:mt-24 md:px-12 lg:px-20 2xl:px-36 place-items-center">
+
+        <!-- display questions for multiple choice and timed quizzes -->
+        <div v-if="storeQuiz.type !== 'Manual Input'" class="grid grid-cols-1 gap-y-12 mt-16 md:grid-cols-2 md:gap-y-28 md:mt-24 md:px-12 lg:px-20 2xl:px-36 place-items-center">
         <QuizBtn v-for="option in [storeQuiz.questions[curr].options[0], storeQuiz.questions[curr].options[1], storeQuiz.questions[curr].options[2], storeQuiz.questions[curr].options[3]]"
         :key="option"
         :class="usersChoice[curr] === option ? 'chosenAnswer' : ''"
@@ -193,14 +274,49 @@ onBeforeUnmount(() => {
             </div>
         </QuizBtn>
         </div>
+
+        <!-- manual input quizzes -->
+        <div v-if="storeQuiz.type === 'Manual Input'" class="mt-12 md:mt-16 lg:mt-20 xl:mt-24 2xl:mt-28 grid grid-cols-2 gap-y-6 place-items-center md:gap-y-10">
+            <h2 v-if="storeStudy.largeNumsDollars.has(originalValue)" class="manualNumber">
+              <span>${{ formattedNumber.toLocaleString() }}</span>
+            </h2>
+            <h2 v-if="storeStudy.smallNumsPercentages.has(originalValue)" class="manualNumber">
+              <span>{{ formattedNumber }}%</span>
+            </h2>
+            <h2 v-if="storeStudy.largeNums.has(originalValue)" class="manualNumber">
+              <span>{{ formattedNumber.toLocaleString() }}</span>
+            </h2>
+            <h2 v-if="storeStudy.smallNums.has(originalValue)" class="manualNumber">
+              <span>{{ formattedNumber }}</span>
+            </h2>
+            <h3 class="manualTitle">Whole</h3>
+            <h3 class="manualTitle">Decimal</h3>
+            <button @click="modifyWholeNumber(1)" class="manualButton">+</button>
+            <button @click="modifyDecimal(1)" class="manualButton">+</button>
+            <button @click="modifyWholeNumber(-1)" class="manualButton">-</button>
+            <button @click="modifyDecimal(-1)" class="manualButton">-</button>
+        </div>
+
+        <!-- options for manual input quizzes -->
+        <div v-if="storeQuiz.type === 'Manual Input'" class="grid grid-cols-2 place-items-center mt-10 mx-40 md:mx-16 md:mt-16 lg:mx-20 2xl:mx-36">
+            <NavBtn :class="curr === 1 ? 'disabled active:scale-[1] disableBtn' : ''" @click="prevQMan">Prev</NavBtn>
+            <NavBtn v-if="curr !== storeQuiz.questions.length-1" @click="nextQMan">Next</NavBtn>
+            <NavBtn v-else @click="openFinish">Finish</NavBtn>
+        </div>
+
+        <!-- options for multiple choice quizzes -->
         <div v-if="storeQuiz.type === 'Multiple Choice'" class="grid grid-cols-2 place-items-center mt-10 mx-40 md:mx-16 md:mt-16 lg:mx-20 2xl:mx-36">
             <NavBtn :class="curr === 1 ? 'disabled active:scale-[1] disableBtn' : ''" @click="prevQ">Prev</NavBtn>
             <NavBtn v-if="curr !== storeQuiz.questions.length-1" @click="nextQ">Next</NavBtn>
             <NavBtn v-else @click="openFinish">Finish</NavBtn>
         </div>
+
+        <!-- enabling the user to quit at any point -->
         <div class="flex justify-center mt-10">
-            <button @click="openPopup" class="w-14 h-8 bg-bgbtn text-wg border border-2 border-brand rounded-lg md:w-20 md:h-12 lg:w-28 lg:h-14 2xl:mt-16 hover:bg-brand hover:text-bg active:scale-[0.98]">Quit</button>
+            <button @click="openPopup" class="w-16 h-10 bg-bgbtn text-wg border border-2 border-brand rounded-lg md:w-20 md:h-12 lg:w-28 lg:h-14 2xl:mt-16 hover:bg-brand hover:text-bg active:scale-[0.98] max-md:text-sm">Quit</button>
         </div>
+
+        <!-- double checking if the user really wants to quit -->
         <div v-if="popupOpen">
             <Popup ref="dialog" @confirm="quitYes" @decline="quitNo" customClass="mt-2 max-md:mt-4">Are you sure you want to quit?</Popup>
         </div>
@@ -217,10 +333,16 @@ onBeforeUnmount(() => {
     <!-- waiting to see if the results will be saved properly -->
     <CenterMessage v-if="done && storeQuiz && !savingFnDone">Loading your results...</CenterMessage>
 
-    <!-- display results -->
-    <div v-if="done && !storeQuiz.error && savingFnDone" class="flex flex-col text-center items-center justify-center pt-12 px-24 2xl:pt-20">
-    <h1 class="text-2xl text-brand font-bold 2xl:text-3xl">You have answered {{ storeQuiz.correctAnswers }} out of {{ storeQuiz.questions.length-1 }} questions correctly!</h1>
-    <NavBtn @click="router.push('/')" :class="'mt-24 2xl:mt-32'">Ok</NavBtn>
+    <!-- display results for multiple choice and timed quizzes -->
+    <div v-if="done && !storeQuiz.error && savingFnDone && storeQuiz.type !== 'Manual Input'" class="flex flex-col text-center items-center justify-center pt-12 px-24 2xl:pt-20">
+        <h1 class="text-2xl text-brand font-bold 2xl:text-3xl">You have answered {{ storeQuiz.correctAnswers }} out of {{ storeQuiz.questions.length-1 }} questions correctly!</h1>
+        <NavBtn @click="router.push('/')" :class="'mt-24 2xl:mt-32'">Ok</NavBtn>
+    </div>
+    
+    <!-- display results for manual input quizzes -->
+    <div v-if="done && !storeQuiz.error && savingFnDone && storeQuiz.type === 'Manual Input'" class="flex flex-col text-center items-center justify-center pt-12 px-24 2xl:pt-20">
+        <h1 class="text-2xl text-brand font-bold 2xl:text-3xl">Your score is: {{ storeQuiz.manualScore }}% !</h1>
+        <NavBtn @click="router.push('/')" :class="'mt-24 2xl:mt-32'">Ok</NavBtn>
     </div>
 
     <!-- error handling -->
@@ -244,26 +366,105 @@ onBeforeUnmount(() => {
 }
 
 .square {
-  display: inline-block;
-  width: 70px;
-  height: 70px;
-  border-radius: 20px;
-  background: rgba(255, 165, 80, 0.9);
-  box-shadow: 4px -40px 60px 5px rgba(0, 0, 0, 0.8) inset;
-  text-align: center;
-  place-content: center;
-  font-size: 24px;
-  color: var(--wg);
-  font-weight: 700;
+    display: inline-block;
+    width: 70px;
+    height: 70px;
+    border-radius: 20px;
+    background: rgba(255, 165, 80, 0.9);
+    box-shadow: 4px -40px 60px 5px rgba(0, 0, 0, 0.8) inset;
+    text-align: center;
+    place-content: center;
+    font-size: 24px;
+    color: var(--wg);
+    font-weight: 700;
 }
 .hithere {
-  animation: hithere 1s ease infinite;
+    animation: hithere 1s ease infinite;
 }
 @keyframes hithere {
-  30% { transform: scale(1.2); }
-  40%, 60% { transform: rotate(-20deg) scale(1.2); }
-  50% { transform: rotate(20deg) scale(1.2); }
-  70% { transform: rotate(0deg) scale(1.2); }
-  100% { transform: scale(1); }
+    30% { transform: scale(1.2); }
+    40%, 60% { transform: rotate(-20deg) scale(1.2); }
+    50% { transform: rotate(20deg) scale(1.2); }
+    70% { transform: rotate(0deg) scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.manualNumber {
+    color: var(--brand);
+    font-weight: 700;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    grid-column: span 2;
+}
+.manualTitle {
+    color: var(--brand);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+}
+.manualButton {
+    color: var(--wg);
+    background-color: var(--bgbtn);
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    border: 2px solid var(--brand);
+    border-radius: 8px;
+    height: 3rem;
+    width: 7rem;
+}
+.manualButton:hover {
+    background-color: var(--brand);
+    color: var(--bg);
+}
+.manualButton:active {
+    scale: 0.98;
+}
+@media(min-width: 768px) {
+    .manualNumber {
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+    }
+    .manualTitle {
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+    }
+    .manualButton {
+        width: 8.5rem;
+        height: 3.5rem;
+        font-size: 1.5rem;
+        line-height: 2rem;
+    }
+}
+@media(min-width: 1280px) {
+    .manualNumber {
+        font-size: 2.25rem;
+        line-height: 2.5rem;
+    }
+    .manualTitle {
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+    }
+    .manualButton {
+        width: 12rem;
+        height: 5rem;
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+    }
+}
+@media(min-width: 1536px) {
+    .manualNumber {
+        font-size: 3rem;
+        line-height: 1;
+    }
+    .manualTitle {
+        font-size: 2.25rem;
+        line-height: 2.5rem;
+    }
+    .manualButton {
+        width: 14rem;
+        height: 6rem;
+        font-size: 2.25rem;
+        line-height: 2.5rem;
+    }
 }
 </style>
