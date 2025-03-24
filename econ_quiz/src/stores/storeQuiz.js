@@ -20,49 +20,49 @@ export const useStoreQuiz = defineStore('storeQuiz', {
             // absoluteMadman: 0.01% - 5%
             multipliers: {
                 "noob": [{
-                    "min": 0.100,
-                    "max": 0.500
+                    "min": 0.040,
+                    "max": 0.200
                 }, {
                     "min": 2.000,
                     "max": 10.000
                 }],
                 "veryEasy": [{
-                    "min": 0.200,
-                    "max": 0.570
+                    "min": 0.080,
+                    "max": 0.350
                 }, {
                     "min": 1.750,
                     "max": 5.000
                 }],
                 "easy": [{
-                    "min": 0.286,
-                    "max": 0.690
+                    "min": 0.235,
+                    "max": 0.640
                 }, {
                     "min": 1.450,
                     "max": 3.500
                 }],
                 "normal": [{
-                    "min": 0.455,
-                    "max": 0.800
+                    "min": 0.345,
+                    "max": 0.770
                 }, {
                     "min": 1.250,
                     "max": 2.200
                 }],
                 "hard": [{
-                    "min": 0.555,
-                    "max": 0.870
+                    "min": 0.530,
+                    "max": 0.850
                 }, {
                     "min": 1.150,
                     "max": 1.800
                 }],
                 "veryHard": [{
-                    "min": 0.770,
-                    "max": 0.952
+                    "min": 0.755,
+                    "max": 0.940
                 }, {
                     "min": 1.050,
                     "max": 1.300
                 }],
                 "absoluteMadman": [{
-                    "min": 0.952,
+                    "min": 0.948,
                     "max": 0.999
                 }, {
                     "min": 1.001,
