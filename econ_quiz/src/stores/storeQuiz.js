@@ -192,15 +192,15 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                 // choosing countries by how difficult they are (subjective)
                 const cleared = [];
 
-                // noob and veryEasy difficulties -> ideally only very easy countries
-                if(difficulty === "noob" || difficulty === "veryEasy") {
-                    for(const [country, value] of storeStudy.countryData.value) {
-                        if(storeStudy.veryEasyCountries.has(country)) cleared.push([country, value]);
+                // noob difficulty -> ideally only very easy countries
+                if (difficulty === "noob") {
+                    for (const [country, value] of storeStudy.countryData.value) {
+                        if (storeStudy.veryEasyCountries.has(country)) cleared.push([country, value]);
                     }
-                    if(cleared.length < 21) {
+                    if (cleared.length < 21) {
                         for (const [country, value] of storeStudy.countryData.value) {
                             if (storeStudy.easyCountries.has(country)) cleared.push([country, value]);
-                            if(cleared.length === 21) break;
+                            if (cleared.length === 21) break;
                         }
                     }
                     if (cleared.length < 21) {
@@ -223,10 +223,41 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                     }
                 }
 
-                // easy difficulty -> ideally only very easy and easy countries
+                // veryEasy difficulty -> ideally only easy and very easy countries
+                else if(difficulty === "veryEasy") {
+                    for(const [country, value] of storeStudy.countryData.value) {
+                        if(storeStudy.easyCountries.has(country) || storeStudy.veryEasyCountries.has(country)) cleared.push([country, value]);
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.mediumCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.hardCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.veryHardCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
+                    }
+                }
+
+                // easy difficulty -> ideally only easy countries; add very easy first if need be
                 else if(difficulty === "easy") {
                     for (const [country, value] of storeStudy.countryData.value) {
-                        if (storeStudy.veryEasyCountries.has(country) || storeStudy.easyCountries.has(country)) cleared.push([country, value]);
+                        if (storeStudy.easyCountries.has(country)) cleared.push([country, value]);
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.veryEasyCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
                     }
                     if (cleared.length < 21) {
                         for (const [country, value] of storeStudy.countryData.value) {
@@ -248,10 +279,16 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                     }
                 }
 
-                // normal difficulty -> ideally no hard and very hard countries
+                // normal difficulty -> ideally only easy and normal countries; add very easy first if need be
                 else if(difficulty === "normal") {
                     for (const [country, value] of storeStudy.countryData.value) {
-                        if (!storeStudy.hardCountries.has(country) && !storeStudy.veryHardCountries.has(country)) cleared.push([country, value]);
+                        if (storeStudy.easyCountries.has(country) || storeStudy.mediumCountries.has(country)) cleared.push([country, value]);
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.veryEasyCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
                     }
                     if (cleared.length < 21) {
                         for (const [country, value] of storeStudy.countryData.value) {
