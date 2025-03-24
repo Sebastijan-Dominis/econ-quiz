@@ -17,8 +17,8 @@ const whatToDo = () => {
     const urlValue = storeStudy.choiceMap[topic];
     if(router.currentRoute.value.fullPath === "/study-choice") {
         router.push({name: 'study', params: {choice: urlValue}});
-    } else if (router.currentRoute.value.fullPath === "/quiz-choice") {
-        router.push({name: 'quiz-difficulty-choice', params: {choice: urlValue}});
+    } else if (router.currentRoute.value.fullPath.includes('/quiz-choice')) {
+        router.push({name: 'quiz-difficulty-choice', params: {type: storeStudy.typesMap[storeStudy.type], choice: urlValue}});
     }
 }
 </script>

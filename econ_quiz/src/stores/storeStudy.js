@@ -37,7 +37,16 @@ export const useStoreStudy = defineStore('storeStudy', {
                 ]
             ),
             allTopics: ref([]),
-            allTypes: ref(["Multiple Choice"])
+            allTypes: ref(["Multiple Choice", "Timed", "Manual Input"]),
+            typesMap: {
+                "Multiple Choice": "multiple-choice",
+                "Timed": "timed",
+                "Manual Input": "manual-input"
+            },
+            economic: new Set([]),
+            demographic: new Set([]),
+            other: new Set([]),
+            indicators: ["economic", "demographic", "other"]
         }
     },
     actions: {
@@ -58,10 +67,19 @@ export const useStoreStudy = defineStore('storeStudy', {
                 const cannotOver100 = data.cannotOver100;
                 const displayName = data.displayName;
 
-                // saving display names for the buttons
-                if(data.indicator === "economic") this.columns[0].push(displayName.replace(/\\n/g, '\n'));
-                else if (data.indicator === "demographic") this.columns[1].push(displayName.replace(/\\n/g, '\n'));
-                else if(data.indicator === "other") this.columns[2].push(displayName.replace(/\\n/g, '\n'));
+                // saving display names for the buttons and categorizing topics by indicator
+                if(indicator === "economic") {
+                    this.economic.add(name);
+                    this.columns[0].push(displayName.replace(/\\n/g, '\n'));
+                } 
+                else if (indicator === "demographic") {
+                    this.demographic.add(name);
+                    this.columns[1].push(displayName.replace(/\\n/g, '\n'));
+                } 
+                else if(indicator === "other") {
+                    this.other.add(name);
+                    this.columns[2].push(displayName.replace(/\\n/g, '\n'));
+                } 
 
                 // saving the keys
                 this.chosenDataMap[name] = key;

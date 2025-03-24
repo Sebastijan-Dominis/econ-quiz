@@ -6,6 +6,7 @@ import Popup from '../components/Popup.vue';
 import { ref, watchEffect } from 'vue';
 import { useStoreAuth } from '../stores/storeAuth';
 import { useStoreQuiz } from '../stores/storeQuiz';
+import { useStoreStudy } from '../stores/storeStudy';
 import { useRouter } from 'vue-router';
 
 // logging process
@@ -55,7 +56,7 @@ watchEffect(() => {
         confirmation.value = dialog.value.confirmation;
     }
 })
-const onClickOutside = event => {
+const onClickOutside = () => {
     document.removeEventListener('mousedown', onClickOutside);
     document.addEventListener('click', onClickOutside2);
 }
@@ -74,10 +75,11 @@ const openPopup = () => {
 const typePopup = ref(false);
 const hoverType = ref(false);
 const storeQuiz = useStoreQuiz();
+const storeStudy = useStoreStudy();
 const router = useRouter();
 const chooseType = function(type) {
     storeQuiz.type = type;
-    router.push('/quiz-choice');
+    router.push(`/quiz-choice/${storeStudy.typesMap[type]}`);
 }
 </script>
 
@@ -176,11 +178,11 @@ const chooseType = function(type) {
         </div>
         <transition name="fade" class="max-xl:hidden">
             <div v-show="hoverType === 'Multiple Choice'">
-                <div class="fixed left-12 bottom-64 w-[450px] grid grid-cols-2 gap-4">
-                    <div class="w-36 h-14 rounded-full bg-bgbtn border-gray border-2 font-medium text-gray text-center">?</div>
-                    <div class="w-36 h-14 rounded-full bg-bgbtn border-gray border-2 font-medium text-gray text-center">?</div>
-                    <div class="w-36 h-14 rounded-full bg-bgbtn border-gray border-2 font-medium text-gray text-center">?</div>
-                    <div class="w-36 h-14 rounded-full bg-bgbtn border-gray border-2 font-medium text-gray text-center">?</div>
+                <div class="fixed left-20 bottom-96 w-[450px] grid grid-cols-2 gap-4">
+                    <div class="mulChBtn">?</div>
+                    <div class="mulChBtn">?</div>
+                    <div class="mulChBtn">?</div>
+                    <div class="mulChBtn">?</div>
                 </div>
                 <p class="bottom-1/2 right-32 transitionNote">You prefer classic quiz format with<br>multiple options? This is it!</p>
             </div>
@@ -212,5 +214,18 @@ const chooseType = function(type) {
 }
 .fade-enter-to, .fade-leave-from {
     opacity: 1;
+}
+
+.mulChBtn {
+    width: 9rem;
+    height: 3.5rem;
+    border-radius: 9999px;
+    background-color: var(--bgbtn);
+    border-color: var(--gray);
+    border-width: 2px;
+    font-weight: 500;
+    color: var(--gray);
+    text-align: center;
+    place-content: center;
 }
 </style>

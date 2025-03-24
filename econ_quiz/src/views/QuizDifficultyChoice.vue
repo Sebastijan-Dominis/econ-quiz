@@ -64,8 +64,8 @@ const onDecline = () => {
 const storeQuiz = useStoreQuiz();
 const start = async() => {
     document.removeEventListener('click', onClickOutside);
-    await storeQuiz.createQuiz(storeStudy.reverseChoiceMap[route.params.choice], difficulty.value);
-    router.push({name: "quiz", params: {choice: route.params.choice, difficulty: difficulty.value, current: 1}});
+    await storeQuiz.createQuiz(storeStudy.typesMap[storeStudy.type], storeStudy.reverseChoiceMap[route.params.choice], difficulty.value);
+    router.push({name: "quiz", params: {type: storeStudy.typesMap[storeStudy.type], choice: route.params.choice, difficulty: difficulty.value, current: 1}});
 }
 </script>
 

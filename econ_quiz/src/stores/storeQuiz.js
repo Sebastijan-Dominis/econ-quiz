@@ -169,7 +169,7 @@ export const useStoreQuiz = defineStore('storeQuiz', {
         },
 
         // main function that creates a quiz
-        async createQuiz(choice, difficulty) {
+        async createQuiz(type, choice, difficulty) {
             this.loading = true;
             try {
                 if(this.abortController) this.abortController.abort();
@@ -188,6 +188,7 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                     return;
                 }
 
+                // TODO: maknuti teske drzave
                 storeStudy.shuffleCountryData();
                 if (signal.aborted) {
                     console.log("Quiz creation aborted after shuffling data.");

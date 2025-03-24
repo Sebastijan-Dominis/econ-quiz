@@ -30,7 +30,7 @@ const openPopup = () => {
 const sortByValue = ref("timestamp");
 const sortDirection = ref("desc");
 const types = ref([...storeStudy.allTypes]);
-const topics = ref([...storeStudy.allTopics]);
+const indicators = ref([...storeStudy.indicators]);
 
 const updateSelectedTypes = (type, event) => {
     if(event.target.checked) {
@@ -40,11 +40,11 @@ const updateSelectedTypes = (type, event) => {
     }
 }
 
-const updateSelectedTopics = (topic, event) => {
+const updateSelectedIndicators = (indicator, event) => {
     if(event.target.checked) {
-        topics.value.push(topic);
+        indicators.value.push(indicator);
     } else {
-        topics.value = topics.value.filter(t => t !== topic);
+        indicators.value = indicators.value.filter(i => i !== indicator);
     }
 }
 
@@ -60,7 +60,7 @@ const confirm = async() => {
     noMoreResults.value = false;
 
     try {
-        await fetchResults(sortDirection.value, sortByValue.value, types, topics);
+        await fetchResults(sortDirection.value, sortByValue.value, types, indicators);
     } catch (error) {
         console.error(error);
         alert("Sorry. An error occurred.");
@@ -70,19 +70,17 @@ const confirm = async() => {
 }
 
 // main function to fetch results
-const fetchResults = async(direction = "desc", element = "timestamp", types = undefined, topics = undefined) => {
+const fetchResults = async(direction = "desc", element = "timestamp", types = undefined, indicators = undefined) => {
     if(loading.value || !storeAuth.user) return;
     loading.value = true;
-    if(types) console.log(types.value)
-    if(topics) console.log(topics.value)
     // creating a query
     const collectionRef = collection(db, "users", storeAuth.user.uid, 'results');
     const conditions = [];
     if(types !== undefined && types.value.length) {
         conditions.push(where("type", "in", types.value));
     }
-    if(topics !== undefined && topics.value.length) {
-        conditions.push(where("topic", "in", topics.value));
+    if(indicators !== undefined && indicators.value.length) {
+        conditions.push(where("indicator", "in", indicators.value));
     }
     let q = query(collectionRef, ...conditions, orderBy(element, direction), limit(pageSize));
 
@@ -130,8 +128,9 @@ const fetchResults = async(direction = "desc", element = "timestamp", types = un
                     score: doc.data().score,
                     timeTaken: timeSpent,
                     type: doc.data().type,
-                    topic: doc.data().topic,
                     difficulty: difficultyString,
+                    topic: doc.data().topic,
+                    indicator: doc.data().indicator,
                     timestamp: EUdate
                 });
             });
@@ -194,7 +193,7 @@ onUnmounted(() => {
                 <h2>Difficulty:</h2>
                 <h2>{{ result.difficulty }}</h2>
                 <h2>Score:</h2>
-                <h2>{{ result.score }}</h2>
+                <h2>{{ result.score }}%</h2>
                 <h2>Time spent:</h2>
                 <h2>{{ result.timeTaken }}</h2>
                 <h2>Taken on:</h2>
@@ -246,11 +245,11 @@ onUnmounted(() => {
                     {{ type }}
                 </label>
 
-                <!-- Topics -->
-                <p class="filterTitle mt-10">Topic</p>
-                <label v-for="topic in storeStudy.allTopics" :key="topic" class="filterLabel">
-                    <input type="checkbox" :value="topic" checked @change="updateSelectedTopics(topic, $event)">
-                    {{ topic }}
+                <!-- Indicators -->
+                <p class="filterTitle mt-10">Indicator</p>
+                <label v-for="indicator in storeStudy.indicators" :key="indicator" class="filterLabel">
+                    <input type="checkbox" :value="indicator" checked @change="updateSelectedIndicators(indicator, $event)">
+                    {{ indicator }}
                 </label>
             </div>
 

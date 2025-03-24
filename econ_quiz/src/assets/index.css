@@ -44,7 +44,6 @@
     box-shadow: 0 0 0 2px var(--brand);
 }
 
-/* text-brand text-2xl 2xl:text-3xl text-center */
 .transitionNote {
     color: var(--brand);
     font-size: 1.5rem;

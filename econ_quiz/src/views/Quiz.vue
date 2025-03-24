@@ -1,7 +1,7 @@
 <script setup>
 // imports
 import { useStoreQuiz } from '../stores/storeQuiz';
-import { onBeforeUnmount, onMounted, ref, watchEffect } from 'vue';
+import { onBeforeUnmount, onMounted, onUnmounted, ref, watchEffect } from 'vue';
 import QuizBtn from '../components/QuizBtn.vue';
 import NavBtn from '../components/NavBtn.vue';
 import { useRouter } from 'vue-router';
@@ -69,6 +69,38 @@ const usersChoice = ref(new Array(storeQuiz.questions));
 const chooseAnswer = function(option) {
     usersChoice.value[curr.value] = option;
 }
+const countdownNum = ref(null);
+let countdownInterval = null;
+if(route.params.type === "timed") {
+    const countdown = function() {
+        if(countdownInterval) clearInterval(countdownInterval);
+        countdownNum.value = 5;
+        countdownInterval = setInterval(() => {
+            countdownNum.value--;
+            if(countdownNum.value === 0) clearInterval(countdownInterval);
+        }, 1000);
+    };
+    const questionTimer = ref(null);
+    onMounted(() => {
+        countdown();
+        questionTimer.value = setInterval(() => {
+            nextQ();
+            countdown();
+            if(curr.value === storeQuiz.questions.length-1) clearInterval(questionTimer.value);
+        }, 5000)
+    });
+    onUnmounted(() => {
+        if(questionTimer.value) clearInterval(questionTimer.value);
+        if(countdownInterval) clearInterval(countdownInterval);
+    });
+    watchEffect(() => {
+        if(curr.value === storeQuiz.questions.length-1) {
+            setTimeout(() => {
+                finish();
+            }, 5000)
+        }
+    })
+}
 const nextQ = () => {
     if(storeQuiz.questions[curr.value].correct === usersChoice.value[curr.value]) storeQuiz.correctAnswers++;
     curr.value++;
@@ -97,23 +129,30 @@ const finish = async() => {
     }
     try {
         const topic = storeStudy.reverseChoiceMap[route.params.choice];
+        const score = (storeQuiz.correctAnswers/20)*100;
         const resultsGlobalRef = collection(db, 'results');
+        let indicator;
+        if(storeStudy.economic.has(topic)) indicator = "economic";
+        else if(storeStudy.demographic.has(topic)) indicator = "demographic";
+        else if(storeStudy.other.has(topic)) indicator = "other";
         await addDoc(resultsGlobalRef, {
             username: storeAuth.user.displayName,
-            score: storeQuiz.correctAnswers,
+            score: score,
             timeTaken: Math.floor((end.value - start.value)/1000),
-            type: "Multiple Choice",
+            type: storeQuiz.type,
             topic: topic,
+            indicator: indicator,
             difficulty: storeQuiz.difficultiesMap[route.params.difficulty],
             timestamp: Timestamp.fromDate(end.value)
         })
 
         const resultsUserRef = collection(db, 'users', storeAuth.user.uid, 'results');
         await addDoc(resultsUserRef, {
-            score: storeQuiz.correctAnswers,
+            score: score,
             timeTaken: Math.floor((end.value - start.value)/1000),
-            type: "Multiple Choice",
+            type: storeQuiz.type,
             topic: topic,
+            indicator: indicator,
             difficulty: storeQuiz.difficultiesMap[route.params.difficulty],
             timestamp: Timestamp.fromDate(end.value)
         })
@@ -139,7 +178,7 @@ onBeforeUnmount(() => {
         <QuizBtn v-for="option in [storeQuiz.questions[curr].options[0], storeQuiz.questions[curr].options[1], storeQuiz.questions[curr].options[2], storeQuiz.questions[curr].options[3]]"
         :key="option"
         :class="usersChoice[curr] === option ? 'chosenAnswer' : ''"
-        @click="chooseAnswer(option)">
+        @mousedown="chooseAnswer(option)">
             <div v-if="storeStudy.largeNumsDollars.has(originalValue)">
               <span>${{ option.toLocaleString() }}</span>
             </div>
@@ -154,7 +193,7 @@ onBeforeUnmount(() => {
             </div>
         </QuizBtn>
         </div>
-        <div class="grid grid-cols-2 place-items-center mt-10 mx-40 md:mx-16 md:mt-16 lg:mx-20 2xl:mx-36">
+        <div v-if="storeQuiz.type === 'Multiple Choice'" class="grid grid-cols-2 place-items-center mt-10 mx-40 md:mx-16 md:mt-16 lg:mx-20 2xl:mx-36">
             <NavBtn :class="curr === 1 ? 'disabled active:scale-[1] disableBtn' : ''" @click="prevQ">Prev</NavBtn>
             <NavBtn v-if="curr !== storeQuiz.questions.length-1" @click="nextQ">Next</NavBtn>
             <NavBtn v-else @click="openFinish">Finish</NavBtn>
@@ -162,13 +201,16 @@ onBeforeUnmount(() => {
         <div class="flex justify-center mt-10">
             <button @click="openPopup" class="w-14 h-8 bg-bgbtn text-wg border border-2 border-brand rounded-lg md:w-20 md:h-12 lg:w-28 lg:h-14 2xl:mt-16 hover:bg-brand hover:text-bg active:scale-[0.98]">Quit</button>
         </div>
-        <div v-show="popupOpen">
+        <div v-if="popupOpen">
             <Popup ref="dialog" @confirm="quitYes" @decline="quitNo" customClass="mt-2 max-md:mt-4">Are you sure you want to quit?</Popup>
         </div>
     </div>
 
+    <!-- countdown -->
+    <div v-if="storeQuiz.type === 'Timed' && !done" class="square hithere fixed top-8 right-12">{{ countdownNum }}</div>
+
     <!-- finish? -->
-    <div v-show="finishQ">
+    <div v-if="finishQ">
         <Popup ref="dialog" @confirm="finish" @decline="quitNo" customClass="mt-2 max-md:mt-4">Are you sure you want to finish?</Popup>
     </div>
 
@@ -199,5 +241,29 @@ onBeforeUnmount(() => {
     background-color: var(--bgbtn);
     color: var(--bg);
     cursor: not-allowed;
+}
+
+.square {
+  display: inline-block;
+  width: 70px;
+  height: 70px;
+  border-radius: 20px;
+  background: rgba(255, 165, 80, 0.9);
+  box-shadow: 4px -40px 60px 5px rgba(0, 0, 0, 0.8) inset;
+  text-align: center;
+  place-content: center;
+  font-size: 24px;
+  color: var(--wg);
+  font-weight: 700;
+}
+.hithere {
+  animation: hithere 1s ease infinite;
+}
+@keyframes hithere {
+  30% { transform: scale(1.2); }
+  40%, 60% { transform: rotate(-20deg) scale(1.2); }
+  50% { transform: rotate(20deg) scale(1.2); }
+  70% { transform: rotate(0deg) scale(1.2); }
+  100% { transform: scale(1); }
 }
 </style>
