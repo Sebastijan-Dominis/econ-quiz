@@ -248,8 +248,8 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                     }
                 }
 
-                // normal and hard difficulties -> ideally no hard and very hard countries
-                else if(difficulty === "normal" || difficulty === "hard") {
+                // normal difficulty -> ideally no hard and very hard countries
+                else if(difficulty === "normal") {
                     for (const [country, value] of storeStudy.countryData.value) {
                         if (!storeStudy.hardCountries.has(country) && !storeStudy.veryHardCountries.has(country)) cleared.push([country, value]);
                     }
@@ -267,8 +267,8 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                     }
                 }
 
-                // very hard difficulty -> ideally no very easy and very hard countries; add very hard first if not enough
-                else if(difficulty === "veryHard") {
+                // hard difficulty -> ideally no very easy and very hard countries; add very hard first if need be
+                else if (difficulty === "hard") {
                     for (const [country, value] of storeStudy.countryData.value) {
                         if (!storeStudy.veryEasyCountries.has(country) && !storeStudy.veryHardCountries.has(country)) cleared.push([country, value]);
                     }
@@ -286,10 +286,35 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                     }
                 }
 
-                // absolute madman difficulty -> ideally no very easy and easy countries
-                else if(difficulty === "absoluteMadman") {
+                // very hard difficulty -> ideally no very easy and easy countries
+                else if(difficulty === "veryHard") {
                     for (const [country, value] of storeStudy.countryData.value) {
                         if (!storeStudy.veryEasyCountries.has(country) && !storeStudy.easyCountries.has(country)) cleared.push([country, value]);
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.easyCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.veryEasyCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
+                    }
+                }
+
+                // absolute madman difficulty -> ideally only hard and very hard countries
+                else if(difficulty === "absoluteMadman") {
+                    for (const [country, value] of storeStudy.countryData.value) {
+                        if (storeStudy.hardCountries.has(country) || storeStudy.veryHardCountries.has(country)) cleared.push([country, value]);
+                    }
+                    if (cleared.length < 21) {
+                        for (const [country, value] of storeStudy.countryData.value) {
+                            if (storeStudy.mediumCountries.has(country)) cleared.push([country, value]);
+                            if (cleared.length === 21) break;
+                        }
                     }
                     if (cleared.length < 21) {
                         for (const [country, value] of storeStudy.countryData.value) {
