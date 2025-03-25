@@ -28,6 +28,7 @@ export const useStoreStudy = defineStore('storeStudy', {
             largeNums: ref(new Set([])),
             smallNums: ref(new Set([])),
             cannotOver100: ref(new Set([])),
+            cannotBelow0: ref(new Set([])),
             chosenDataMap: {},
             columns: ref(
                 [
@@ -52,7 +53,8 @@ export const useStoreStudy = defineStore('storeStudy', {
             hardCountries: new Set(["Andorra", "Angola", "Armenia", "Azerbaijan", "Bahrain", "Belize", "Bhutan", "Botswana", "Burkina Faso", "Burundi", "Cameroon", "Chad", "Comoros", "Cote d'Ivoire", "Djibouti", "Ecuador", "Equatorial Guinea", "Eswatini", "Gabon", "Gambia, The", "Ghana", "Guatemala", "Guyana", "Jamaica", "Kuwait", "Kyrgyz Republic", "Lao PDR", "Latvia", "Lebanon", "Lesotho", "Liberia", "Lithuania", "Malawi", "Maldives", "Mali", "Mauritius", "Moldova", "Mozambique", "Myanmar", "Namibia", "Nepal", "Nicaragua", "Niger", "Panama", "Paraguay", "Rwanda", "Senegal", "Sierra Leone", "Sri Lanka", "Sudan", "Suriname", "Tajikistan", "Tanzania", "Togo", "Turkmenistan", "Uganda", "Uzbekistan", "Zambia", "Zimbabwe"]),
             mediumCountries: new Set(["Afghanistan", "Albania", "Algeria", "Bangladesh", "Belarus", "Bolivia", "Bosnia and Herzegovina", "Bulgaria", "Cambodia", "Chile", "Congo, Dem. Rep.", "Costa Rica", "Cuba", "Czechia", "Denmark", "El Salvador", "Eritrea", "Estonia", "Georgia", "Haiti", "Honduras", "Iraq", "Jordan", "Kazakhstan", "Kenya", "Kosovo", "Libya", "Liechtenstein", "Madagascar", "Malaysia", "Malta", "Monaco", "Mongolia", "Montenegro", "Morocco", "North Macedonia", "Oman", "Peru", "Qatar", "San Marino", "Slovak Republic", "Slovenia", "Somalia", "Syrian Arab Republic", "Thailand", "Tunisia", "United Arab Emirates", "Uruguay", "Venezuela, RB", "Viet Nam", "West Bank and Gaza", "Yemen, Rep."]),
             easyCountries: new Set(["Argentina", "Austria", "Belgium", "Colombia", "Croatia", "Egypt, Arab Rep.", "Ethiopia", "Finland", "Hungary", "Iceland", "Ireland", "Korea, Dem. People's Rep.", "Luxembourg", "Norway", "Philippines", "Poland", "Portugal", "Romania", "Serbia", "Singapore", "South Africa", "Turkiye", "Ukraine"]),
-            veryEasyCountries: new Set(["Australia", "Brazil", "Canada", "China", "France", "Germany", "Greece", "India", "Indonesia", "Iran, Islamic Rep.", "Israel", "Italy", "Japan", "Korea, Rep.", "Mexico", "Netherlands", "New Zealand", "Nigeria", "Pakistan", "Russian Federation", "Saudi Arabia", "Spain", "Sweden", "Switzerland", "United Kingdom", "United States"])
+            veryEasyCountries: new Set(["Australia", "Brazil", "Canada", "China", "France", "Germany", "Greece", "India", "Indonesia", "Iran, Islamic Rep.", "Israel", "Italy", "Japan", "Korea, Rep.", "Mexico", "Netherlands", "New Zealand", "Nigeria", "Pakistan", "Russian Federation", "Saudi Arabia", "Spain", "Sweden", "Switzerland", "United Kingdom", "United States"]),
+            manualLimit: null
         }
     },
     actions: {
@@ -71,6 +73,7 @@ export const useStoreStudy = defineStore('storeStudy', {
                 const display = data.display;
                 const indicator = data.indicator;
                 const cannotOver100 = data.cannotOver100;
+                const cannotBelow0 = data.cannotBelow0;
                 const displayName = data.displayName;
 
                 // saving display names for the buttons and categorizing topics by indicator
@@ -95,6 +98,9 @@ export const useStoreStudy = defineStore('storeStudy', {
 
                 // adding to cannotOver100 to prevent the quiz algorithm from creating options that are above 100 for topics where it is impossible
                 if(cannotOver100) this.cannotOver100.add(name);
+
+                // adding to cannotBelow0 to not give players any score on manual input when they input a value below 0 where it is not possible
+                if(cannotBelow0) this.cannotBelow0.add(name);
 
                 // managing how the data will be displayed
                 if(display === "largeNumsDollars") this.largeNumsDollars.add(name);
@@ -178,6 +184,13 @@ export const useStoreStudy = defineStore('storeStudy', {
                     this.countryDataZA.value = [...this.countryData.value].reverse();
                     this.countryDataHL.value = [...this.countryData.value].sort((a, b) => b[1] - a[1]);
                     this.countryDataLH.value = [...this.countryData.value].sort((a, b) => a[1] - b[1]);
+                    const n = this.countryDataHL.value.length;
+
+                    // different m could be considered. lower will make it easier, while higher will make it harder for all manual input quizzes
+                    const m = Math.round(n/2.5);
+                    const upper = this.countryDataHL.value[Math.round(n/2)+m][1];
+                    const lower = this.countryDataHL.value[Math.round(n/2)-m][1];
+                    this.manualLimit = Math.abs(upper-lower);
                 } catch (error) {
                     this.error = error.message;
                     this.loading = false;

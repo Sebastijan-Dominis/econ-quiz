@@ -12,6 +12,7 @@ import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { db } from '../js/firebase';
 import CenterMessage from '../components/CenterMessage.vue';
 import { useStoreAuth } from '../stores/storeAuth';
+import DarkBtn from '../components/DarkBtn.vue';
 
 // initializing pinia stores
 const storeQuiz = useStoreQuiz();
@@ -121,7 +122,21 @@ const number = ref(new Array(21).fill(0));
 const keyModifier = ref(1);
 const shiftPressed = ref(false);
 
-const formattedNumber = computed(() => number.value[curr.value].toFixed(2));
+const formattedNumber = computed(() => {
+    console.log(typeof (Number(number.value[curr.value].toFixed(2))))
+    console.log(typeof (Number(number.value[curr.value]).toFixed(2)))
+    console.log(typeof (number.value[curr.value]).toFixed(2))
+    if(storeStudy.smallNumsPercentages.has(originalValue)) {
+        return `${number.value[curr.value].toFixed(2)}%`;
+    } else if(storeStudy.smallNums.has(originalValue)) {
+        return number.value[curr.value].toFixed(2);
+    } else if(storeStudy.largeNumsDollars.has(originalValue)) {
+        return `$${Number(number.value[curr.value].toFixed(2)).toLocaleString()}`;
+    } else if(storeStudy.largeNums.has(originalValue)) {
+        return Number(number.value[curr.value].toFixed(2)).toLocaleString();
+    }
+    return '';
+});
 
 const modifyWholeNumber = amount => {
     number.value[curr.value] += amount * keyModifier.value;
@@ -135,6 +150,34 @@ const modifyDecimal = amount => {
 const handleKeydown = event => {
     if(event.key.match(/[1-9]/)) {
         keyModifier.value = Math.pow(10, parseInt(event.key))
+    } else {
+        switch (event.key) {
+            case "0":
+                keyModifier.value = 10000000000
+                break;
+            case "Q":
+            case "q":
+                keyModifier.value = 100000000000;
+                break;
+            case "W":
+            case "w":
+                keyModifier.value = 1000000000000;
+                break;
+            case "E":
+            case "e":
+                keyModifier.value = 10000000000000;
+                break;
+            case "R":
+            case "r":
+                keyModifier.value = 100000000000000;
+                break;
+            case "T":
+            case "t":
+                keyModifier.value = 1000000000000000;
+                break;
+            default:
+                break;
+        }
     }
     if(event.shiftKey) {
         shiftPressed.value = true;
@@ -164,6 +207,9 @@ const prevQMan = () => {
     if(curr.value > 1) curr.value--;
 }
 
+// instructions for manual input quizzes
+const instructions = ref(false);
+
 // finishing
 const done = ref(false);
 const openFinish = () => {
@@ -190,24 +236,36 @@ const finish = async() => {
             let closeness = [];
             for(let i = 1; i < number.value.length; i++) {
                 const currNum = number.value[i];
-                const currCorr = storeQuiz.questions[i].correct;
-                if(currNum < currCorr) {
-                    closeness.push((currNum/currCorr).toFixed(2));
-                } else {
-                    const diff = currNum - currCorr;
-                    const divider = currCorr - diff;
-                    if(divider < 0) closeness.push(0.00);
-                    else closeness.push((divider/currCorr).toFixed(2));
+
+                if(storeStudy.cannotOver100.has(topic) && currNum > 100 || storeStudy.cannotBelow0.has(topic) && currNum < 0) {
+                    closeness.push(0.00);
+                    continue;
                 }
+
+                const currCorr = storeQuiz.questions[i].correct;
+
+                if(currNum === currCorr) {
+                    closeness.push(100.00);
+                    continue;
+                }
+
+                const limit = storeStudy.manualLimit;
+                const distance = Math.abs(currCorr - currNum);
+                
+                if(distance >= limit) {
+                    closeness.push(0.00);
+                    continue;
+                }
+
+                const currCloseness = (100-((distance/limit)*100)).toFixed(2);
+                closeness.push(currCloseness);
             }
             let total = 0;
             for(let i = 0; i < closeness.length; i++) {
-                total += Number((closeness[i] * 100).toFixed(2));
+                total += Number(closeness[i]);
             }
-            console.log(total);
             score = (total/20).toFixed(2);
             storeQuiz.manualScore = score;
-            console.log(score, storeQuiz.manualScore);
         }
         const resultsGlobalRef = collection(db, 'results');
         let indicator;
@@ -242,6 +300,7 @@ const finish = async() => {
         savingFnDone.value = true;
     }
 }
+
 onBeforeUnmount(() => {
     document.removeEventListener('click', onClickOutside2);
     storeQuiz.questions = [];
@@ -277,16 +336,7 @@ onBeforeUnmount(() => {
 
         <!-- manual input quizzes -->
         <div v-if="storeQuiz.type === 'Manual Input'" class="mt-12 md:mt-16 lg:mt-20 xl:mt-24 2xl:mt-28 grid grid-cols-2 gap-y-6 place-items-center md:gap-y-10">
-            <h2 v-if="storeStudy.largeNumsDollars.has(originalValue)" class="manualNumber">
-              <span>${{ formattedNumber.toLocaleString() }}</span>
-            </h2>
-            <h2 v-if="storeStudy.smallNumsPercentages.has(originalValue)" class="manualNumber">
-              <span>{{ formattedNumber }}%</span>
-            </h2>
-            <h2 v-if="storeStudy.largeNums.has(originalValue)" class="manualNumber">
-              <span>{{ formattedNumber.toLocaleString() }}</span>
-            </h2>
-            <h2 v-if="storeStudy.smallNums.has(originalValue)" class="manualNumber">
+            <h2 class="manualNumber">
               <span>{{ formattedNumber }}</span>
             </h2>
             <h3 class="manualTitle">Whole</h3>
@@ -303,6 +353,49 @@ onBeforeUnmount(() => {
             <NavBtn v-if="curr !== storeQuiz.questions.length-1" @click="nextQMan">Next</NavBtn>
             <NavBtn v-else @click="openFinish">Finish</NavBtn>
         </div>
+
+        <!-- instructions for manual input quizzes -->
+        <div @click="instructions = true" class="fixed top-4 right-8 w-14 h-14 rounded-full border border-brand bg-bgbtn text-wg text-2xl flex items-center justify-center hover:cursor-pointer hover:bg-brand hover:text-bg hover:border-bg active:scale-98">
+            ?
+        </div>
+        <div v-show="instructions">
+            <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-95"></div>
+            <div class="fixed top-0 left-0 w-full h-[70%] grid grid-cols-2 text-brand place-items-center items-start mt-16">
+                <h1 class="col-span-2 text-3xl font-bold">Instructions</h1>
+                <p class="col-span-2 text-2xl">Hold these keys while clicking</p>
+                <p class="col-span-2 text-1xl">(e.g. hold 2 while clicking on whole + or - to increase or decrease it by 100)</p>
+                <div>
+                    <h2 class="text-2xl font-bold">Whole</h2>
+                    <div class="mt-4">
+                        <p class="instructions">default => +-1</p>
+                        <p class="instructions">1 => +-10</p>
+                        <p class="instructions">2 => +-100</p>
+                        <p class="instructions">3 => +-1,000</p>
+                        <p class="instructions">4 => +-10,000</p>
+                        <p class="instructions">5 => +-100,000</p>
+                        <p class="instructions">6 => +-1,000,000</p>
+                        <p class="instructions">7 => +-10,000,000</p>
+                        <p class="instructions">8 => +-100,000,000</p>
+                        <p class="instructions">9 => +-1,000,000,000</p>
+                        <p class="instructions">0 => +-10,000,000,000</p>
+                        <p class="instructions">q => +-100,000,000,000</p>
+                        <p class="instructions">w => +-1,000,000,000,000</p>
+                        <p class="instructions">e => +-10,000,000,000,000</p>
+                        <p class="instructions">r => +-100,000,000,000,000</p>
+                        <p class="instructions">t => +-1,000,000,000,000,000</p>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold">Decimal</h2>
+                    <div class="mt-4">
+                        <p class="instructions">default => +-0.01</p>
+                        <p class="instructions">shift => +=0.1</p>
+                    </div>
+                </div>
+                <DarkBtn @click="instructions = false" class="col-span-2">Close</DarkBtn>
+            </div>
+        </div>
+
 
         <!-- options for multiple choice quizzes -->
         <div v-if="storeQuiz.type === 'Multiple Choice'" class="grid grid-cols-2 place-items-center mt-10 mx-40 md:mx-16 md:mt-16 lg:mx-20 2xl:mx-36">
@@ -466,5 +559,10 @@ onBeforeUnmount(() => {
         font-size: 2.25rem;
         line-height: 2.5rem;
     }
+}
+
+.instructions {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
 }
 </style>
