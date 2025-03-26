@@ -123,9 +123,6 @@ const keyModifier = ref(1);
 const shiftPressed = ref(false);
 
 const formattedNumber = computed(() => {
-    console.log(typeof (Number(number.value[curr.value].toFixed(2))))
-    console.log(typeof (Number(number.value[curr.value]).toFixed(2)))
-    console.log(typeof (number.value[curr.value]).toFixed(2))
     if(storeStudy.smallNumsPercentages.has(originalValue)) {
         return `${number.value[curr.value].toFixed(2)}%`;
     } else if(storeStudy.smallNums.has(originalValue)) {
@@ -302,6 +299,7 @@ const finish = async() => {
 }
 
 onBeforeUnmount(() => {
+    document.removeEventListener('mousedown', onClickOutside);
     document.removeEventListener('click', onClickOutside2);
     storeQuiz.questions = [];
     storeQuiz.correctAnswers = 0;
@@ -411,7 +409,7 @@ onBeforeUnmount(() => {
 
         <!-- double checking if the user really wants to quit -->
         <div v-if="popupOpen">
-            <Popup ref="dialog" @confirm="quitYes" @decline="quitNo" customClass="mt-2 max-md:mt-4">Are you sure you want to quit?</Popup>
+            <Popup ref="dialog" @confirm="quitYes" @decline="quitNo">Are you sure you want to quit?</Popup>
         </div>
     </div>
 
@@ -420,7 +418,7 @@ onBeforeUnmount(() => {
 
     <!-- finish? -->
     <div v-if="finishQ">
-        <Popup ref="dialog" @confirm="finish" @decline="quitNo" customClass="mt-2 max-md:mt-4">Are you sure you want to finish?</Popup>
+        <Popup ref="dialog" @confirm="finish" @decline="quitNo">Are you sure you want to finish?</Popup>
     </div>
 
     <!-- waiting to see if the results will be saved properly -->

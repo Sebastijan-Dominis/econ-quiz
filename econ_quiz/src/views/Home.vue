@@ -3,7 +3,7 @@
 import BrandBtn from '../components/BrandBtn.vue';
 import DarkBtn from '../components/DarkBtn.vue';
 import Popup from '../components/Popup.vue';
-import { ref, watchEffect } from 'vue';
+import { ref, watchEffect, onBeforeUnmount } from 'vue';
 import { useStoreAuth } from '../stores/storeAuth';
 import { useStoreQuiz } from '../stores/storeQuiz';
 import { useStoreStudy } from '../stores/storeStudy';
@@ -81,12 +81,18 @@ const chooseType = function(type) {
     storeQuiz.type = type;
     router.push(`/quiz-choice/${storeStudy.typesMap[type]}`);
 }
+
+// cleaning up
+onBeforeUnmount(() => {
+    document.removeEventListener('mousedown', onClickOutside);
+    document.removeEventListener('click', onClickOutside2);
+})
 </script>
 
 <template>
     <!-- Small screens -->
     <h1 class="text-brand text-3xl text-center font-bold pt-4 md:hidden">Welcome to Econ Quiz!</h1>
-    <p class="text-brand text-center font-bold mt-8 md:hidden">For the best experience, use your desktop computer</p>
+    <p class="text-brand text-center font-bold mt-8 md:hidden">For the best experience, use a wider screen</p>
     <h2 v-if="!storeAuth.isLoggedIn" class="text-brand text-center font-bold fixed top-32 left-1/2 transform -translate-x-1/2 text-lg md:hidden">You are not logged in. Log in to save your results!</h2>
     <h2 v-else class="text-brand text-center font-bold fixed top-32 left-1/2 transform -translate-x-1/2 text-lg md:hidden">{{ hello }}</h2>
 
@@ -102,13 +108,14 @@ const chooseType = function(type) {
         <DarkBtn class="w-48 h-20" @click="typePopup = true">Play Now!</DarkBtn>
     </div>
 
-    <div class="w-full mt-16 pl-4 md:hidden">
+    <div class="w-full flex mt-16 px-4 justify-between md:hidden">
         <router-link :to="{name: 'results-choice'}"><DarkBtn class="w-32 h-12">Results</DarkBtn></router-link>
+        <router-link :to="{name: 'add'}"><DarkBtn v-if="storeAuth.isLoggedIn && storeAuth.isAdmin">Add</DarkBtn></router-link>
     </div>
 
     <div class="w-full flex mt-8 px-4 pb-8 justify-between md:hidden">
         <router-link :to="{name: 'leaderboard'}"><DarkBtn class="w-32 h-12">Leaderboard</DarkBtn></router-link>
-        <p v-if="storeAuth.isLoggedIn && storeAuth.isAdmin" class="text-center w-80 text-brand md:hidden">To use Admin options, please use your desktop computer</p>
+        <router-link :to="{name: 'edit-choice'}"><DarkBtn v-if="storeAuth.isLoggedIn && storeAuth.isAdmin">Edit/Delete</DarkBtn></router-link>
     </div> 
 
     <div class="w-full flex px-4 pb-8 justify-between md:hidden">
@@ -151,7 +158,7 @@ const chooseType = function(type) {
             <h2 class="text-2xl text-brand font-normal">Admin Options</h2>
             <nav class="flex flex-col gap-6">
                 <router-link :to="{name: 'add'}"><DarkBtn>Add</DarkBtn></router-link>
-                <router-link :to="{name: 'edit'}"><DarkBtn>Edit</DarkBtn></router-link>
+                <router-link :to="{name: 'edit-choice'}"><DarkBtn>Edit/Delete</DarkBtn></router-link>
             </nav>
         </div>
 
@@ -162,7 +169,7 @@ const chooseType = function(type) {
     </div>
     <!-- Logout? -->
     <div v-show="storeAuth.logoutq">
-        <Popup ref="dialog" @confirm="logoutYes" @decline="logoutNo" customClass="mt-2 max-md:mt-4">Are you sure you want to log out?</Popup>
+        <Popup ref="dialog" @confirm="logoutYes" @decline="logoutNo">Are you sure you want to log out?</Popup>
     </div>
 
     <!-- type choice -->

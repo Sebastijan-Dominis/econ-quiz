@@ -4,6 +4,7 @@ import PageTop from '../components/PageTop.vue';
 import { useRoute } from 'vue-router';
 import { useStoreStudy } from '../stores/storeStudy';
 import { ref, watchEffect, onMounted, onUnmounted, computed } from 'vue';
+import Dropdown from '../components/Dropdown.vue';
 
 // fetching the data
 const route = useRoute();
@@ -100,9 +101,7 @@ const manageScreenSize = computed(() => {
       <!-- Button to toggle sorter box -->
       <button @click="isOpen = !isOpen" class="flex justify-between items-center w-full text-lg font-bold" :class="{'max-lg:!justify-center': storeFixedBtn.isFixed}">
         <span v-show="manageScreenSize">Sort By</span>
-        <svg :class="{'rotate-90': isOpen}" class="w-6 h-6 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
-        </svg>
+        <Dropdown :class="{'rotate-90': isOpen}"></Dropdown>
       </button>
 
     <!-- sorter options (hidden by default) -->

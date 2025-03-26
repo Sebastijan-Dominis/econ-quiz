@@ -6,6 +6,7 @@ import Leaderboard from "../views/Leaderboard.vue";
 import Results from "../views/Results.vue";
 import QuizChoice from "../views/QuizChoice.vue";
 import Add from "../views/Add.vue";
+import EditChoice from "../views/EditChoice.vue";
 import Edit from "../views/Edit.vue";
 import Signup from "../views/Signup.vue";
 import Login from "../views/Login.vue";
@@ -25,7 +26,8 @@ const routes = [
     { path: '/results', name: 'results', component: Results},
     { path: '/quiz-choice/:type', name: 'quiz-choice', component: QuizChoice },
     { path: '/add', name: 'add', component: Add },
-    { path: '/edit', name: 'edit', component: Edit },
+    { path: '/edit-choice', name: 'edit-choice', component: EditChoice },
+    { path: '/edit/:choice', name: 'edit', component: Edit },
     { path: '/signup', name: 'signup', component: Signup },
     { path: '/login', name: 'login', component: Login },
     { path: '/results-choice', name: 'results-choice', component: ResultsChoice },

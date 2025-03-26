@@ -3,6 +3,7 @@
 import DarkBtn from './DarkBtn.vue';
 import { useRouter } from 'vue-router';
 import { useStoreStudy } from '../stores/storeStudy';
+import { useStoreEditQuiz } from '../stores/storeEditQuiz';
 
 // props
 const props = defineProps(['label']);
@@ -12,6 +13,7 @@ const router = useRouter();
 
 // sending the choice information
 const storeStudy = useStoreStudy();
+const storeEditQuiz = useStoreEditQuiz();
 const whatToDo = () => {
     const topic = props.label.replace(/\n/g, ' ');
     const urlValue = storeStudy.choiceMap[topic];
@@ -19,6 +21,9 @@ const whatToDo = () => {
         router.push({name: 'study', params: {choice: urlValue}});
     } else if (router.currentRoute.value.fullPath.includes('/quiz-choice')) {
         router.push({name: 'quiz-difficulty-choice', params: {type: storeStudy.typesMap[storeStudy.type], choice: urlValue}});
+    } else if (router.currentRoute.value.fullPath === "/edit-choice") {
+        storeEditQuiz.editOrDelete = true;
+        storeEditQuiz.chosenTopic = topic;
     }
 }
 </script>

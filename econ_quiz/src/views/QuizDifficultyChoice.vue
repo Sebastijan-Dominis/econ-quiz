@@ -134,7 +134,7 @@ const start = async() => {
             </div>
         </transition>
         <div v-show="showPopup">
-            <Popup ref="dialog" @confirm="start" @decline="onDecline" customClass="mt-8 max-md:mt-6">Start quiz?</Popup>
+            <Popup ref="dialog" @confirm="start" @decline="onDecline">Start quiz?</Popup>
             <p class="fixed bottom-20 left-1/2 translate-x-[-50%] text-brand text-base font-bold text-center 2xl:bottom-32 2xl:text-xl">Note: the data for this quiz<br>is from {{ year }}</p>
         </div>
     </div>

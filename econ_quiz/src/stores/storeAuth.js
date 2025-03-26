@@ -2,7 +2,7 @@
 import { defineStore } from "pinia";
 import { auth, db, googleProvider } from '../js/firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, deleteUser, onAuthStateChanged, signInWithPopup, sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
-import { setDoc, doc, getDocs, collection, query, where } from "firebase/firestore";
+import { setDoc, doc, getDocs, collection, query, where, getDoc } from "firebase/firestore";
 
 export const useStoreAuth = defineStore('storeAuth', {
     state: () => {
@@ -16,11 +16,13 @@ export const useStoreAuth = defineStore('storeAuth', {
     },
     actions: {
         init() {
-            onAuthStateChanged(auth, user => {
+            onAuthStateChanged(auth, async user => {
                 if(user) {
                     this.isLoggedIn = true;
-                    this.isAdmin = true;
                     this.user = user;
+                    const userRef = doc(db, "users", user.uid);
+                    const userData = await getDoc(userRef);
+                    if(userData.data().isAdmin) this.isAdmin = true;
                     this.router.push('/');
                 } else {
                     this.isLoggedIn = false;
