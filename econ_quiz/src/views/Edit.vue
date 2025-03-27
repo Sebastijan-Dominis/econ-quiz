@@ -11,6 +11,7 @@ import CenterMessage from '../components/CenterMessage.vue';
 import { useRouter } from 'vue-router';
 import { useStoreEditQuiz } from '../stores/storeEditQuiz';
 import AdminInstructions from '../components/AdminInstructions.vue';
+import InstructionsBtn from '../components/InstructionsBtn.vue';
 
 const router = useRouter();
 const storeEditQuiz = useStoreEditQuiz();
@@ -312,7 +313,7 @@ onBeforeUnmount(() => {
     </div>
 
     <!-- instructions -->
-    <div @click="storeEditQuiz.instructions = true" class="fixed top-4 right-8 w-14 h-14 rounded-full border border-brand bg-bgbtn text-wg text-2xl flex items-center justify-center hover:cursor-pointer hover:bg-brand hover:text-bg hover:border-bg active:scale-98">?</div>
+    <InstructionsBtn @click="storeEditQuiz.instructions = true"></InstructionsBtn>
     <AdminInstructions v-if="storeEditQuiz.instructions"></AdminInstructions>
 
     <!-- popup confirmation -->

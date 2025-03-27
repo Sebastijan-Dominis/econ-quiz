@@ -113,6 +113,22 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                 5: "Hard",
                 6: "Very hard",
                 7: "Absolute madman"
+            },
+
+            // these factors are only for calculating the leaderboard score
+            typeFactors: {
+                "Manual Input": 1.3,
+                "Timed": 1.3,
+                "Multiple Choice": 1
+            },
+            difficultiesFactors:{
+                1: 1,
+                2: 1.3,
+                3: 1.6,
+                4: 1.9,
+                5: 2.2,
+                6: 2.5,
+                7: 2.8
             }
         }
     },

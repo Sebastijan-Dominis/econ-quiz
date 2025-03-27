@@ -13,6 +13,9 @@ import { db } from '../js/firebase';
 import CenterMessage from '../components/CenterMessage.vue';
 import { useStoreAuth } from '../stores/storeAuth';
 import DarkBtn from '../components/DarkBtn.vue';
+import InstructionsBtn from '../components/InstructionsBtn.vue';
+import firstSound from '../assets/music/first.wav';
+import secondSound from '../assets/music/second.wav';
 
 // initializing pinia stores
 const storeQuiz = useStoreQuiz();
@@ -102,6 +105,30 @@ if(route.params.type === "timed") {
                 finish();
             }, 5000)
         }
+    })
+
+    // sound effects
+    let firstInterval;
+    let secondInterval;
+    const first = ref(null);
+    const second = ref(null);
+    onMounted(() => {
+        first.value = new Audio(firstSound);
+        second.value = new Audio(secondSound); 
+        first.value.play();
+        second.value.play();
+        firstInterval = setInterval(() => {
+            first.value.play()
+        }, 5000);
+        secondInterval = setInterval(() => {
+            second.value.play();
+        }, 1000)
+    })
+    onUnmounted(() => {
+        clearInterval(firstInterval);
+        clearInterval(secondInterval);
+        first.value = null;
+        second.value = null;
     })
 }
 
@@ -265,6 +292,12 @@ const finish = async() => {
             storeQuiz.manualScore = score;
         }
         const resultsGlobalRef = collection(db, 'results');
+        const difficulty = storeQuiz.difficultiesMap[route.params.difficulty];
+
+        const typeFactor = storeQuiz.typeFactors[storeQuiz.type];
+        const difficultyFactor = storeQuiz.difficultiesFactors[difficulty];
+        const leaderboardScore = Math.floor(score * typeFactor * difficultyFactor);
+
         let indicator;
         if(storeStudy.economic.has(topic)) indicator = "economic";
         else if(storeStudy.demographic.has(topic)) indicator = "demographic";
@@ -276,8 +309,9 @@ const finish = async() => {
             type: storeQuiz.type,
             topic: topic,
             indicator: indicator,
-            difficulty: storeQuiz.difficultiesMap[route.params.difficulty],
-            timestamp: Timestamp.fromDate(end.value)
+            difficulty: difficulty,
+            timestamp: Timestamp.fromDate(end.value),
+            leaderboardScore: leaderboardScore
         })
 
         const resultsUserRef = collection(db, 'users', storeAuth.user.uid, 'results');
@@ -287,8 +321,9 @@ const finish = async() => {
             type: storeQuiz.type,
             topic: topic,
             indicator: indicator,
-            difficulty: storeQuiz.difficultiesMap[route.params.difficulty],
-            timestamp: Timestamp.fromDate(end.value)
+            difficulty: difficulty,
+            timestamp: Timestamp.fromDate(end.value),
+            leaderboardScore: leaderboardScore
         })
     } catch(error) {
         alert("Sorry. An error occurred and your results were not saved :/");
@@ -353,9 +388,8 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- instructions for manual input quizzes -->
-        <div v-show="storeQuiz.type === 'Manual Input'" @click="instructions = true" class="fixed top-4 right-8 w-14 h-14 rounded-full border border-brand bg-bgbtn text-wg text-2xl flex items-center justify-center hover:cursor-pointer hover:bg-brand hover:text-bg hover:border-bg active:scale-98">
-            ?
-        </div>
+        <InstructionsBtn v-show="storeQuiz.type === 'Manual Input'" @click="instructions = true"></InstructionsBtn>
+        
         <div v-show="instructions">
             <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-95"></div>
             <div class="fixed top-0 left-0 w-full h-[70%] grid grid-cols-2 text-brand place-items-center items-start mt-16">

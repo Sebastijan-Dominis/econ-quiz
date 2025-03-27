@@ -131,6 +131,7 @@ const fetchResults = async(direction = "desc", element = "timestamp", types = un
                     difficulty: difficultyString,
                     topic: doc.data().topic,
                     indicator: doc.data().indicator,
+                    leaderboardScore: doc.data().leaderboardScore,
                     timestamp: EUdate
                 });
             });
@@ -196,6 +197,8 @@ onUnmounted(() => {
                 <h2>{{ result.score }}%</h2>
                 <h2>Time spent:</h2>
                 <h2>{{ result.timeTaken }}</h2>
+                <h2>Leaderboard score:</h2>
+                <h2>{{ result.leaderboardScore }}</h2>
                 <h2>Taken on:</h2>
                 <h2>{{ result.timestamp }}</h2>
             </div> 
