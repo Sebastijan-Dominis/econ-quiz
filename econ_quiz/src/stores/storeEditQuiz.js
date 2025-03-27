@@ -6,6 +6,8 @@ export const useStoreEditQuiz = defineStore('storeEditQuiz', {
         return {
             editOrDelete: false,
             chosenTopic: null,
+            topicID : null,
+            instructions: false,
             currTopic: {
                 name: null,
                 displayName: null,

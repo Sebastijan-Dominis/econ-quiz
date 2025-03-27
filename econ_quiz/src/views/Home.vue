@@ -92,7 +92,7 @@ onBeforeUnmount(() => {
 <template>
     <!-- Small screens -->
     <h1 class="text-brand text-3xl text-center font-bold pt-4 md:hidden">Welcome to Econ Quiz!</h1>
-    <p class="text-brand text-center font-bold mt-8 md:hidden">For the best experience, use a wider screen</p>
+    <p class="text-brand text-center font-bold mt-8 md:hidden">For the best experience use laptop or desktop PC</p>
     <h2 v-if="!storeAuth.isLoggedIn" class="text-brand text-center font-bold fixed top-32 left-1/2 transform -translate-x-1/2 text-lg md:hidden">You are not logged in. Log in to save your results!</h2>
     <h2 v-else class="text-brand text-center font-bold fixed top-32 left-1/2 transform -translate-x-1/2 text-lg md:hidden">{{ hello }}</h2>
 

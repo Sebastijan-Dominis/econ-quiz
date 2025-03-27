@@ -13,7 +13,7 @@ const titles = ref(
 </script>
 
 <template>
-<div class="grid grid-cols-3 max-lg:grid-cols-1 mx-32 gap-12">
+<div class="grid grid-cols-3 max-lg:grid-cols-1 mx-32 gap-12 mb-4">
   <div v-for="(column, index) in storeStudy.columns" :key="index" class="flex flex-col items-center mt-12">
       <h2 class="text-lg xl:text-2xl 2xl:text-3xl text-brand font-bold text-center">{{ titles[index] }}</h2>
     <ChooseBtn v-for="(button, i) in column" :key="i" :label="button" class="mt-6"/>

@@ -6,13 +6,14 @@ import { ref, reactive, onMounted, onUnmounted, watchEffect, onBeforeUnmount } f
 import DarkBtn from '../components/DarkBtn.vue';
 import Popup from '../components/Popup.vue';
 import { db } from '../js/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import CenterMessage from '../components/CenterMessage.vue';
 import { useRouter } from 'vue-router';
 import { useStoreEditQuiz } from '../stores/storeEditQuiz';
+import AdminInstructions from '../components/AdminInstructions.vue';
 
-const storeEditQuiz = useStoreEditQuiz();
 const router = useRouter();
+const storeEditQuiz = useStoreEditQuiz();
 
 const quizInfo = reactive({
     name: null,
@@ -27,15 +28,16 @@ const quizInfo = reactive({
 })
 
 onMounted(() => {
-    quizInfo.name = storeEditQuiz.currTopic.name;
-    quizInfo.displayName = storeEditQuiz.currTopic.displayName;
-    quizInfo.shortName = storeEditQuiz.currTopic.shortName;
-    quizInfo.key = storeEditQuiz.currTopic.key;
-    quizInfo.year = storeEditQuiz.currTopic.year;
-    quizInfo.indicator = storeEditQuiz.currTopic.indicator;
-    quizInfo.display = storeEditQuiz.currTopic.display;
-    quizInfo.cannotOver100 = storeEditQuiz.currTopic.cannotOver100;
-    quizInfo.cannotBelow0 = storeEditQuiz.currTopic.cannotBelow0;
+    const info = storeEditQuiz.currTopic;
+    quizInfo.name = info.name;
+    quizInfo.displayName = info.displayName;
+    quizInfo.shortName = info.shortName;
+    quizInfo.key = info.key;
+    quizInfo.year = info.year;
+    quizInfo.indicator = info.indicator;
+    quizInfo.display = info.display;
+    quizInfo.cannotOver100 = info.cannotOver100;
+    quizInfo.cannotBelow0 = info.cannotBelow0;
 })
 
 // managing dropdowns
@@ -78,7 +80,7 @@ onMounted(() => {
     maxYear.value = currYear.value-1;
 })
 
-// managing the popup and adding new quiz data to the database
+// managing the popup and editing quiz data
 const popupOpen = ref(false);
 const confirmation = ref(null);
 const dialog = ref(null);
@@ -101,32 +103,33 @@ const openPopup = () => {
     popupOpen.value = true;
     document.addEventListener('mousedown', onClickOutsidePopup);
 }
+const editing = ref(false);
 const edit = async() => {
+    editing.value = true;
+    document.removeEventListener('click', onClickOutsidePopup2);
+    popupOpen.value = false;
     const values = Object.values(quizInfo);
     for(let i = 0; i < values.length; i++) {
         if(values[i] === null) {
-            document.removeEventListener('click', onClickOutsidePopup2);
-            popupOpen.value = false;
+            editing.value = false;
             alert("All of the values are required.");
             return;
         }
     }
     if(quizInfo.year < minYear.value || quizInfo.year > maxYear.value) {
-        document.removeEventListener('click', onClickOutsidePopup2);
-        popupOpen.value = false;
+        editing.value = false;
         alert(`Year must be between ${minYear.value} and ${maxYear.value}`);
         return;
     }
     try {
-        const topics = collection(db, "topics");
-        await addDoc(topics, quizInfo);
-        finalMessageText.value = "You have successfully added a quiz!";
+        const docRef = doc(db, "topics", storeEditQuiz.topicID);
+        await updateDoc(docRef, { ...quizInfo });
+        finalMessageText.value = "You have successfully edited a quiz!";
     } catch(error) {
         console.error(error);
-        finalMessageText.value = `An error occured and your quiz was not added.\n${error}`;
+        finalMessageText.value = `An error occurred and your quiz was not edited.\n${error}`;
     } finally {
-        document.removeEventListener('click', onClickOutsidePopup2);
-        popupOpen.value = false;
+        editing.value = false;
         finalMessage.value = true;
     }
 }
@@ -139,181 +142,190 @@ const close = () => {
 const finalMessage = ref(false);
 const finalMessageText = ref(null);
 
-// cleaning up the event listener
+// cleaning up
 onBeforeUnmount(() => {
     document.removeEventListener('mousedown', onClickOutsidePopup);
     document.removeEventListener('click', onClickOutsidePopup2);
+    editing.value = false;
+    finalMessage.value = false;
+    finalMessageText.value = null;
+    storeEditQuiz.instructions = false;
+    storeEditQuiz.chosenTopic = null;
     storeEditQuiz.currTopic.name = null;
     storeEditQuiz.currTopic.displayName = null;
     storeEditQuiz.currTopic.shortName = null;
-    storeEditQuiz.currTopic.display = null;
     storeEditQuiz.currTopic.key = null;
-    storeEditQuiz.currTopic.indicator = null;
     storeEditQuiz.currTopic.year = null;
+    storeEditQuiz.currTopic.indicator = null;
+    storeEditQuiz.currTopic.display = null;
     storeEditQuiz.currTopic.cannotOver100 = null;
     storeEditQuiz.currTopic.cannotBelow0 = null;
 })
 </script>
 
 <template>
-    <div v-if="!finalMessage">
-        <ReturnBtn></ReturnBtn>
-        <div class="h-auto w-auto bg-bgform border-brand border-4 rounded-3xl absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 flex flex-col text-brand">
-            <h1 class="text-center text-4xl font-bold mt-6">Add a new quiz</h1>
-            <p class="text-center mt-6">Fill in the form to add a new quiz</p>
-            <form @submit.prevent="edit" class="mt-6 mx-4 md:grid md:grid-cols-2 gap-x-4 gap-y-6 items-center text-lg">
-                <!-- name -->
-                <div class="col-span-1">
-                    <h2>name:</h2>
-                </div>
-                <div class="col-span-1">
-                    <input type="text" v-model="quizInfo.name" class="text-bg w-full h-8 px-2">
-                </div>
-    
-                <!-- displayName -->
-                <div class="col-span-1">
-                    <h2>displayName:</h2>
-                </div>
-                <div class="col-span-1">
-                    <input type="text" v-model="quizInfo.displayName" class="text-bg w-full h-8 px-2">
-                </div>
-    
-                <!-- shortName -->
-                <div class="col-span-1">
-                    <h2>shortName:</h2>
-                </div>
-                <div class="col-span-1">
-                    <input type="text" v-model="quizInfo.shortName" class="text-bg w-full h-8 px-2">
-                </div>
-    
-                <!-- key -->
-                <div class="col-span-1">
-                    <h2>key:</h2>
-                </div>
-                <div class="col-span-1">
-                    <input type="text" v-model="quizInfo.key" class="text-bg w-full h-8 px-2">
-                </div>
-    
-                <!-- year -->
-                <div class="col-span-1">
-                    <h2>year:</h2>
-                </div>
-                <div class="col-span-1">
-                    <input type="number" v-model="quizInfo.year" step="1" :min="minYear" :max="maxYear" class="text-bg w-full h-8 px-2" @input.prevent>
-                </div>
-    
-                <!-- indicator -->
-                <div class="col-span-1">
-                    <h2>indicator:</h2>
-                </div>
-                <div ref="dropdownMenu1" class="col-span-1">
-                    <button type="button" @click="isOpen1 = !isOpen1" class="dropdownBtn">
-                        <Dropdown :class="{'rotate-90': isOpen1}" ></Dropdown>
-                        <p class="text-brand text-xs font-thin mr-2">{{ quizInfo.indicator }}</p>
-                    </button>
-                    <div v-show="isOpen1" class="mt-4 space-y-2">
-                        <div class="flex items-center">
-                            <input type="radio" id="indicator1" class="mr-2" name="indicator" value="economic" v-model="quizInfo.indicator" />
-                            <label for="indicator1">economic</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="radio" id="indicator2" class="mr-2" name="indicator" value="demographic" v-model="quizInfo.indicator" />
-                            <label for="indicator2">demographic</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="radio" id="indicator3" class="mr-2" name="indicator" value="other" v-model="quizInfo.indicator" />
-                            <label for="indicator3">other</label>
-                        </div>
+    <ReturnBtn></ReturnBtn>
+    <div class="h-auto w-auto bg-bgform border-brand border-4 rounded-3xl absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 flex flex-col text-brand">
+        <h1 class="text-center text-4xl font-bold mt-6">Edit a quiz</h1>
+        <p class="text-center mt-6">Fill in the form to edit<br>{{ storeEditQuiz.chosenTopic }}</p>
+        <form @submit.prevent="create" class="mt-6 mx-4 md:grid md:grid-cols-2 gap-x-4 gap-y-6 items-center text-lg">
+            <!-- name -->
+            <div class="col-span-1">
+                <h2>name:</h2>
+            </div>
+            <div class="col-span-1">
+                <input type="text" v-model="quizInfo.name" class="text-bg w-full h-8 px-2">
+            </div>
+
+            <!-- displayName -->
+            <div class="col-span-1">
+                <h2>displayName:</h2>
+            </div>
+            <div class="col-span-1">
+                <input type="text" v-model="quizInfo.displayName" class="text-bg w-full h-8 px-2">
+            </div>
+
+            <!-- shortName -->
+            <div class="col-span-1">
+                <h2>shortName:</h2>
+            </div>
+            <div class="col-span-1">
+                <input type="text" v-model="quizInfo.shortName" class="text-bg w-full h-8 px-2">
+            </div>
+
+            <!-- key -->
+            <div class="col-span-1">
+                <h2>key:</h2>
+            </div>
+            <div class="col-span-1">
+                <input type="text" v-model="quizInfo.key" class="text-bg w-full h-8 px-2">
+            </div>
+
+            <!-- year -->
+            <div class="col-span-1">
+                <h2>year:</h2>
+            </div>
+            <div class="col-span-1">
+                <input type="number" v-model="quizInfo.year" step="1" :min="minYear" :max="maxYear" class="text-bg w-full h-8 px-2" @input.prevent>
+            </div>
+
+            <!-- indicator -->
+            <div class="col-span-1">
+                <h2>indicator:</h2>
+            </div>
+            <div ref="dropdownMenu1" class="col-span-1">
+                <button type="button" @click="isOpen1 = !isOpen1" class="dropdownBtn">
+                    <Dropdown :class="{'rotate-90': isOpen1}" ></Dropdown>
+                    <p class="text-brand text-xs font-thin mr-2">{{ quizInfo.indicator }}</p>
+                </button>
+                <div v-show="isOpen1" class="mt-4 space-y-2">
+                    <div class="flex items-center">
+                        <input type="radio" id="indicator1" class="mr-2" name="indicator" value="economic" v-model="quizInfo.indicator" />
+                        <label for="indicator1">economic</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="radio" id="indicator2" class="mr-2" name="indicator" value="demographic" v-model="quizInfo.indicator" />
+                        <label for="indicator2">demographic</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="radio" id="indicator3" class="mr-2" name="indicator" value="other" v-model="quizInfo.indicator" />
+                        <label for="indicator3">other</label>
                     </div>
                 </div>
-    
-                <!-- display -->
-                <div class="col-span-1">
-                    <h2>display:</h2>
-                </div>
-                <div ref="dropdownMenu2" class="col-span-1">
-                    <button type="button" @click="isOpen2 = !isOpen2" class="dropdownBtn">
-                        <Dropdown :class="{'rotate-90': isOpen2}" ></Dropdown>
-                        <p class="text-brand text-xs font-thin mr-2">{{ quizInfo.display }}</p>
-                    </button>
-                    <div v-show="isOpen2" class="mt-4 space-y-2">
-                        <div class="flex items-center">
-                            <input type="radio" id="display1" class="mr-2" name="display" value="smallNums" v-model="quizInfo.display" />
-                            <label for="display1">smallNums</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="radio" id="display2" class="mr-2" name="display" value="smallNumsPercentages" v-model="quizInfo.display" />
-                            <label for="display2">smallNumsPercentages</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="radio" id="display3" class="mr-2" name="display" value="largeNums" v-model="quizInfo.display" />
-                            <label for="display3">largeNums</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="radio" id="display4" class="mr-2" name="display" value="largeNumsDollars" v-model="quizInfo.display" />
-                            <label for="display4">largeNumsDollars</label>
-                        </div>
+            </div>
+
+            <!-- display -->
+            <div class="col-span-1">
+                <h2>display:</h2>
+            </div>
+            <div ref="dropdownMenu2" class="col-span-1">
+                <button type="button" @click="isOpen2 = !isOpen2" class="dropdownBtn">
+                    <Dropdown :class="{'rotate-90': isOpen2}" ></Dropdown>
+                    <p class="text-brand text-xs font-thin mr-2">{{ quizInfo.display }}</p>
+                </button>
+                <div v-show="isOpen2" class="mt-4 space-y-2">
+                    <div class="flex items-center">
+                        <input type="radio" id="display1" class="mr-2" name="display" value="smallNums" v-model="quizInfo.display" />
+                        <label for="display1">smallNums</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="radio" id="display2" class="mr-2" name="display" value="smallNumsPercentages" v-model="quizInfo.display" />
+                        <label for="display2">smallNumsPercentages</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="radio" id="display3" class="mr-2" name="display" value="largeNums" v-model="quizInfo.display" />
+                        <label for="display3">largeNums</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="radio" id="display4" class="mr-2" name="display" value="largeNumsDollars" v-model="quizInfo.display" />
+                        <label for="display4">largeNumsDollars</label>
                     </div>
                 </div>
-    
-                <!-- cannotOver100 -->
-                <div class="col-span-1">
-                    <h2>cannotOver100:</h2>
-                </div>
-                <div ref="dropdownMenu3" class="col-span-1">
-                    <button type="button" @click="isOpen3 = !isOpen3" class="dropdownBtn">
-                        <Dropdown :class="{'rotate-90': isOpen3}" ></Dropdown>
-                        <p class="text-brand text-xs font-thin mr-2">{{ quizInfo.cannotOver100 }}</p>
-                    </button>
-                    <div v-show="isOpen3" class="mt-4 space-y-2">
-                        <div class="flex items-center">
-                            <input type="radio" id="cannotOver1001" class="mr-2" name="cannotOver100" :value="true" v-model="quizInfo.cannotOver100" />
-                            <label for="cannotOver1001">true</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="radio" id="cannotOver1002" class="mr-2" name="cannotOver100" :value="false" v-model="quizInfo.cannotOver100" />
-                            <label for="cannotOver1002">false</label>
-                        </div>
+            </div>
+
+            <!-- cannotOver100 -->
+            <div class="col-span-1">
+                <h2>cannotOver100:</h2>
+            </div>
+            <div ref="dropdownMenu3" class="col-span-1">
+                <button type="button" @click="isOpen3 = !isOpen3" class="dropdownBtn">
+                    <Dropdown :class="{'rotate-90': isOpen3}" ></Dropdown>
+                    <p class="text-brand text-xs font-thin mr-2">{{ quizInfo.cannotOver100 }}</p>
+                </button>
+                <div v-show="isOpen3" class="mt-4 space-y-2">
+                    <div class="flex items-center">
+                        <input type="radio" id="cannotOver1001" class="mr-2" name="cannotOver100" :value="true" v-model="quizInfo.cannotOver100" />
+                        <label for="cannotOver1001">true</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="radio" id="cannotOver1002" class="mr-2" name="cannotOver100" :value="false" v-model="quizInfo.cannotOver100" />
+                        <label for="cannotOver1002">false</label>
                     </div>
                 </div>
-    
-                <!-- cannotBelow0 -->
-                <div class="col-span-1">
-                    <h2 class="">cannotBelow0:</h2>
-                </div>
-                <div ref="dropdownMenu4" class="col-span-1">
-                    <button type="button" @click="isOpen4 = !isOpen4" class="dropdownBtn">
-                        <Dropdown :class="{'rotate-90': isOpen4}" ></Dropdown>
-                        <p class="text-brand text-xs font-thin mr-2">{{ quizInfo.cannotBelow0 }}</p>
-                    </button>
-                    <div v-show="isOpen4" class="mt-4 space-y-2">
-                        <div class="flex items-center">
-                            <input type="radio" id="cannotBelow01" class="mr-2" name="cannotBelow0" :value="true" v-model="quizInfo.cannotBelow0" />
-                            <label for="cannotBelow01">true</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="radio" id="cannotBelow02" class="mr-2" name="cannotBelow0" :value="false" v-model="quizInfo.cannotBelow0" />
-                            <label for="cannotBelow02">false</label>
-                        </div>
+            </div>
+
+            <!-- cannotBelow0 -->
+            <div class="col-span-1">
+                <h2 class="">cannotBelow0:</h2>
+            </div>
+            <div ref="dropdownMenu4" class="col-span-1">
+                <button type="button" @click="isOpen4 = !isOpen4" class="dropdownBtn">
+                    <Dropdown :class="{'rotate-90': isOpen4}" ></Dropdown>
+                    <p class="text-brand text-xs font-thin mr-2">{{ quizInfo.cannotBelow0 }}</p>
+                </button>
+                <div v-show="isOpen4" class="mt-4 space-y-2">
+                    <div class="flex items-center">
+                        <input type="radio" id="cannotBelow01" class="mr-2" name="cannotBelow0" :value="true" v-model="quizInfo.cannotBelow0" />
+                        <label for="cannotBelow01">true</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="radio" id="cannotBelow02" class="mr-2" name="cannotBelow0" :value="false" v-model="quizInfo.cannotBelow0" />
+                        <label for="cannotBelow02">false</label>
                     </div>
                 </div>
-    
-                <!-- submit button -->
-                <DarkBtn @click.prevent="openPopup" class="h-12 w-40 mt-2 mb-6 justify-self-center col-span-2 max-md:flex max-md:justify-center max-md:items-center max-md:mt-6">Edit</DarkBtn>
-    
-            </form>
-        </div>
-    
-        <!-- popup confirmation -->
-        <div v-if="popupOpen">
-            <Popup ref="dialog" @confirm="edit" @decline="close">Are you sure you want to edit a new quiz?</Popup>
-        </div>
+            </div>
+
+            <!-- submit button -->
+            <DarkBtn @click.prevent="openPopup" class="h-12 w-40 mt-2 mb-6 justify-self-center col-span-2 max-md:flex max-md:justify-center max-md:items-center max-md:mt-6">Edit</DarkBtn>
+
+        </form>
+    </div>
+
+    <!-- instructions -->
+    <div @click="storeEditQuiz.instructions = true" class="fixed top-4 right-8 w-14 h-14 rounded-full border border-brand bg-bgbtn text-wg text-2xl flex items-center justify-center hover:cursor-pointer hover:bg-brand hover:text-bg hover:border-bg active:scale-98">?</div>
+    <AdminInstructions v-if="storeEditQuiz.instructions"></AdminInstructions>
+
+    <!-- popup confirmation -->
+    <div v-if="popupOpen">
+        <Popup ref="dialog" @confirm="edit" @decline="close">Are you sure you want to edit a quiz?</Popup>
     </div>
 
     <!-- final message -->
-    <div v-if="finalMessage">
-        <CenterMessage>{{ finalMessageText }}</CenterMessage>
-        <DarkBtn @click="router.push('/')" class="fixed left-1/2 transform -translate-x-1/2 bottom-64">Ok</DarkBtn>
+    <div v-if="editing || finalMessage">
+        <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-95"></div>
+        <CenterMessage v-if="editing">Editing...</CenterMessage>
+        <CenterMessage v-if="finalMessage">{{ finalMessageText }}</CenterMessage>
+        <DarkBtn v-if="finalMessage" @click="router.push('/')" class="fixed left-1/2 transform -translate-x-1/2 bottom-40">Ok</DarkBtn>
     </div>
 </template>
 
