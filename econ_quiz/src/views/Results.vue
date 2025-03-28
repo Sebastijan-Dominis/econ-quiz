@@ -182,85 +182,85 @@ onUnmounted(() => {
 </script>
 
 <template>
+<PageTop>Results</PageTop>
 <CenterMessage v-if="!storeAuth.user">You are not logged in.<br>Please log in to view your results.</CenterMessage>
 <div v-else>
-    <PageTop>Results</PageTop>
-        <div v-for="result in results" :key="result.id" class="w-[500px] h-auto px-8 py-4 bg-bgbtn border border-brand border-2 rounded-3xl justify-self-center place-items-center my-12">
-            <div class="grid grid-cols-2 gap-x-16 gap-y-8 text-wg font-bold">
-                <h2>Type:</h2>
-                <h2>{{ result.type }}</h2>
-                <h2>Topic:</h2>
-                <h2>{{ result.topic }}</h2>
-                <h2>Difficulty:</h2>
-                <h2>{{ result.difficulty }}</h2>
-                <h2>Score:</h2>
-                <h2>{{ result.score }}%</h2>
-                <h2>Time spent:</h2>
-                <h2>{{ result.timeTaken }}</h2>
-                <h2>Leaderboard score:</h2>
-                <h2>{{ result.leaderboardScore }}</h2>
-                <h2>Taken on:</h2>
-                <h2>{{ result.timestamp }}</h2>
-            </div> 
-        </div>
-
-        <DarkBtn class="fixed top-6 right-12" @click="openPopup" :class="{'disabled cursor-not-allowed': disableConfirm}">Sort and Filter</DarkBtn>
-        <div v-show="popupOpen" class="fixed top-1/2 translate-y-[-50%] left-1/2 translate-x-[-50%] w-full h-full bg-bgpopup text-brand overflow-y-auto">
-
-            <!-- sorter -->
-            <h1 class="sorterTitle pt-20">Sort by</h1>
-            <div class="block">
-                <input type="radio" id="sorter1" class="sorterInput" name="element" value="score" v-model="sortByValue">
-                <label for="sorter1" class="sorterLabel">Score</label>
-            </div>
-            <div class="block">
-                <input type="radio" id="sorter4" class="sorterInput" name="element" value="difficulty" v-model="sortByValue" >
-                <label for="sorter4" class="sorterLabel">Difficulty</label>
-            </div>
-            <div class="block">
-                <input type="radio" id="sorter2" class="sorterInput" name="element" value="timeTaken" v-model="sortByValue">
-                <label for="sorter2" class="sorterLabel">Time Spent</label>
-            </div>
-            <div class="block">
-                <input type="radio" id="sorter3" class="sorterInput" name="element" value="timestamp" v-model="sortByValue" checked>
-                <label for="sorter3" class="sorterLabel">Taken on</label>
-            </div>
-            
-            <h1 class="sorterTitle pt-12">Order</h1>
-            <div class="block">
-                <input type="radio" id="direction1" class="sorterInput" name="direction" value="desc" v-model="sortDirection" checked>
-                <label for="direction1" class="sorterLabel">Descending</label>
-            </div>
-            <div class="block">
-                <input type="radio" id="direction2" class="sorterInput" name="direction" value="asc" v-model="sortDirection">
-                <label for="direction2" class="sorterLabel">Ascending</label>
-            </div>
-
-
-            <!-- filter -->
-            <div class="ml-32 py-20 lg:fixed lg:right-64 lg:top-0">
-                <h1 class="text-2xl font-bold">Filter</h1>
-
-                <!-- Types -->
-                <p class="filterTitle mt-12">Type</p>
-                <label v-for="type in storeStudy.allTypes" :key="type" class="filterLabel">
-                    <input type="checkbox" :value ="type" checked @change="updateSelectedTypes(type, $event)">
-                    {{ type }}
-                </label>
-
-                <!-- Indicators -->
-                <p class="filterTitle mt-10">Indicator</p>
-                <label v-for="indicator in storeStudy.indicators" :key="indicator" class="filterLabel">
-                    <input type="checkbox" :value="indicator" checked @change="updateSelectedIndicators(indicator, $event)">
-                    {{ indicator }}
-                </label>
-            </div>
-
-            <DarkBtn class="fixed bottom-6 right-12" @click="confirm">Confirm choices</DarkBtn>
-        </div>
+    <div v-for="result in results" :key="result.id" class="w-[500px] h-auto px-8 py-4 bg-bgbtn border border-brand border-2 rounded-3xl justify-self-center place-items-center my-12">
+        <div class="grid grid-cols-2 gap-x-16 gap-y-8 text-wg font-bold">
+            <h2>Type:</h2>
+            <h2>{{ result.type }}</h2>
+            <h2>Topic:</h2>
+            <h2>{{ result.topic }}</h2>
+            <h2>Difficulty:</h2>
+            <h2>{{ result.difficulty }}</h2>
+            <h2>Score:</h2>
+            <h2>{{ result.score }}%</h2>
+            <h2>Time spent:</h2>
+            <h2>{{ result.timeTaken }}</h2>
+            <h2>Leaderboard score:</h2>
+            <h2>{{ result.leaderboardScore }}</h2>
+            <h2>Taken on:</h2>
+            <h2>{{ result.timestamp }}</h2>
+        </div> 
     </div>
 
-    <p v-if="loading" class="flex justify-center pt-4 text-brand text-xl">Loading more results...</p>
+    <DarkBtn class="fixed top-6 right-12" @click="openPopup" :class="{'disabled cursor-not-allowed': disableConfirm}">Sort and Filter</DarkBtn>
+    <div v-show="popupOpen" class="fixed top-1/2 translate-y-[-50%] left-1/2 translate-x-[-50%] w-full h-full bg-bgpopup text-brand overflow-y-auto">
+
+        <!-- sorter -->
+        <h1 class="sorterTitle pt-20">Sort by</h1>
+        <div class="block">
+            <input type="radio" id="sorter1" class="sorterInput" name="element" value="score" v-model="sortByValue">
+            <label for="sorter1" class="sorterLabel">Score</label>
+        </div>
+        <div class="block">
+            <input type="radio" id="sorter4" class="sorterInput" name="element" value="difficulty" v-model="sortByValue" >
+            <label for="sorter4" class="sorterLabel">Difficulty</label>
+        </div>
+        <div class="block">
+            <input type="radio" id="sorter2" class="sorterInput" name="element" value="timeTaken" v-model="sortByValue">
+            <label for="sorter2" class="sorterLabel">Time Spent</label>
+        </div>
+        <div class="block">
+            <input type="radio" id="sorter3" class="sorterInput" name="element" value="timestamp" v-model="sortByValue" checked>
+            <label for="sorter3" class="sorterLabel">Taken on</label>
+        </div>
+        
+        <h1 class="sorterTitle pt-12">Order</h1>
+        <div class="block">
+            <input type="radio" id="direction1" class="sorterInput" name="direction" value="desc" v-model="sortDirection" checked>
+            <label for="direction1" class="sorterLabel">Descending</label>
+        </div>
+        <div class="block">
+            <input type="radio" id="direction2" class="sorterInput" name="direction" value="asc" v-model="sortDirection">
+            <label for="direction2" class="sorterLabel">Ascending</label>
+        </div>
+
+
+        <!-- filter -->
+        <div class="ml-32 py-20 lg:fixed lg:right-64 lg:top-0">
+            <h1 class="text-2xl font-bold">Filter</h1>
+
+            <!-- Types -->
+            <p class="filterTitle mt-12">Type</p>
+            <label v-for="type in storeStudy.allTypes" :key="type" class="filterLabel">
+                <input type="checkbox" :value ="type" checked @change="updateSelectedTypes(type, $event)">
+                {{ type }}
+            </label>
+
+            <!-- Indicators -->
+            <p class="filterTitle mt-10">Indicator</p>
+            <label v-for="indicator in storeStudy.indicators" :key="indicator" class="filterLabel">
+                <input type="checkbox" :value="indicator" checked @change="updateSelectedIndicators(indicator, $event)">
+                {{ indicator }}
+            </label>
+        </div>
+
+        <DarkBtn class="fixed bottom-6 right-12" @click="confirm">Confirm choices</DarkBtn>
+    </div>
+</div>
+
+<p v-if="loading" class="flex justify-center pt-4 text-brand text-xl">Loading more results...</p>
 </template>
 
 <style scoped>
