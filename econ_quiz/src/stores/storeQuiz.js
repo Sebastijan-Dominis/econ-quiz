@@ -447,6 +447,25 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                                     answer = this.addOrSubtract(answer, choice);
                                 }
                             }
+                            if(storeStudy.cannotBelow0.has(choice) && answer <= 0) {
+                                if(this.big) answer = '100';
+                                else answer = '100.00';
+                                while(same.has(answer)) {
+                                    const increase = this.random(0.01, 9, 2);
+                                    if(this.big) answer = Math.round(Number(answer + increase));
+                                    else answer = Number(answer + increase).toFixed(2);
+                                }
+                            }
+                            console.log(choice)
+                            if(choice === "Life expectancy" && answer >= 120) {
+                                if(this.big) answer = '120';
+                                else answer = '120.00';
+                                while(same.has(answer)) {
+                                    const diminish = this.random(0.01, 9, 2);
+                                    if(this.big) answer = Math.round(Number(answer-diminish));
+                                    else answer = Number(answer - diminish).toFixed(2);
+                                }
+                            }
                             same.add(answer);
                             options.push(answer);
                             i++;

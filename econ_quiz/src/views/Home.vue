@@ -92,36 +92,38 @@ onBeforeUnmount(() => {
 <template>
     <!-- Small screens -->
     <h1 class="text-brand text-3xl text-center font-bold pt-4 md:hidden">Welcome to Econ Quiz!</h1>
-    <p class="text-brand text-center font-bold mt-8 md:hidden">For the best experience use laptop or desktop PC</p>
-    <h2 v-if="!storeAuth.isLoggedIn" class="text-brand text-center font-bold fixed top-32 left-1/2 transform -translate-x-1/2 text-lg md:hidden">You are not logged in. Log in to save your results!</h2>
-    <h2 v-else class="text-brand text-center font-bold fixed top-32 left-1/2 transform -translate-x-1/2 text-lg md:hidden">{{ hello }}</h2>
+    <p class="text-brand text-center text-sm font-bold mt-4 mx-4 md:hidden">For the best experience use laptop or desktop PC</p>
+    <h2 v-if="!storeAuth.isLoggedIn" class="text-brand text-center font-bold mt-4 mx-4 md:hidden text-sm">You are not logged in. Log in to save your results!</h2>
+    <h2 v-else class="text-brand text-center font-bold mt-4 text-lg md:hidden">{{ hello }}</h2>
 
-    <div v-if="storeAuth.isLoggedIn" class="w-full flex justify-center mt-16 md:hidden">
-        <DarkBtn class="w-32 h-12" @click="openPopup">Logout</DarkBtn>
-    </div> 
-    <div v-else class="w-full flex px-32 pb-8 mt-16 justify-between md:hidden">
-        <router-link :to="{name: 'login'}"><DarkBtn class="w-32 h-12">Login</DarkBtn></router-link>
-        <router-link :to="{name: 'signup'}"><BrandBtn class="w-32 h-12">Sign Up</BrandBtn></router-link>
-    </div> 
-
-    <div class="w-full flex justify-center mt-16 md:hidden">
-        <DarkBtn class="w-48 h-20" @click="typePopup = true">Play Now!</DarkBtn>
+    
+    <div class="fixed bottom-8 left-1/2 transform -translate-x-1/2 w-full">
+        <div v-if="storeAuth.isLoggedIn" class="w-full flex pb-8 justify-evenly md:hidden">
+            <DarkBtn class="w-32 h-12" @click="openPopup">Logout</DarkBtn>
+        </div> 
+        <div v-else class="w-full flex pb-8 justify-evenly md:hidden">
+            <router-link :to="{name: 'login'}"><DarkBtn class="w-32 h-12">Login</DarkBtn></router-link>
+            <router-link :to="{name: 'signup'}"><BrandBtn class="w-32 h-12">Sign Up</BrandBtn></router-link>
+        </div> 
+        <div class="w-full flex justify-center mt-12 md:hidden">
+            <DarkBtn class="w-48 h-20" @click="typePopup = true">Play Now!</DarkBtn>
+        </div>
+    
+        <div class="w-full flex mt-16 px-4 justify-between md:hidden">
+            <router-link :to="{name: 'results-choice'}"><DarkBtn class="w-32 h-12">Results</DarkBtn></router-link>
+            <router-link :to="{name: 'add'}"><DarkBtn v-if="storeAuth.isLoggedIn && storeAuth.isAdmin">Add</DarkBtn></router-link>
+        </div>
+    
+        <div class="w-full flex mt-8 px-4 pb-8 justify-between md:hidden">
+            <router-link :to="{name: 'leaderboard'}"><DarkBtn class="w-32 h-12">Leaderboard</DarkBtn></router-link>
+            <router-link :to="{name: 'edit-choice'}"><DarkBtn v-if="storeAuth.isLoggedIn && storeAuth.isAdmin">Edit/Delete</DarkBtn></router-link>
+        </div> 
+    
+        <div class="w-full flex px-4 pb-8 justify-between md:hidden">
+            <router-link :to="{name: 'study-choice'}"><DarkBtn class="w-32 h-12">Study</DarkBtn></router-link>
+            <router-link :to="{name: 'faq'}"><DarkBtn class="w-32 h-12">FAQ</DarkBtn></router-link>
+        </div> 
     </div>
-
-    <div class="w-full flex mt-16 px-4 justify-between md:hidden">
-        <router-link :to="{name: 'results-choice'}"><DarkBtn class="w-32 h-12">Results</DarkBtn></router-link>
-        <router-link :to="{name: 'add'}"><DarkBtn v-if="storeAuth.isLoggedIn && storeAuth.isAdmin">Add</DarkBtn></router-link>
-    </div>
-
-    <div class="w-full flex mt-8 px-4 pb-8 justify-between md:hidden">
-        <router-link :to="{name: 'leaderboard'}"><DarkBtn class="w-32 h-12">Leaderboard</DarkBtn></router-link>
-        <router-link :to="{name: 'edit-choice'}"><DarkBtn v-if="storeAuth.isLoggedIn && storeAuth.isAdmin">Edit/Delete</DarkBtn></router-link>
-    </div> 
-
-    <div class="w-full flex px-4 pb-8 justify-between md:hidden">
-        <router-link :to="{name: 'study-choice'}"><DarkBtn class="w-32 h-12">Study</DarkBtn></router-link>
-        <router-link :to="{name: 'faq'}"><DarkBtn class="w-32 h-12">FAQ</DarkBtn></router-link>
-    </div> 
 
 
     <!-- Desktop and Tablet -->

@@ -8,6 +8,7 @@ import { reactive, ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 import Popup from '../components/Popup.vue';
 import { useStoreQuiz } from '../stores/storeQuiz';
+import CenterMessage from '../components/CenterMessage.vue';
 
 // route
 const route = useRoute();
@@ -139,9 +140,7 @@ const start = async() => {
         </div>
     </div>
 
-    <div v-else>
-        <h1 class="fixed left-1/2 translate-x-[-50%] top-1/2 translate-y-[-50%] text-brand text-3xl font-bold">Creating your quiz...</h1>
-    </div>
+    <CenterMessage v-else>Creating your quiz...</CenterMessage>
 </template>
 
 <style scoped>

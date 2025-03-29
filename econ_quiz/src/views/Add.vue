@@ -142,7 +142,6 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <ReturnBtn></ReturnBtn>
     <div class="h-auto w-auto bg-bgform border-brand border-4 rounded-3xl absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 flex flex-col text-brand">
         <h1 class="text-center text-4xl font-bold mt-6">Add a new quiz</h1>
         <p class="text-center mt-6">Fill in the form to add a new quiz</p>
@@ -288,6 +287,7 @@ onBeforeUnmount(() => {
 
         </form>
     </div>
+    <ReturnBtn></ReturnBtn>
 
     <!-- instructions -->
     <InstructionsBtn @click="storeEditQuiz.instructions = true"></InstructionsBtn>

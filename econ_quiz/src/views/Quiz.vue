@@ -123,6 +123,12 @@ if(route.params.type === "timed") {
         secondInterval = setInterval(() => {
             second.value.play();
         }, 1000)
+        setTimeout(() => {
+            clearInterval(firstInterval);
+            clearInterval(secondInterval);
+            first.value = null;
+            second.value = null;
+        }, 100005)
     })
     onUnmounted(() => {
         clearInterval(firstInterval);

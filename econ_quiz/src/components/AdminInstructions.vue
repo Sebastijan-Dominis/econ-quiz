@@ -8,8 +8,8 @@ const storeEditQuiz = useStoreEditQuiz();
 
 <template>
     <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-95"></div>
-        <div class="fixed top-0 left-0 w-full h-[90vh] text-brand mt-16 px-24 overflow-y-auto">
-            <h1 class="text-3xl mx-auto mb-8">Instructions</h1>
+        <div class="fixed top-0 left-0 w-full h-[90vh] text-brand mt-16 px-16 md:px-24 overflow-y-auto">
+            <h1 class="text-3xl justify-self-center mb-8">Instructions</h1>
             <p class="mt-4"><b>name</b> = the name of the topic (e.g. GDP PPP); the name is allowed to differ from the official one from world bank data but it has to be clear and concise since displayName will have to fit in the buttons</p>
             <p class="mt-4"><b>displayName</b> = how the name displays on buttons (same as name but add \n where appropriate)</p>
             <p class="mt-4"><b>shortName</b> = a part of the url (more concise than name but still meaningful and clear enough)</p>

@@ -6,13 +6,11 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { db } from '../js/firebase';
 import { collection, getDocs, query, orderBy, limit, startAfter, where } from 'firebase/firestore';
 import PageTop from '../components/PageTop.vue';
-import { useStoreFixedBtn } from '../stores/storeFixedBtn';
 import DarkBtn from '../components/DarkBtn.vue';
 import { useStoreQuiz } from '../stores/storeQuiz';
 import { useStoreStudy } from '../stores/storeStudy';
 
 const storeAuth = useStoreAuth();
-const storeFixedBtn = useStoreFixedBtn();
 const storeQuiz = useStoreQuiz();
 const storeStudy = useStoreStudy();
 
@@ -171,22 +169,14 @@ onMounted(() => {
 onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll);
 });
-
-// fixed button
-onMounted(() => {
-    storeFixedBtn.isFixed = true;
-})
-onUnmounted(() => {
-    storeFixedBtn.isFixed = false;
-})
 </script>
 
 <template>
 <PageTop>Results</PageTop>
 <CenterMessage v-if="!storeAuth.user">You are not logged in.<br>Please log in to view your results.</CenterMessage>
 <div v-else>
-    <div v-for="result in results" :key="result.id" class="w-[500px] h-auto px-8 py-4 bg-bgbtn border border-brand border-2 rounded-3xl justify-self-center place-items-center my-12">
-        <div class="grid grid-cols-2 gap-x-16 gap-y-8 text-wg font-bold">
+    <div v-for="result in results" :key="result.id" class="w-[300px] md:w-[500px] h-auto px-8 py-4 bg-bgbtn border border-brand border-2 rounded-3xl justify-self-center place-items-center my-12">
+        <div class="grid grid-cols-2 gap-x-16 gap-y-8 text-wg font-bold items-center">
             <h2>Type:</h2>
             <h2>{{ result.type }}</h2>
             <h2>Topic:</h2>

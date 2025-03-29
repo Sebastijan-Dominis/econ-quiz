@@ -18,18 +18,6 @@ watchEffect(() => {
   }
 })
 
-// fixed button functionality
-import { useStoreFixedBtn } from '../stores/storeFixedBtn';
-const storeFixedBtn = useStoreFixedBtn();
-onMounted(() => {
-  storeFixedBtn.isFixed = true;
-  storeFixedBtn.isFixedStudy = true;
-})
-onUnmounted(() => {
-  storeFixedBtn.isFixed = false;
-  storeFixedBtn.isFixedStudy = false;
-})
-
 // managing sorted by
 const sortedBy = ref('countryData')
 const isOpen = ref(false);
@@ -96,10 +84,10 @@ const manageScreenSize = computed(() => {
     <img src="" alt="candles" class="max-lg:hidden fixed bottom-80 left-0 w-56">
 
     <!-- the sorter  -->
-    <div ref="sorter" class="fixed top-6 right-10 border border-brand rounded-2xl border-2 text-wg bg-bgbtn" :class="{'max-lg:!right-4': storeFixedBtn.isFixed}">
-      <div class="w-36 p-4" :class="{'max-lg:w-24': storeFixedBtn.isFixed}">
+    <div ref="sorter" class="fixed top-6 right-10 border border-brand rounded-2xl border-2 text-wg bg-bgbtn">
+      <div class="w-24 md:w-36 p-3 md:p-4">
       <!-- Button to toggle sorter box -->
-      <button @click="isOpen = !isOpen" class="flex justify-between items-center w-full text-lg font-bold" :class="{'max-lg:!justify-center': storeFixedBtn.isFixed}">
+      <button @click="isOpen = !isOpen" class="flex justify-between items-center w-full text-lg font-bold">
         <span v-show="manageScreenSize">Sort By</span>
         <Dropdown :class="{'rotate-90': isOpen}"></Dropdown>
       </button>
@@ -130,24 +118,24 @@ const manageScreenSize = computed(() => {
       </div>
     </div>
 
-      <ul class="mt-16 lg:mt-28">
-        <li v-for="[country, value] of storeStudy[sortedBy].value" :key="country" class="flex mx-32 md:mx-40 lg:mx-56 xl:mx-72 2xl:mx-[500px] justify-between my-6 text-brand text-xl xl:text-2xl 2xl:text-3xl font-bold">
-          <div>{{ country }}:</div> 
-          <div>
-            <div v-if="storeStudy.largeNumsDollars.has(originalValue)">
-              <span>${{ Math.round(value).toLocaleString() }}</span>
-            </div>
-            <div v-if="storeStudy.smallNumsPercentages.has(originalValue)">
-              <span>{{ value.toFixed(2) }}%</span>
-            </div>
-            <div v-if="storeStudy.largeNums.has(originalValue)">
-              <span>{{ Math.round(value).toLocaleString() }}</span>
-            </div>
-            <div v-if="storeStudy.smallNums.has(originalValue)">
-              <span>{{ value.toFixed(2) }}</span>
-            </div>
+    <ul class="mt-16 lg:mt-28">
+      <li v-for="[country, value] of storeStudy[sortedBy].value" :key="country" class="flex mx-8 md:mx-40 lg:mx-56 xl:mx-72 2xl:mx-[500px] justify-between my-6 text-brand text-base md:text-xl xl:text-2xl 2xl:text-3xl font-bold">
+        <div>{{ country }}:</div> 
+        <div>
+          <div v-if="storeStudy.largeNumsDollars.has(originalValue)">
+            <span>${{ Math.round(value).toLocaleString() }}</span>
           </div>
-        </li>
-      </ul>
+          <div v-if="storeStudy.smallNumsPercentages.has(originalValue)">
+            <span>{{ value.toFixed(2) }}%</span>
+          </div>
+          <div v-if="storeStudy.largeNums.has(originalValue)">
+            <span>{{ Math.round(value).toLocaleString() }}</span>
+          </div>
+          <div v-if="storeStudy.smallNums.has(originalValue)">
+            <span>{{ value.toFixed(2) }}</span>
+          </div>
+        </div>
+      </li>
+    </ul>
   </div>
 </template>
