@@ -50,10 +50,10 @@ onMounted(() => {
     <router-view></router-view>
 
     <!-- relaxing music -->
-    <div @click="toggleAudio" class="fixed top-80 left-0 mx-4 px-4 py-2 w-16 bg-bgbtn border border-brand border-2 rounded-lg cursor-pointer">
+    <div @click="toggleAudio" class="fixed top-80 left-0 mx-4 px-4 py-2 md:w-16 bg-bgbtn border border-brand border-2 rounded-lg cursor-pointer max-md:px-2 max-md:py-1">
       <button class="flex justify-between items-center w-full">
-        <img v-if="!playing" src="/src/assets/icons/speakerOff.svg" alt="music off">
-        <img v-else src="/src/assets/icons/speakerOn.svg" alt="music on">
+        <img v-if="!playing" src="/src/assets/icons/speakerOff.svg" alt="music off" class="max-md:w-6 max-md:h-auto">
+        <img v-else src="/src/assets/icons/speakerOn.svg" alt="music on" class="max-md:w-6 max-md:h-auto">
       </button>
     </div>
   </div>

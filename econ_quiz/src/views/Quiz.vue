@@ -353,7 +353,7 @@ onBeforeUnmount(() => {
         <h1 class="pt-8 text-brand text-base font-bold flex text-center justify-center md:text-xl md:pt-10 md:text-3xl lg:pt-12 xl:text-4xl 2xl:text-5xl">{{ storeQuiz.questions[curr].question }}</h1>
 
         <!-- display questions for multiple choice and timed quizzes -->
-        <div v-if="storeQuiz.type !== 'Manual Input'" class="grid grid-cols-1 gap-y-12 mt-16 md:grid-cols-2 md:gap-y-28 md:mt-24 md:px-12 lg:px-20 2xl:px-36 place-items-center">
+        <div v-if="storeQuiz.type !== 'Manual Input'" class="grid grid-cols-1 gap-y-12 mt-16 md:grid-cols-2 md:gap-y-28 md:mt-24 md:px-12 lg:px-20 2xl:px-36 place-items-center options">
         <QuizBtn v-for="option in [storeQuiz.questions[curr].options[0], storeQuiz.questions[curr].options[1], storeQuiz.questions[curr].options[2], storeQuiz.questions[curr].options[3]]"
         :key="option"
         :class="usersChoice[curr] === option ? 'chosenAnswer' : ''"
@@ -387,7 +387,7 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- options for manual input quizzes -->
-        <div v-if="storeQuiz.type === 'Manual Input'" class="grid grid-cols-2 place-items-center mt-10 mx-40 md:mx-16 md:mt-16 lg:mx-20 2xl:mx-36">
+        <div v-if="storeQuiz.type === 'Manual Input'" class="grid grid-cols-2 place-items-center mt-10 mx-2 md:mx-16 md:mt-16 lg:mx-20 2xl:mx-36">
             <NavBtn :class="curr === 1 ? 'disabled active:scale-[1] disableBtn' : ''" @click="prevQMan">Prev</NavBtn>
             <NavBtn v-if="curr !== storeQuiz.questions.length-1" @click="nextQMan">Next</NavBtn>
             <NavBtn v-else @click="openFinish">Finish</NavBtn>
@@ -436,7 +436,7 @@ onBeforeUnmount(() => {
 
 
         <!-- options for multiple choice quizzes -->
-        <div v-if="storeQuiz.type === 'Multiple Choice'" class="grid grid-cols-2 place-items-center mt-10 mx-40 md:mx-16 md:mt-16 lg:mx-20 2xl:mx-36">
+        <div v-if="storeQuiz.type === 'Multiple Choice'" class="grid grid-cols-2 place-items-center mt-10 mx-2 md:mx-16 md:mt-16 lg:mx-20 2xl:mx-36">
             <NavBtn :class="curr === 1 ? 'disabled active:scale-[1] disableBtn' : ''" @click="prevQ">Prev</NavBtn>
             <NavBtn v-if="curr !== storeQuiz.questions.length-1" @click="nextQ">Next</NavBtn>
             <NavBtn v-else @click="openFinish">Finish</NavBtn>
@@ -496,6 +496,13 @@ onBeforeUnmount(() => {
     cursor: not-allowed;
 }
 
+@media (max-width: 640px) and (min-height:840px) {
+    .options {
+        row-gap: 5rem;
+        margin-bottom: 6rem;
+    }
+}
+
 .square {
     display: inline-block;
     width: 70px;
@@ -508,6 +515,12 @@ onBeforeUnmount(() => {
     font-size: 24px;
     color: var(--wg);
     font-weight: 700;
+}
+@media (max-width: 640px) {
+    .square {
+        background: transparent;
+        box-shadow: none;
+    }
 }
 .hithere {
     animation: hithere 1s ease infinite;

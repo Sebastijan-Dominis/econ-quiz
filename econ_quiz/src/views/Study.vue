@@ -71,8 +71,8 @@ const manageScreenSize = computed(() => {
 
   <!-- once loaded... -->
   <div v-if="!storeStudy.loading && !storeStudy.error">
-    <PageTop customH1Class="text-8xl max-xl:text-7xl max-lg:text-6xl max-md:text-6xl font-bold">Library</PageTop>
-    <h1 class="flex justify-center mt-20 text-brand text-4xl xl:text-5xl 2xl:text-6xl font-bold">{{ originalValue }}</h1>
+    <PageTop customH1Class="text-8xl max-xl:text-7xl max-lg:text-6xl max-md:text-6xl font-bold title">Library</PageTop>
+    <h1 class="flex justify-center mt-20 text-brand text-4xl xl:text-5xl 2xl:text-6xl font-bold topic">{{ originalValue }}</h1>
     <h3 class="flex justify-center mt-6 text-brand text-2xl xl:text-3xl 2xl:text-4xl font-bold gap-x-1">Data from
       <span>{{ storeStudy.year[originalValue] }}</span>
     </h3>
@@ -118,8 +118,8 @@ const manageScreenSize = computed(() => {
       </div>
     </div>
 
-    <ul class="mt-16 lg:mt-28">
-      <li v-for="[country, value] of storeStudy[sortedBy].value" :key="country" class="flex mx-8 md:mx-40 lg:mx-56 xl:mx-72 2xl:mx-[500px] justify-between my-6 text-brand text-base md:text-xl xl:text-2xl 2xl:text-3xl font-bold">
+    <ul class="mt-16 lg:mt-28 mainData">
+      <li v-for="[country, value] of storeStudy[sortedBy].value" :key="country" class="flex mx-8 md:mx-40 lg:mx-56 xl:mx-72 2xl:mx-[500px] justify-between my-6 text-brand text-base md:text-xl xl:text-2xl 2xl:text-3xl font-bold items-center">
         <div>{{ country }}:</div> 
         <div>
           <div v-if="storeStudy.largeNumsDollars.has(originalValue)">
@@ -139,3 +139,18 @@ const manageScreenSize = computed(() => {
     </ul>
   </div>
 </template>
+
+<style>
+  @media (max-width: 640px) and (max-height: 850px) {
+    .title {
+      font-size: 3rem;
+      line-height: 1;
+    }
+    .topic {
+      margin-top: 2.5rem;
+    }
+    .mainData {
+      margin-top: 3rem;
+    }
+  }
+</style>

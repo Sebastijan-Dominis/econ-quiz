@@ -133,9 +133,9 @@ onUnmounted(() => {
     <InstructionsBtn @click="instructions = true"></InstructionsBtn>
     <div v-show="instructions">
       <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-95"></div>
-      <div class="fixed top-0 left-0 w-full h-[90vh] overflow-y-auto text-brand mt-16 px-32">
-        <h1 class="text-3xl flex justify-center">How are scores calculated?</h1>
-        <p class="text-2xl mt-16">Scores take into account the type of quiz, difficulty and score of that particular quiz. That score is multiplied with two factors that reward good results on harder quizzes.<br><br>Timed and Manual Input quizzes give you 1.3x score. This represents the first factor.<br><br>The second factor comes from difficulty. Very easy difficulty gives you 1.3x score, easy gives 1.6x, normal gives 1.9x, hard gives 2.2x, very hard gives 2.5x, and absolute madman gives 2.8x.<br><br>The highest possible score is 100 x 1.3 x 2.8 = 364. The lowest possible score is 0.<br><br>Only one score per user can appear on the leaderboard, so your highest score for the chosen period (month/year/all-time) is displayed.</p>
+      <div class="fixed top-0 left-0 w-full h-[90vh] overflow-y-auto text-brand mt-16 px-32 max-md:px-4 container">
+        <h1 class="text-3xl text-center title">How are scores calculated?</h1>
+        <p class="text-2xl mt-16 textInstructions">Scores take into account the type of quiz, difficulty and score of that particular quiz. That score is multiplied with two factors that reward good results on harder quizzes.<br><br>Timed and Manual Input quizzes give you 1.3x score. This represents the first factor.<br><br>The second factor comes from difficulty. Very easy difficulty gives you 1.3x score, easy gives 1.6x, normal gives 1.9x, hard gives 2.2x, very hard gives 2.5x, and absolute madman gives 2.8x.<br><br>The highest possible score is 100 x 1.3 x 2.8 = 364. The lowest possible score is 0.<br><br>Only one score per user can appear on the leaderboard, so your highest score for the chosen period (month/year/all-time) is displayed.</p>
         <div class="flex justify-center">
           <DarkBtn @click="instructions = false" class="mt-16 ">Close</DarkBtn>
         </div>
@@ -159,5 +159,30 @@ onUnmounted(() => {
   .active {
     color: var(--bg);
     background-color: var(--brand);
+  }
+  @media (max-width:640px) {
+    .textInstructions {
+      font-size: 1.25rem;
+      line-height: 1.75rem;
+      margin-top: 3rem;
+    }
+    .container {
+      margin-top: 3rem;
+    }
+  }
+  @media (max-width: 640px) and (max-height: 700px) {
+    .textInstructions {
+      font-size: 1.125rem;
+      line-height: 1.75rem;
+      margin-top: 2rem;
+    }
+    .title {
+      font-size: 1.5rem;
+      line-height: 2rem;
+      padding: 0 1rem;
+    }
+    .container {
+      margin-top: 2rem;
+    }
   }
 </style>

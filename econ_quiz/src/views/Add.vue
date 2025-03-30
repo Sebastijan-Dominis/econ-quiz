@@ -142,16 +142,16 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="h-auto w-auto bg-bgform border-brand border-4 rounded-3xl absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 flex flex-col text-brand">
-        <h1 class="text-center text-4xl font-bold mt-6">Add a new quiz</h1>
-        <p class="text-center mt-6">Fill in the form to add a new quiz</p>
-        <form @submit.prevent="create" class="mt-6 mx-4 md:grid md:grid-cols-2 gap-x-4 gap-y-6 items-center text-lg">
+    <div class="w-[85vw] h-auto md:w-auto bg-bgform border-brand border-4 rounded-3xl absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 flex flex-col text-brand">
+        <h1 class="text-center text-2xl md:text-4xl font-bold mt-6">Add a new quiz</h1>
+        <p class="text-center mt-4 md:mt-6">Fill in the form to add a new quiz</p>
+        <form @submit.prevent="create" class="mt-4 md:mt-6 mx-4 md:grid md:grid-cols-2 gap-x-4 gap-y-6 items-center text-lg max-md:text-base">
             <!-- name -->
             <div class="col-span-1">
                 <h2>name:</h2>
             </div>
             <div class="col-span-1">
-                <input type="text" v-model="quizInfo.name" class="text-bg w-full h-8 px-2">
+                <input type="text" v-model="quizInfo.name" class="text-bg w-full h-6 md:h-8 px-2">
             </div>
 
             <!-- displayName -->
@@ -159,7 +159,7 @@ onBeforeUnmount(() => {
                 <h2>displayName:</h2>
             </div>
             <div class="col-span-1">
-                <input type="text" v-model="quizInfo.displayName" class="text-bg w-full h-8 px-2">
+                <input type="text" v-model="quizInfo.displayName" class="text-bg w-full h-6 md:h-8 px-2">
             </div>
 
             <!-- shortName -->
@@ -167,7 +167,7 @@ onBeforeUnmount(() => {
                 <h2>shortName:</h2>
             </div>
             <div class="col-span-1">
-                <input type="text" v-model="quizInfo.shortName" class="text-bg w-full h-8 px-2">
+                <input type="text" v-model="quizInfo.shortName" class="text-bg w-full h-6 md:h-8 px-2">
             </div>
 
             <!-- key -->
@@ -175,7 +175,7 @@ onBeforeUnmount(() => {
                 <h2>key:</h2>
             </div>
             <div class="col-span-1">
-                <input type="text" v-model="quizInfo.key" class="text-bg w-full h-8 px-2">
+                <input type="text" v-model="quizInfo.key" class="text-bg w-full h-6 md:h-8 px-2">
             </div>
 
             <!-- year -->
@@ -183,7 +183,7 @@ onBeforeUnmount(() => {
                 <h2>year:</h2>
             </div>
             <div class="col-span-1">
-                <input type="number" v-model="quizInfo.year" step="1" :min="minYear" :max="maxYear" class="text-bg w-full h-8 px-2" @input.prevent>
+                <input type="number" v-model="quizInfo.year" step="1" :min="minYear" :max="maxYear" class="text-bg w-full h-6 md:h-8 px-2" @input.prevent>
             </div>
 
             <!-- indicator -->
@@ -283,7 +283,7 @@ onBeforeUnmount(() => {
             </div>
 
             <!-- submit button -->
-            <DarkBtn @click.prevent="openPopup" class="h-12 w-40 mt-2 mb-6 justify-self-center col-span-2 max-md:flex max-md:justify-center max-md:items-center max-md:mt-6">Add</DarkBtn>
+            <DarkBtn @click.prevent="openPopup" class="h-12 w-40 mt-2 mb-6 justify-self-center col-span-2 max-md:flex max-md:justify-center max-md:items-center max-md:mt-6 max-md:h-10 max-md:w-28">Add</DarkBtn>
 
         </form>
     </div>
@@ -320,5 +320,10 @@ onBeforeUnmount(() => {
     color: var(--wg);
     background-color: var(--bgbtn);
     border: 1px solid var(--brand);
+}
+@media (max-width: 640px) {
+    .dropdownBtn {
+        height: 1.5rem;
+    }
 }
 </style>
