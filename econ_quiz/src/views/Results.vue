@@ -204,16 +204,20 @@ onUnmounted(() => {
             <label for="sorter1" class="sorterLabel">Score</label>
         </div>
         <div class="block">
-            <input type="radio" id="sorter4" class="sorterInput" name="element" value="difficulty" v-model="sortByValue" >
-            <label for="sorter4" class="sorterLabel">Difficulty</label>
+            <input type="radio" id="sorter2" class="sorterInput" name="element" value="difficulty" v-model="sortByValue" >
+            <label for="sorter2" class="sorterLabel">Difficulty</label>
         </div>
         <div class="block">
-            <input type="radio" id="sorter2" class="sorterInput" name="element" value="timeTaken" v-model="sortByValue">
-            <label for="sorter2" class="sorterLabel">Time Spent</label>
+            <input type="radio" id="sorter3" class="sorterInput" name="element" value="timeTaken" v-model="sortByValue">
+            <label for="sorter3" class="sorterLabel">Time spent</label>
         </div>
         <div class="block">
-            <input type="radio" id="sorter3" class="sorterInput" name="element" value="timestamp" v-model="sortByValue" checked>
-            <label for="sorter3" class="sorterLabel">Taken on</label>
+            <input type="radio" id="sorter4" class="sorterInput" name="element" value="timestamp" v-model="sortByValue" checked>
+            <label for="sorter4" class="sorterLabel">Taken on</label>
+        </div>
+        <div class="block">
+            <input type="radio" id="sorter5" class="sorterInput" name="element" value="leaderboardScore" v-model="sortByValue">
+            <label for="sorter5" class="sorterLabel">Leaderboard score</label>
         </div>
         
         <h1 class="sorterTitle pt-12">Order</h1>
@@ -242,7 +246,7 @@ onUnmounted(() => {
             <p class="filterTitle mt-10">Indicator</p>
             <label v-for="indicator in storeStudy.indicators" :key="indicator" class="filterLabel">
                 <input type="checkbox" :value="indicator" checked @change="updateSelectedIndicators(indicator, $event)">
-                {{ indicator }}
+                {{ indicator.replace(/\b\w/g, char => char.toUpperCase()) }}
             </label>
         </div>
 

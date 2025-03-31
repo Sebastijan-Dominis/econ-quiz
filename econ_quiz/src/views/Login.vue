@@ -25,7 +25,7 @@ const storeAuth = useStoreAuth();
             <label for="password" class="labelForm">Password: </label>
             <input name="password" type="password" placeholder="Enter your password" v-model="credentials.password" class="inputForm" required>
 
-            <button type="submit" class="w-36 h-14 border-bg border-2 bg-brand text-bg rounded-full col-span-3 mx-auto text-xl font-medium max-lg:block hover:bg-bgbtn hover:border-brand hover:text-wg active:scale-98 max-md:mt-4">Log In!</button>
+            <button type="submit" class="w-36 h-14 border-bg border-2 bg-brand text-bg rounded-full col-span-3 mx-auto text-xl font-medium max-lg:block lg:hover:bg-bgbtn lg:hover:border-brand lg:hover:text-wg lg:active:scale-98 max-md:mt-4">Log In!</button>
         </form>
 
         <h2 class="mx-auto text-2xl text-brand mt-6 max-lg:block">Or log in with:</h2>
@@ -39,7 +39,7 @@ const storeAuth = useStoreAuth();
             <router-link :to="{name: 'resend'}"><button class="help">Resend verification email</button></router-link>
             <router-link :to="{name: 'reset'}"><button class="help">I forgot my password</button></router-link>
         </div>
-        <router-link :to="{name: 'home'}"><button class="w-32 h-12 bg-bgbtn border-2 border-brand mt-4 mx-auto rounded-full text-wg text-xl mb-4 block hover:bg-brand hover:border-bg hover:text-bg active:scale-98">Quit</button></router-link>
+        <router-link :to="{name: 'home'}"><button class="w-32 h-12 bg-bgbtn border-2 border-brand mt-4 mx-auto rounded-full text-wg text-xl mb-4 block lg:hover:bg-brand lg:hover:border-bg lg:hover:text-bg lg:active:scale-98">Quit</button></router-link>
     </div>
 </template>
 
@@ -58,14 +58,18 @@ const storeAuth = useStoreAuth();
     margin-left: auto;
     margin-right: auto;
 }
-.altSignUp:hover {
-    background-color: var(--brand);
-    border-color: var(--bg);
+@media (min-width: 1024px) {
+    .altSignUp:hover {
+        background-color: var(--brand);
+        border-color: var(--bg);
+    }
+    .altSignUp:active {
+        transform: scale(0.98);
+    }
+    .group:hover .logoName {
+        color: var(--bg);
+    }
 }
-.altSignUp:active {
-    transform: scale(0.98);
-}
-
 .logo {
     width: 2.5rem;
     height: auto;
@@ -75,9 +79,7 @@ const storeAuth = useStoreAuth();
     font-size: 20px;
     color: var(--wg);
 }
-.group:hover .logoName {
-    color: var(--bg);
-}
+
 
 .help {
     width: 12rem;
@@ -87,9 +89,14 @@ const storeAuth = useStoreAuth();
     color: var(--wg);
     border-radius: 9999px;
 }
-.help:hover {
-    background-color: var(--brand);
-    border-color: var(--bg);
-    color: var(--bg);
+@media (min-width: 1024px) {
+    .help:hover {
+        background-color: var(--brand);
+        border-color: var(--bg);
+        color: var(--bg);
+    }
+    .help:active {
+        scale: 0.98;
+    }
 }
 </style>

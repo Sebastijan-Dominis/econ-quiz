@@ -12,8 +12,6 @@ import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { db } from '../js/firebase';
 import CenterMessage from '../components/CenterMessage.vue';
 import { useStoreAuth } from '../stores/storeAuth';
-import DarkBtn from '../components/DarkBtn.vue';
-import InstructionsBtn from '../components/InstructionsBtn.vue';
 import firstSound from '../assets/music/first.wav';
 import secondSound from '../assets/music/second.wav';
 
@@ -151,94 +149,32 @@ const prevQ = () => {
 }
 
 // manual input quizzes
-const number = ref(new Array(21).fill(0));
-const keyModifier = ref(1);
-const shiftPressed = ref(false);
+const chosenNumber = ref(new Array(21).fill(0));
 
 const formattedNumber = computed(() => {
+    const num = chosenNumber.value[curr.value];
+    if(typeof num === 'string') return "Invalid input.";
     if(storeStudy.smallNumsPercentages.has(originalValue)) {
-        return `${number.value[curr.value].toFixed(2)}%`;
+        return `${num.toFixed(2)}%`;
     } else if(storeStudy.smallNums.has(originalValue)) {
-        return number.value[curr.value].toFixed(2);
+        return num.toFixed(2);
     } else if(storeStudy.largeNumsDollars.has(originalValue)) {
-        return `$${Number(number.value[curr.value].toFixed(2)).toLocaleString()}`;
+        return `$${Number(num.toFixed(2)).toLocaleString()}`;
     } else if(storeStudy.largeNums.has(originalValue)) {
-        return Number(number.value[curr.value].toFixed(2)).toLocaleString();
+        return Number(num.toFixed(2)).toLocaleString();
     }
-    return '';
 });
 
-const modifyWholeNumber = amount => {
-    number.value[curr.value] += amount * keyModifier.value;
-};
-
-const modifyDecimal = amount => {
-    const step = shiftPressed.value ? 0.10 : 0.01;
-    number.value[curr.value] = parseFloat((number.value[curr.value] + amount * step).toFixed(2));
-};
-
-const handleKeydown = event => {
-    if(event.key.match(/[1-9]/)) {
-        keyModifier.value = Math.pow(10, parseInt(event.key))
-    } else {
-        switch (event.key) {
-            case "0":
-                keyModifier.value = 10000000000
-                break;
-            case "Q":
-            case "q":
-                keyModifier.value = 100000000000;
-                break;
-            case "W":
-            case "w":
-                keyModifier.value = 1000000000000;
-                break;
-            case "E":
-            case "e":
-                keyModifier.value = 10000000000000;
-                break;
-            case "R":
-            case "r":
-                keyModifier.value = 100000000000000;
-                break;
-            case "T":
-            case "t":
-                keyModifier.value = 1000000000000000;
-                break;
-            default:
-                break;
-        }
-    }
-    if(event.shiftKey) {
-        shiftPressed.value = true;
-    }
-};
-
-const handleKeyup = () => {
-    keyModifier.value = 1;
-    shiftPressed.value = false;
-};
-
-if(route.params.type === "manual-input") {
-    onMounted(() => {
-        window.addEventListener("keydown", handleKeydown);
-        window.addEventListener("keyup", handleKeyup);
-    });
-    onUnmounted(() => {
-        window.removeEventListener("keydown", handleKeydown);
-        window.removeEventListener("keyup", handleKeyup);
-    });
-};
-
 const nextQMan = () => {
+    if(typeof chosenNumber.value[curr.value] === "string") {
+        alert("Please input a valid number");
+        return;
+    }
     curr.value++;
 }
 const prevQMan = () => {
     if(curr.value > 1) curr.value--;
 }
-
-// instructions for manual input quizzes
-const instructions = ref(false);
 
 // finishing
 const done = ref(false);
@@ -264,10 +200,10 @@ const finish = async() => {
             score = (storeQuiz.correctAnswers/20)*100;
         } else {
             let closeness = [];
-            for(let i = 1; i < number.value.length; i++) {
-                const currNum = number.value[i];
+            for(let i = 1; i < chosenNumber.value.length; i++) {
+                const currNum = chosenNumber.value[i];
 
-                if(storeStudy.cannotOver100.has(topic) && currNum > 100 || storeStudy.cannotBelow0.has(topic) && currNum < 0) {
+                if(storeStudy.cannotOver100.has(topic) && currNum > 100 || storeStudy.cannotBelow0.has(topic) && currNum < 0 || topic === "Life expectancy" && currNum > 120) {
                     closeness.push(0.00);
                     continue;
                 }
@@ -374,77 +310,30 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- manual input quizzes -->
-        <div v-if="storeQuiz.type === 'Manual Input'" class="mt-12 md:mt-16 lg:mt-20 xl:mt-24 2xl:mt-28 grid grid-cols-2 gap-y-6 place-items-center md:gap-y-10">
+        <div v-if="storeQuiz.type === 'Manual Input'" class="mt-12 md:mt-16 lg:mt-20 xl:mt-24 2xl:mt-28 flex flex-col items-center">
             <h2 class="manualNumber">
               <span>{{ formattedNumber }}</span>
             </h2>
-            <h3 class="manualTitle">Whole</h3>
-            <h3 class="manualTitle">Decimal</h3>
-            <button @click="modifyWholeNumber(1)" class="manualButton">+</button>
-            <button @click="modifyDecimal(1)" class="manualButton">+</button>
-            <button @click="modifyWholeNumber(-1)" class="manualButton">-</button>
-            <button @click="modifyDecimal(-1)" class="manualButton">-</button>
+            <input type="number" v-model="chosenNumber[curr]" class="p-2 mt-8 text-lg md:mt-12 md:p-3 md:text-xl lg:mt-16 lg:p-4 lg:text-2xl xl:mt-24 xl:p-6 xl:text-3xl 2xl:mt-32 2xl:p-8 2xl:text-4xl font-bold border border-brand border-2 2xl:border-4 rounded-full text-center appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-moz-appearance:textfield]">
         </div>
 
         <!-- options for manual input quizzes -->
-        <div v-if="storeQuiz.type === 'Manual Input'" class="grid grid-cols-2 place-items-center mt-10 mx-2 md:mx-16 md:mt-16 lg:mx-20 2xl:mx-36">
-            <NavBtn :class="curr === 1 ? 'disabled active:scale-[1] disableBtn' : ''" @click="prevQMan">Prev</NavBtn>
-            <NavBtn v-if="curr !== storeQuiz.questions.length-1" @click="nextQMan">Next</NavBtn>
-            <NavBtn v-else @click="openFinish">Finish</NavBtn>
+        <div v-if="storeQuiz.type === 'Manual Input'" class="grid grid-cols-2 place-items-center mt-10 md:mt-16 lg:mt-20 xl:mt-24 2xl:mt-32 mx-2 md:mx-16 lg:mx-20 2xl:mx-36">
+            <NavBtn :class="{'disabled active:scale-[1] disableBtn': curr === 1}" @click="prevQMan" custom-class="manualNav">Prev</NavBtn>
+            <NavBtn v-if="curr !== storeQuiz.questions.length-1" @click="nextQMan" custom-class="manualNav">Next</NavBtn>
+            <NavBtn v-else @click="openFinish" custom-class="manualNav">Finish</NavBtn>
         </div>
-
-        <!-- instructions for manual input quizzes -->
-        <InstructionsBtn v-show="storeQuiz.type === 'Manual Input'" @click="instructions = true"></InstructionsBtn>
-        
-        <div v-show="instructions">
-            <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-95"></div>
-            <div class="fixed top-0 left-0 w-full h-[70%] grid grid-cols-2 text-brand place-items-center items-start mt-16">
-                <h1 class="col-span-2 text-3xl font-bold">Instructions</h1>
-                <p class="col-span-2 text-2xl">Hold these keys while clicking</p>
-                <p class="col-span-2 text-1xl">(e.g. hold 2 while clicking on whole + or - to increase or decrease it by 100)</p>
-                <div>
-                    <h2 class="text-2xl font-bold">Whole</h2>
-                    <div class="mt-4">
-                        <p class="instructions">default => +-1</p>
-                        <p class="instructions">1 => +-10</p>
-                        <p class="instructions">2 => +-100</p>
-                        <p class="instructions">3 => +-1,000</p>
-                        <p class="instructions">4 => +-10,000</p>
-                        <p class="instructions">5 => +-100,000</p>
-                        <p class="instructions">6 => +-1,000,000</p>
-                        <p class="instructions">7 => +-10,000,000</p>
-                        <p class="instructions">8 => +-100,000,000</p>
-                        <p class="instructions">9 => +-1,000,000,000</p>
-                        <p class="instructions">0 => +-10,000,000,000</p>
-                        <p class="instructions">q => +-100,000,000,000</p>
-                        <p class="instructions">w => +-1,000,000,000,000</p>
-                        <p class="instructions">e => +-10,000,000,000,000</p>
-                        <p class="instructions">r => +-100,000,000,000,000</p>
-                        <p class="instructions">t => +-1,000,000,000,000,000</p>
-                    </div>
-                </div>
-                <div>
-                    <h2 class="text-2xl font-bold">Decimal</h2>
-                    <div class="mt-4">
-                        <p class="instructions">default => +-0.01</p>
-                        <p class="instructions">shift => +=0.1</p>
-                    </div>
-                </div>
-                <DarkBtn @click="instructions = false" class="col-span-2">Close</DarkBtn>
-            </div>
-        </div>
-
 
         <!-- options for multiple choice quizzes -->
         <div v-if="storeQuiz.type === 'Multiple Choice'" class="grid grid-cols-2 place-items-center mt-10 mx-2 md:mx-16 md:mt-16 lg:mx-20 2xl:mx-36">
-            <NavBtn :class="curr === 1 ? 'disabled active:scale-[1] disableBtn' : ''" @click="prevQ">Prev</NavBtn>
+            <NavBtn :class="{'disabled active:scale-[1] disableBtn': curr === 1}" @click="prevQ">Prev</NavBtn>
             <NavBtn v-if="curr !== storeQuiz.questions.length-1" @click="nextQ">Next</NavBtn>
             <NavBtn v-else @click="openFinish">Finish</NavBtn>
         </div>
 
         <!-- enabling the user to quit at any point -->
         <div class="flex justify-center mt-10">
-            <button @click="openPopup" class="w-16 h-10 bg-bgbtn text-wg border border-2 border-brand rounded-lg md:w-20 md:h-12 lg:w-28 lg:h-14 2xl:mt-16 hover:bg-brand hover:text-bg active:scale-[0.98] max-md:text-sm">Quit</button>
+            <button @click="openPopup" class="w-16 h-10 bg-bgbtn text-wg border border-2 border-brand rounded-lg md:w-20 md:h-12 lg:w-28 lg:h-14 2xl:mt-16 lg:hover:bg-brand lg:hover:text-bg lg:active:scale-[0.98] max-md:text-sm">Quit</button>
         </div>
 
         <!-- double checking if the user really wants to quit -->
@@ -556,12 +445,14 @@ onBeforeUnmount(() => {
     height: 3rem;
     width: 7rem;
 }
-.manualButton:hover {
-    background-color: var(--brand);
-    color: var(--bg);
-}
-.manualButton:active {
-    scale: 0.98;
+@media (min-width: 1024px) {
+    .manualButton:hover {
+        background-color: var(--brand);
+        color: var(--bg);
+    }
+    .manualButton:active {
+        scale: 0.98;
+    }
 }
 @media(min-width: 768px) {
     .manualNumber {
@@ -615,5 +506,22 @@ onBeforeUnmount(() => {
 .instructions {
     font-size: 1.25rem;
     line-height: 1.75rem;
+}
+
+@media (min-width: 1280px) {
+    .manualNav {
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+        height: 5rem;
+        width: 12rem;
+    }
+}
+@media(min-width: 1536px) {
+    .manualNav {
+        font-size: 1.5rem;
+        line-height: 2rem;
+        height: 6rem;
+        width: 14rem;
+    }
 }
 </style>

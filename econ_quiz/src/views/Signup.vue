@@ -180,7 +180,7 @@ const onSubmit = function() {
                 <img v-else src="../assets/images/green.png" alt="green, smiley face">
             </div>
 
-            <button type="submit" class="w-36 h-14 border-bg border-2 bg-brand text-bg rounded-full col-span-7 mx-auto text-xl font-medium max-lg:block max-lg:mt-4 hover:bg-bgbtn hover:text-wg hover:border-brand active:scale-98">Sign Up!</button>
+            <button type="submit" class="w-36 h-14 border-bg border-2 bg-brand text-bg rounded-full col-span-7 mx-auto text-xl font-medium max-lg:block max-lg:mt-4 lg:hover:bg-bgbtn lg:hover:text-wg lg:hover:border-brand lg:active:scale-98">Sign Up!</button>
         </form>
 
         <h2 class="mx-auto text-2xl text-brand mt-12 max-lg:block max-lg:mt-8">Or sign up with:</h2>
@@ -190,7 +190,7 @@ const onSubmit = function() {
             <span class="logoName">Google</span>
         </button>
 
-        <router-link :to="{name: 'home'}"><button class="w-32 h-12 bg-bgbtn border-2 border-brand mt-10 mx-auto rounded-full text-wg text-xl mb-4 block hover:bg-brand hover:border-bg hover:text-bg active:scale-98">Quit</button></router-link>
+        <router-link :to="{name: 'home'}"><button class="w-32 h-12 bg-bgbtn border-2 border-brand mt-10 mx-auto rounded-full text-wg text-xl mb-4 block lg:hover:bg-brand lg:hover:border-bg lg:hover:text-bg ;lg:active:scale-98">Quit</button></router-link>
         
     </div>
 </template>
@@ -259,14 +259,18 @@ const onSubmit = function() {
     margin-left: auto;
     margin-right: auto;
 }
-.altSignUp:hover {
-    background-color: var(--brand);
-    border-color: var(--bg);
+@media (min-width: 1024px) {
+    .altSignUp:hover {
+        background-color: var(--brand);
+        border-color: var(--bg);
+    }
+    .altSignUp:active {
+        transform: scale(0.98);
+    }
+    .group:hover .logoName {
+        color: var(--bg);
+    }
 }
-.altSignUp:active {
-    transform: scale(0.98);
-}
-
 .logo {
     width: 2.5rem;
     height: auto;
@@ -275,8 +279,5 @@ const onSubmit = function() {
 .logoName {
     font-size: 20px;
     color: var(--wg);
-}
-.group:hover .logoName {
-    color: var(--bg);
 }
 </style>

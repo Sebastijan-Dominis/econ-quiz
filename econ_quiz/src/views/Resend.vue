@@ -25,7 +25,7 @@ const credentials = reactive({
             <label for="password" class="labelForm">Password: </label>
             <input name="password" type="password" placeholder="Enter your password..." v-model="credentials.password" class="inputForm" required>
 
-            <button type="submit" class="w-36 h-14 border-bg border-2 bg-brand text-bg rounded-full col-span-3 mx-auto text-xl font-medium max-lg:block hover:bg-bgbtn hover:border-brand hover:text-wg active:scale-98 max-md:mt-4 mb-4">Resend!</button>
+            <button type="submit" class="w-36 h-14 border-bg border-2 bg-brand text-bg rounded-full col-span-3 mx-auto text-xl font-medium max-lg:block lg:hover:bg-bgbtn lg:hover:border-brand lg:hover:text-wg lg:active:scale-98 max-md:mt-4 mb-4">Resend!</button>
         </form>
     </div>
 

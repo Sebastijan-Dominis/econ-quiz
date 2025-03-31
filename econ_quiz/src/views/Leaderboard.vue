@@ -156,33 +156,33 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-  .active {
-    color: var(--bg);
-    background-color: var(--brand);
+.active {
+  color: var(--bg);
+  background-color: var(--brand);
+}
+@media (max-width:640px) {
+  .textInstructions {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    margin-top: 3rem;
   }
-  @media (max-width:640px) {
-    .textInstructions {
-      font-size: 1.25rem;
-      line-height: 1.75rem;
-      margin-top: 3rem;
-    }
-    .container {
-      margin-top: 3rem;
-    }
+  .container {
+    margin-top: 3rem;
   }
-  @media (max-width: 640px) and (max-height: 700px) {
-    .textInstructions {
-      font-size: 1.125rem;
-      line-height: 1.75rem;
-      margin-top: 2rem;
-    }
-    .title {
-      font-size: 1.5rem;
-      line-height: 2rem;
-      padding: 0 1rem;
-    }
-    .container {
-      margin-top: 2rem;
-    }
+}
+@media (max-width: 640px) and (max-height: 700px) {
+  .textInstructions {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    margin-top: 2rem;
   }
+  .title {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    padding: 0 1rem;
+  }
+  .container {
+    margin-top: 2rem;
+  }
+}
 </style>

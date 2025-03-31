@@ -91,44 +91,43 @@ onBeforeUnmount(() => {
 
 <template>
     <!-- Small screens -->
-    <h1 class="text-brand text-3xl text-center font-bold pt-4 md:hidden">Welcome to Econ Quiz!</h1>
-    <p class="text-brand text-center text-sm font-bold mt-4 mx-4 md:hidden">For the best experience use laptop or desktop PC</p>
-    <h2 v-if="!storeAuth.isLoggedIn" class="text-brand text-center font-bold mt-4 mx-4 md:hidden text-sm">You are not logged in. Log in to save your results!</h2>
-    <h2 v-else class="text-brand text-center font-bold mt-4 text-lg md:hidden">{{ hello }}</h2>
+    <h1 class="text-brand text-3xl text-center font-bold pt-4 lg:hidden md:pt-16 smallTitle">Welcome to Econ Quiz!</h1>
+    <h2 v-show="!storeAuth.isLoggedIn" class="text-brand text-center font-bold mx-4 text-lg lg:hidden fixed left-1/2 transform -translate-x-1/2 top-32 smallWelcomeMessage">You are not logged in. Log in to save your results!</h2>
+    <h2 v-show="storeAuth.isLoggedIn" class="text-brand text-center font-bold mx-4 text-lg lg:hidden fixed left-1/2 transform -translate-x-1/2 top-32 smallWelcomeMessage">{{ hello }}</h2>
 
     
-    <div class="fixed bottom-8 left-1/2 transform -translate-x-1/2 w-full">
-        <div v-if="storeAuth.isLoggedIn" class="w-full flex pb-8 justify-evenly md:hidden">
-            <DarkBtn class="w-32 h-12" @click="openPopup">Logout</DarkBtn>
+    <div class="fixed bottom-8 left-1/2 transform -translate-x-1/2 w-full smallContainer md:relative md:mt-32 lg:hidden">
+        <div v-if="storeAuth.isLoggedIn" class="w-full flex justify-evenly lg:hidden smallLog">
+            <DarkBtn class="smallSmallBtn" @click="openPopup">Logout</DarkBtn>
         </div> 
-        <div v-else class="w-full flex pb-8 justify-evenly md:hidden">
-            <router-link :to="{name: 'login'}"><DarkBtn class="w-32 h-12">Login</DarkBtn></router-link>
-            <router-link :to="{name: 'signup'}"><BrandBtn class="w-32 h-12">Sign Up</BrandBtn></router-link>
+        <div v-else class="w-full flex justify-evenly lg:hidden smallLog">
+            <router-link :to="{name: 'login'}"><DarkBtn class="smallSmallBtn">Login</DarkBtn></router-link>
+            <router-link :to="{name: 'signup'}"><BrandBtn class="smallSmallBtn">Sign Up</BrandBtn></router-link>
         </div> 
-        <div class="w-full flex justify-center mt-12 md:hidden">
-            <DarkBtn class="w-48 h-20" @click="typePopup = true">Play Now!</DarkBtn>
+        <div class="w-full flex justify-center mt-20 md:mt-40 lg:hidden smallPlay">
+            <DarkBtn class="w-48 h-20 smallPlayBtn" @click="typePopup = true">Play Now!</DarkBtn>
         </div>
     
-        <div class="w-full flex mt-16 px-4 justify-between md:hidden">
-            <router-link :to="{name: 'results-choice'}"><DarkBtn class="w-32 h-12">Results</DarkBtn></router-link>
-            <router-link :to="{name: 'add'}"><DarkBtn v-if="storeAuth.isLoggedIn && storeAuth.isAdmin">Add</DarkBtn></router-link>
+        <div class="w-full flex mt-16 px-4 justify-between md:mt-28 lg:hidden smallFirstRow">
+            <router-link :to="{name: 'results-choice'}"><DarkBtn class="smallSmallBtn">Results</DarkBtn></router-link>
+            <router-link :to="{name: 'add'}"><DarkBtn v-if="storeAuth.isLoggedIn && storeAuth.isAdmin" class="smallSmallBtn">Add</DarkBtn></router-link>
         </div>
     
-        <div class="w-full flex mt-8 px-4 pb-8 justify-between md:hidden">
-            <router-link :to="{name: 'leaderboard'}"><DarkBtn class="w-32 h-12">Leaderboard</DarkBtn></router-link>
-            <router-link :to="{name: 'edit-choice'}"><DarkBtn v-if="storeAuth.isLoggedIn && storeAuth.isAdmin">Edit/Delete</DarkBtn></router-link>
+        <div class="w-full flex mt-8 px-4 pb-8 justify-between lg:hidden">
+            <router-link :to="{name: 'leaderboard'}"><DarkBtn class="smallSmallBtn">Leaderboard</DarkBtn></router-link>
+            <router-link :to="{name: 'edit-choice'}"><DarkBtn v-if="storeAuth.isLoggedIn && storeAuth.isAdmin" class="smallSmallBtn">Edit/Delete</DarkBtn></router-link>
         </div> 
     
-        <div class="w-full flex px-4 pb-8 justify-between md:hidden">
-            <router-link :to="{name: 'study-choice'}"><DarkBtn class="w-32 h-12">Study</DarkBtn></router-link>
-            <router-link :to="{name: 'faq'}"><DarkBtn class="w-32 h-12">FAQ</DarkBtn></router-link>
+        <div class="w-full flex px-4 pb-8 justify-between lg:hidden smallLastRow">
+            <router-link :to="{name: 'study-choice'}"><DarkBtn class="smallSmallBtn">Study</DarkBtn></router-link>
+            <router-link :to="{name: 'faq'}"><DarkBtn class="smallSmallBtn">FAQ</DarkBtn></router-link>
         </div> 
     </div>
 
 
     <!-- Desktop and Tablet -->
     <router-view />
-    <div class="max-md:hidden">
+    <div class="max-lg:hidden">
         <nav class="flex justify-between items-center px-10 py-6">
             <div class="flex gap-4">
                 <router-link :to="{name: 'results'}"><DarkBtn>Results</DarkBtn></router-link>
@@ -143,20 +142,20 @@ onBeforeUnmount(() => {
                 <router-link :to="{name: 'signup'}"><BrandBtn>Sign up</BrandBtn></router-link>
             </div>
         </nav>
+        
+        <h1 class="text-brand text-center font-bold text-5xl mt-28 welcomeMessage">Welcome to Econ Quiz!</h1>
 
-        <p v-if="!storeAuth.isLoggedIn" class="absolute left-1/2 top-96 lg:top-24 xl:top-32 2xl:top-40 text-brand text-3xl max-2xl:text-2xl transform -translate-x-1/2 text-center font-normal">You are not logged in. Log in to<br>save your results!</p>
-        <p v-else class="absolute left-1/2 top-96 lg:top-24 xl:top-32 2xl:top-40 text-brand text-3xl max-2xl:text-2xl transform -translate-x-1/2 text-center font-normal">{{ hello }}</p>
+        <p v-if="!storeAuth.isLoggedIn" class="helloMessage">You are not logged in. Log in to<br>save your results!</p>
+        <p v-else class="helloMessage">{{ hello }}</p>
 
-        <h1 class="absolute left-1/2 transform -translate-x-1/2 top-80 text-brand text-6xl max-2xl:text-5xl text-center font-bold max-2xl:top-64 max-xl:top-48">Welcome to Econ Quiz!</h1>
+        <button class="w-56 h-24 2xl:w-72 2xl:h-32 rounded-full bg-bgbtn border-brand border-2 font-medium text-wg absolute left-1/2 transform -translate-x-1/2 bottom-64 text-3xl lg:hover:bg-brand lg:hover:text-bg lg:hover:border-bg lg:active:scale-98 max-lg:bottom-16 playBtn" @click="typePopup = true">Play Now!</button>
 
-        <button class="w-56 h-24 2xl:w-72 2xl:h-32 rounded-full bg-bgbtn border-brand border-2 font-medium text-wg absolute left-1/2 transform -translate-x-1/2 bottom-64 text-3xl hover:bg-brand hover:text-bg hover:border-bg active:scale-98 max-lg:bottom-16" @click="typePopup = true">Play Now!</button>
+        <img src="../assets/images/happy.png" alt="a happy man looking to the right direction" class="absolute bottom-0 left-24 w-56 max-lg:hidden happyGuy">
+        <p class="absolute bottom-0 left-24 text-brand text-2xl font-normal text-center max-lg:hidden happyMessage">Learn, test<br>yourself, and have<br>lots of fun!</p>
 
-        <img src="../assets/images/happy.png" alt="a happy man looking to the right direction" class="absolute bottom-0 left-24 w-56 max-lg:hidden">
-        <p class="absolute bottom-0 left-24 text-brand text-2xl font-normal text-center max-lg:hidden">Learn, test<br>yourself, and have<br>lots of fun!</p>
+        <img src="../assets/icons/arrow.svg" alt="an arrow pointing from the happy man to the play now button" class="absolute left-80 bottom-40 max-lg:hidden arrow">
 
-        <img src="../assets/icons/arrow.svg" alt="an arrow pointing from the happy man to the play now button" class="absolute left-80 bottom-40 max-lg:hidden">
-
-        <div v-if="storeAuth.isLoggedIn && storeAuth.isAdmin" class="absolute top-56 right-6 flex flex-col gap-6 items-center">
+        <div v-if="storeAuth.isLoggedIn && storeAuth.isAdmin" class="absolute top-1/2 transform -translate-y-[70%] right-6 flex flex-col gap-6 items-center">
             <h2 class="text-2xl text-brand font-normal">Admin Options</h2>
             <nav class="flex flex-col gap-6">
                 <router-link :to="{name: 'add'}"><DarkBtn>Add</DarkBtn></router-link>
@@ -236,5 +235,121 @@ onBeforeUnmount(() => {
     color: var(--gray);
     text-align: center;
     place-content: center;
+}
+
+@media (max-width: 640px) and (max-height: 735px) {
+    .smallContainer {
+        bottom: 0rem;
+    }
+    .smallLog {
+        padding-bottom: 0rem;
+    }
+    .smallPlay {
+        margin-top: 3rem;
+    }
+    .smallFirstRow {
+        margin-top: 2.5rem;
+    }
+}
+
+@media (max-width: 640px) and (min-height: 840px) {
+    .smallLastRow {
+        padding-bottom: 7rem;
+    }
+}
+
+.helloMessage {
+    margin-top: 8rem;
+    color: var(--brand);
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    text-align: center;
+    font-weight: 400;
+}
+
+/* ipad mini */
+@media (min-width: 768px) and (max-width: 1024px) and (max-height: 1150px) {
+    .helloMessage {
+        margin-top: 8rem;
+    }
+    .welcomeMessage {
+        margin-top: 8rem;
+    }
+    .smallSmallBtn {
+        height: 4rem;
+        width: 11rem;
+    }
+    .smallPlayBtn {
+        height: 7rem;
+        width: 16rem;
+    }
+}
+
+/* nest hub */
+@media (min-width: 1024px) and (max-width: 1280px) and (max-height: 880px) {
+    .welcomeMessage {
+        margin-top: 2rem;
+    }
+    .helloMessage {
+        margin-top: 4rem;
+    }
+    .playBtn {
+        bottom: 10rem;
+    }
+    .arrow {
+        bottom: 6rem;
+        left: 14rem;
+        width: 10rem;
+    }
+    .happyGuy {
+        width: 10rem;
+        left: 4rem;
+    }
+    .happyMessage {
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+        left: 4rem;
+    }
+}
+
+/* ipad air */
+@media (min-width: 768px) and (max-width: 1024px) and (min-height: 1100px) and (max-height: 1200px) {
+    .smallContainer {
+        margin-top: 12rem;
+    }
+    .smallWelcomeMessage {
+        top: 10rem;
+    }
+    .smallSmallBtn {
+        height: 4rem;
+        width: 11rem;
+    }
+    .smallPlayBtn {
+        height: 7rem;
+        width: 16rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) and (min-height: 1200px) {
+    .smallContainer {
+        margin-top: 16rem;
+    }
+    .smallWelcomeMessage {
+        top: 12rem;
+        font-size: 1.5rem;
+        line-height: 2rem;
+    }
+    .smallTitle {
+        font-size: 2.25rem;
+        line-height: 2.5rem;
+    }
+    .smallSmallBtn {
+        height: 5rem;
+        width: 13rem;
+    }
+    .smallPlayBtn {
+        height: 9rem;
+        width: 20rem;
+    }
 }
 </style>
