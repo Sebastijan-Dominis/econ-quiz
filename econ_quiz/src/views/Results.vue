@@ -194,63 +194,66 @@ onUnmounted(() => {
         </div> 
     </div>
 
-    <DarkBtn class="fixed top-6 right-12" @click="openPopup" :class="{'disabled cursor-not-allowed': disableConfirm}">Sort and Filter</DarkBtn>
-    <div v-show="popupOpen" class="fixed top-1/2 translate-y-[-50%] left-1/2 translate-x-[-50%] w-full h-full bg-bgpopup text-brand overflow-y-auto">
+    <DarkBtn class="fixed top-4 right-6 max-lg:w-32 max-lg:h-12 lg:w-40 lg:h-16 lg:text-lg lg:font-semibold xl:w-48 xl:h-20 xl:text-xl xl:font-bold 2xl:w-56 2xl:h-24 2xl:text-2xl 2xl:font-extrabold" @click="openPopup" :class="{'disabled cursor-not-allowed': disableConfirm}">Sort and Filter</DarkBtn>
+    <div v-show="popupOpen" class="fixed top-1/2 transform -translate-y-1/2 left-1/2 -translate-x-1/2 w-full h-full bg-bgpopup text-brand">
+        <div class="grid grid-cols-2 place-items-center place-content-evenly h-screen">
+            <!-- sorter -->
+             <div>
+                 <h1 class="sorterTitle">Sort by</h1>
+                 <div class="block">
+                     <input type="radio" id="sorter1" class="sorterInput" name="element" value="score" v-model="sortByValue">
+                     <label for="sorter1" class="sorterLabel">Score</label>
+                 </div>
+                 <div class="block">
+                     <input type="radio" id="sorter2" class="sorterInput" name="element" value="difficulty" v-model="sortByValue" >
+                     <label for="sorter2" class="sorterLabel">Difficulty</label>
+                 </div>
+                 <div class="block">
+                     <input type="radio" id="sorter3" class="sorterInput" name="element" value="timeTaken" v-model="sortByValue">
+                     <label for="sorter3" class="sorterLabel">Time spent</label>
+                 </div>
+                 <div class="block">
+                     <input type="radio" id="sorter4" class="sorterInput" name="element" value="timestamp" v-model="sortByValue" checked>
+                     <label for="sorter4" class="sorterLabel">Taken on</label>
+                 </div>
+                 <div class="block">
+                     <input type="radio" id="sorter5" class="sorterInput" name="element" value="leaderboardScore" v-model="sortByValue">
+                     <label for="sorter5" class="sorterLabel">Leaderboard score</label>
+                 </div>
+                 
+                 <h1 class="sorterTitle pt-12">Order</h1>
+                 <div class="block">
+                     <input type="radio" id="direction1" class="sorterInput" name="direction" value="desc" v-model="sortDirection" checked>
+                     <label for="direction1" class="sorterLabel">Descending</label>
+                 </div>
+                 <div class="block">
+                     <input type="radio" id="direction2" class="sorterInput" name="direction" value="asc" v-model="sortDirection">
+                     <label for="direction2" class="sorterLabel">Ascending</label>
+                 </div>
+             </div>
+    
+    
+            <!-- filter -->
+            <div>
+                <h1 class="sorterTitle ml-6">Filter</h1>
+    
+                <!-- Types -->
+                <p class="filterTitle mt-12">Type</p>
+                <label v-for="type in storeStudy.allTypes" :key="type" class="filterLabel">
+                    <input type="checkbox" :value ="type" checked class="filterInput" @change="updateSelectedTypes(type, $event)">
+                    {{ type }}
+                </label>
+    
+                <!-- Indicators -->
+                <p class="filterTitle mt-10">Indicator</p>
+                <label v-for="indicator in storeStudy.indicators" :key="indicator" class="filterLabel">
+                    <input type="checkbox" :value="indicator" checked class="filterInput" @change="updateSelectedIndicators(indicator, $event)">
+                    {{ indicator.replace(/\b\w/g, char => char.toUpperCase()) }}
+                </label>
+            </div>
+            <DarkBtn class="col-span-2 md:w-40 md:h-16 md:text-lg md:font-semibold lg:w-48 lg:h-20 lg:text-xl lg:font-bold xl:w-56 xl:h-24 xl:text-2xl xl:font-extrabold 2xl:w-64 2xl:h-28 2xl:text-3xl 2xl:font-black" @click="confirm">Confirm choices</DarkBtn>
+        </div>
 
-        <!-- sorter -->
-        <h1 class="sorterTitle pt-20">Sort by</h1>
-        <div class="block">
-            <input type="radio" id="sorter1" class="sorterInput" name="element" value="score" v-model="sortByValue">
-            <label for="sorter1" class="sorterLabel">Score</label>
-        </div>
-        <div class="block">
-            <input type="radio" id="sorter2" class="sorterInput" name="element" value="difficulty" v-model="sortByValue" >
-            <label for="sorter2" class="sorterLabel">Difficulty</label>
-        </div>
-        <div class="block">
-            <input type="radio" id="sorter3" class="sorterInput" name="element" value="timeTaken" v-model="sortByValue">
-            <label for="sorter3" class="sorterLabel">Time spent</label>
-        </div>
-        <div class="block">
-            <input type="radio" id="sorter4" class="sorterInput" name="element" value="timestamp" v-model="sortByValue" checked>
-            <label for="sorter4" class="sorterLabel">Taken on</label>
-        </div>
-        <div class="block">
-            <input type="radio" id="sorter5" class="sorterInput" name="element" value="leaderboardScore" v-model="sortByValue">
-            <label for="sorter5" class="sorterLabel">Leaderboard score</label>
-        </div>
-        
-        <h1 class="sorterTitle pt-12">Order</h1>
-        <div class="block">
-            <input type="radio" id="direction1" class="sorterInput" name="direction" value="desc" v-model="sortDirection" checked>
-            <label for="direction1" class="sorterLabel">Descending</label>
-        </div>
-        <div class="block">
-            <input type="radio" id="direction2" class="sorterInput" name="direction" value="asc" v-model="sortDirection">
-            <label for="direction2" class="sorterLabel">Ascending</label>
-        </div>
-
-
-        <!-- filter -->
-        <div class="ml-32 py-20 lg:fixed lg:right-64 lg:top-0">
-            <h1 class="text-2xl font-bold">Filter</h1>
-
-            <!-- Types -->
-            <p class="filterTitle mt-12">Type</p>
-            <label v-for="type in storeStudy.allTypes" :key="type" class="filterLabel">
-                <input type="checkbox" :value ="type" checked @change="updateSelectedTypes(type, $event)">
-                {{ type }}
-            </label>
-
-            <!-- Indicators -->
-            <p class="filterTitle mt-10">Indicator</p>
-            <label v-for="indicator in storeStudy.indicators" :key="indicator" class="filterLabel">
-                <input type="checkbox" :value="indicator" checked @change="updateSelectedIndicators(indicator, $event)">
-                {{ indicator.replace(/\b\w/g, char => char.toUpperCase()) }}
-            </label>
-        </div>
-
-        <DarkBtn class="fixed bottom-6 right-12" @click="confirm">Confirm choices</DarkBtn>
     </div>
 </div>
 
@@ -259,8 +262,10 @@ onUnmounted(() => {
 
 <style scoped>
 .filterTitle {
-    font-size: 18px;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
     margin-left: 2rem;
+    margin-bottom: 1rem;
     text-decoration: underline;
 }
 .filterLabel {
@@ -270,12 +275,11 @@ onUnmounted(() => {
 }
 
 .sorterTitle {
-    margin-left: 128px;
-    font-size: 24px;
+    font-size: 1.5rem;
+    line-height: 2rem;
     font-weight: 700;
 }
 .sorterInput {
-    margin-left: 10rem;
     margin-top: 2rem;
 }
 .sorterLabel {
@@ -283,5 +287,96 @@ onUnmounted(() => {
 }
 .sorterLabel, .sorterInput {
     cursor: pointer;
+}
+
+/* small ipads */
+@media (min-width: 768px) {
+    .sorterLabel,
+    .filterLabel {
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+    }
+    .sorterTitle {
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+    }
+    .filterTitle {
+        font-size: 1.25rem;
+    }
+    .sorterInput,
+    .filterInput {
+        scale: 1.3;
+    }
+    .filterInput {
+        margin-right: 0.25rem;
+    }
+}
+
+/* ipads, small laptops */
+@media (min-width: 1024px) {
+    .sorterLabel,
+    .filterLabel {
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+    }
+    .sorterTitle {
+        font-size: 2.25rem;
+        line-height: 2.5rem;
+    }
+    .filterTitle {
+        font-size: 1.5rem;
+        line-height: 2rem;
+    }
+    .sorterInput,
+    .filterInput {
+        scale: 1.5;
+    }
+    .filterInput {
+        margin-right: 0.5rem;
+    }
+}
+
+/* laptops, nesthub */
+@media (min-width: 1280px) {
+    .sorterLabel,
+    .filterLabel {
+        font-size: 1.5rem;
+        line-height: 2rem;
+    }
+    .sorterTitle {
+        font-size: 3rem;
+        line-height: 1;
+    }
+    .filterTitle {
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+    }
+    .sorterInput,
+    .filterInput {
+        scale: 1.8;
+    }
+    .filterInput {
+        margin-right: 0.75rem;
+    }
+}
+
+/* big screens */
+@media (min-width: 1536px) {
+    .sorterLabel,
+    .filterLabel {
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+    }
+    .filterTitle {
+        font-size: 2.25rem;
+        line-height: 2.5rem;
+    }
+    .sorterInput,
+    .filterInput {
+        scale: 2.1;
+    }
+    .filterInput {
+        margin-right: 1rem;
+    }
 }
 </style>

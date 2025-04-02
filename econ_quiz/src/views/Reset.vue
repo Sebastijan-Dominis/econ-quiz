@@ -11,7 +11,7 @@ const email = ref("");
 <template>
     <ReturnBtn class="fixed left-0 top-0 z-50"></ReturnBtn>
 
-    <div class="h-auto w-auto bg-bgform border-brand border-4 rounded-3xl absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 flex flex-col">
+    <div class="h-auto w-auto px-4 py-2 bg-bgform border-brand border-4 rounded-3xl absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 flex flex-col">
         <h1 class="text-center text-4xl font-bold text-brand mt-4 px-2">Password reset</h1>
         <p class="text-center text-brand mt-6">Reset your password!</p>
         <form @submit.prevent="storeAuth.resetPassword(email)" class="mt-6 mx-4 md:grid md:grid-cols-3 gap-x-4 gap-y-6 items-center">

@@ -29,12 +29,6 @@ A: Your results only save themselves when you finish a quiz while logged in. You
 Q: Can I add some topics?<br>
 A: Only admins can add, edit and delete topics. This is done to prevent abuse of those options.
 <br><br>
-Q: Do you really expect me to click a trillion times in that manual input quiz? What a joke...<br>
-A: Click on the question mark in the top right corner while playing it. You can add a trillion in one click :)
-<br><br>
-Q: Why does the website look so bad on mobile?<br>
-A: Because it is currently optimized only for laptops and desktop PCs. I may or may not adapt it to work well on mobile devices as well in the future.
-<br><br>
 Q: Why is there only one song that constantly repeats itself?<br>
 A: Good point... I wanted to add some music but only added one song. Eh, might add more in the future if I feel like it. For now, play something on YT or Spotify when you get bored of this track :D
 <br><br>

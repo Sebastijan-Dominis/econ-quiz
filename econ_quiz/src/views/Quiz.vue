@@ -238,7 +238,10 @@ const finish = async() => {
 
         const typeFactor = storeQuiz.typeFactors[storeQuiz.type];
         const difficultyFactor = storeQuiz.difficultiesFactors[difficulty];
-        const leaderboardScore = Math.floor(score * typeFactor * difficultyFactor);
+        let leaderboardScore = Math.floor(score * typeFactor * difficultyFactor);
+        if(topic === "Life expectancy") {
+            leaderboardScore = Math.floor(leaderboardScore * 0.65);
+        }
 
         let indicator;
         if(storeStudy.economic.has(topic)) indicator = "economic";
@@ -314,7 +317,7 @@ onBeforeUnmount(() => {
             <h2 class="manualNumber">
               <span>{{ formattedNumber }}</span>
             </h2>
-            <input type="number" v-model="chosenNumber[curr]" class="p-2 mt-8 text-lg md:mt-12 md:p-3 md:text-xl lg:mt-16 lg:p-4 lg:text-2xl xl:mt-24 xl:p-6 xl:text-3xl 2xl:mt-32 2xl:p-8 2xl:text-4xl font-bold border border-brand border-2 2xl:border-4 rounded-full text-center appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-moz-appearance:textfield]">
+            <input type="number" v-model="chosenNumber[curr]" class="p-2 mt-8 text-lg md:mt-12 md:p-3 md:text-xl lg:mt-16 lg:p-4 lg:text-2xl xl:mt-24 xl:p-6 xl:text-3xl 2xl:mt-32 2xl:p-8 2xl:text-4xl font-bold border border-brand border-2 2xl:border-4 rounded-full text-center appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-moz-appearance:textfield] manualInputField">
         </div>
 
         <!-- options for manual input quizzes -->

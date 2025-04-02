@@ -10,7 +10,6 @@ import EditChoice from "../views/EditChoice.vue";
 import Edit from "../views/Edit.vue";
 import Signup from "../views/Signup.vue";
 import Login from "../views/Login.vue";
-import ResultsChoice from "../views/ResultsChoice.vue";
 import Study from "../views/Study.vue";
 import QuizDifficultyChoice from "../views/QuizDifficultyChoice.vue";
 import Quiz from "../views/Quiz.vue";
@@ -30,7 +29,6 @@ const routes = [
     { path: '/edit/:choice', name: 'edit', component: Edit },
     { path: '/signup', name: 'signup', component: Signup },
     { path: '/login', name: 'login', component: Login },
-    { path: '/results-choice', name: 'results-choice', component: ResultsChoice },
     { path: '/study/:choice', name: 'study', component: Study },
     { path: '/quiz-difficulty-choice/:type/:choice', name: 'quiz-difficulty-choice', component: QuizDifficultyChoice },
     { path: '/quiz/:type/:choice/:difficulty/:current', name: 'quiz', component: Quiz },
