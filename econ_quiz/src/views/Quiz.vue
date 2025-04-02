@@ -289,10 +289,10 @@ onBeforeUnmount(() => {
 <template>
     <!-- quiz flow -->
     <div v-if="!done && !storeQuiz.error">
-        <h1 class="pt-8 text-brand text-base font-bold flex text-center justify-center md:text-xl md:pt-10 md:text-3xl lg:pt-12 xl:text-4xl 2xl:text-5xl">{{ storeQuiz.questions[curr].question }}</h1>
+        <h1 class="pt-8 text-brand text-base font-bold flex text-center justify-center md:pt-10 md:text-3xl lg:pt-12 lg:text-4xl 2xl:text-5xl mx-4 questionTitle">{{ storeQuiz.questions[curr].question }}</h1>
 
         <!-- display questions for multiple choice and timed quizzes -->
-        <div v-if="storeQuiz.type !== 'Manual Input'" class="grid grid-cols-1 gap-y-12 mt-16 md:grid-cols-2 md:gap-y-28 md:mt-24 md:px-12 lg:px-20 2xl:px-36 place-items-center options">
+        <div v-if="storeQuiz.type !== 'Manual Input'" class="grid grid-cols-1 gap-y-8 mt-12 md:grid-cols-2 md:gap-y-28 md:mt-24 place-items-center options">
         <QuizBtn v-for="option in [storeQuiz.questions[curr].options[0], storeQuiz.questions[curr].options[1], storeQuiz.questions[curr].options[2], storeQuiz.questions[curr].options[3]]"
         :key="option"
         :class="usersChoice[curr] === option ? 'chosenAnswer' : ''"
@@ -336,7 +336,7 @@ onBeforeUnmount(() => {
 
         <!-- enabling the user to quit at any point -->
         <div class="flex justify-center mt-10">
-            <button @click="openPopup" class="w-16 h-10 bg-bgbtn text-wg border border-2 border-brand rounded-lg md:w-20 md:h-12 lg:w-28 lg:h-14 2xl:mt-16 lg:hover:bg-brand lg:hover:text-bg lg:active:scale-[0.98] max-md:text-sm">Quit</button>
+            <button @click="openPopup" class="w-16 h-10 bg-bgbtn text-wg border border-2 border-brand rounded-lg md:w-20 md:h-12 lg:w-28 lg:h-14 2xl:mt-16 lg:hover:bg-brand lg:hover:text-bg lg:active:scale-[0.98] max-md:text-sm quitBtn">Quit</button>
         </div>
 
         <!-- double checking if the user really wants to quit -->
@@ -388,10 +388,54 @@ onBeforeUnmount(() => {
     cursor: not-allowed;
 }
 
-@media (max-width: 640px) and (min-height:840px) {
+@media (max-width: 640px) and (min-height: 840px) {
     .options {
-        row-gap: 5rem;
+        row-gap: 3.5rem;
         margin-bottom: 6rem;
+    }
+}
+
+@media (min-width: 1024px) and (max-height: 700px) {
+    .options {
+        padding-left: 3rem;
+        padding-right: 3rem;
+        margin-top: 3rem;
+        row-gap: 3.5rem;
+    }
+    .questionTitle {
+        padding-top: 2.5rem;
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+    }
+    .quitBtn {
+        width: 5rem;
+        height: 3rem;
+    }
+}
+
+@media (min-width: 1024px) and (min-height: 701px) and (max-height: 800px) {
+    .options {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+    .quitBtn {
+        width: 5rem;
+        height: 3rem;
+    }
+    .questionTitle {
+        font-size: 2.25rem;
+        line-height: 2.5rem;
+    }
+}
+
+@media (min-width: 1280px) and (min-height: 801px) and (max-height: 940px) {
+    .quitBtn {
+        margin-top: 0rem;
+    }
+    .questionTitle {
+        padding-top: 3rem;
+        font-size: 2.25rem;
+        line-height: 2.5rem;
     }
 }
 

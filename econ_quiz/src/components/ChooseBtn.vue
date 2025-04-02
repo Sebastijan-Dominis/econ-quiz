@@ -29,7 +29,7 @@ const whatToDo = () => {
 </script>
 
 <template>
-    <DarkBtn @click="whatToDo" class="w-56 h-14">
-        <span class="mx-4 block text-center whitespace-pre-line">{{ label }}</span>
+    <DarkBtn @click="whatToDo" class="w-56 h-14 xl:w-64 xl:h-16 2xl:w-80 2xl:h-20">
+        <span class="mx-4 block text-center whitespace-pre-line xl:text-lg 2xl:text-xl">{{ label }}</span>
     </DarkBtn>
 </template>

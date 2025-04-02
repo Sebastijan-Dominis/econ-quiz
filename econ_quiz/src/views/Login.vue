@@ -102,8 +102,8 @@ const storeAuth = useStoreAuth();
     }
 }
 
-/* mobile phones */
-@media ((max-width: 640px) and (max-height: 850px)) or (max-height:700px) {
+/* medium sized and large mobile phones */
+@media ((max-width: 640px) and (min-height: 751px)) or ((min-width: 768px) and (min-height: 701px) and (max-height: 800px)) {
     .title {
         font-size: 1.875rem;
         line-height: 2.25rem;
@@ -168,6 +168,68 @@ const storeAuth = useStoreAuth();
 @media (min-width: 768px) and (max-width: 850px) {
     .mainContainer {
         width: 80vw;
+    }
+}
+
+/* small mobile phones */
+@media ((max-width: 640px) and (max-height: 750px)) or ((min-width: 768px) and (max-height: 750px)) {
+    .title {
+        font-size: 1.5rem;
+        line-height: 2rem;
+        margin-top: 0.75rem;
+    }
+    .subtitle {
+        font-size: 0.75rem;
+        line-height: 1rem;
+        margin-top: 0.75rem;
+    }
+    .formContainer {
+        margin-top: 0.75rem;
+    }
+    .labelForm {
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+        margin-top: 0.1rem;
+    }
+    .inputForm {
+        padding: 0.3rem 0.6rem;
+    }
+    .loginBtn {
+        height: 2.5rem;
+        width: 7rem;
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+    .secondSubtitle {
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+        margin-top: 0.75rem;
+    }
+    .altSignUp {
+        height: 2.5rem;
+        width: 9.5rem;
+    }
+    .logo {
+        width: 1.5rem;
+    }
+    .logoName {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+    .reContainer {
+        margin-top: 1.5rem;
+    }
+    .help {
+        height: 2.5rem;
+        width: 8.5rem;
+        font-size: 0.75rem;
+        line-height: 1rem;
+    }
+    .quitBtn {
+        height: 2.5rem;
+        width: 6rem;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
     }
 }
 </style>

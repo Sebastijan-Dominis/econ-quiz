@@ -214,17 +214,6 @@ const onSubmit = function() {
         grid-column: span 2;
     }
 }
-
-.inputForm {
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    border: 1px solid var(--brand);
-    transition: box-shadow 0.2s ease-in-out; 
-}
-.inputForm:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--brand);
-}
 @media (min-width: 768px) {
     .inputForm {
         grid-column: span 4;
@@ -336,10 +325,10 @@ const onSubmit = function() {
         margin-top: 1.75rem;
     }
     .mainContainer {
-        width: 90vw;
+        width: 80vw;
     }
     .inputForm {
-        width: 80vw;
+        width: 70vw;
     }
 }
 
@@ -401,7 +390,7 @@ const onSubmit = function() {
 }
 
 /* very small screen height, like nesthub */
-@media (max-height: 700px) {
+@media (max-height: 780px) {
         .title {
         font-size: 1.25rem;
         line-height: 1.75rem;

@@ -73,15 +73,15 @@ const start = async() => {
 <template>
     <div v-if="!storeQuiz.loading">
         <PageTop customH1Class="text-5xl max-xl:text-4xl max-lg:text-3xl font-bold">{{ storeStudy.reverseChoiceMap[route.params.choice] }}</PageTop>
-        <h2 class="mt-12 lg:mt-16 xl:mt-20 2xl:mt-24 flex justify-center text-brand text-3xl lg:text-4xl xl:text-5xl">Choose difficulty</h2>
+        <h2 class="mt-12 flex justify-center text-brand text-3xl lg:text-4xl xl:text-5xl">Choose difficulty</h2>
         <div class="flex flex-col items-center mt-4 lg:mt-6 xl:mt-8 gap-6">
-            <DarkBtn class="w-56" @mouseover="difficulties.noob = true" @mouseleave="difficulties.noob = false" @click="openPopup('noob')">Noob</DarkBtn>
-            <DarkBtn class="w-56" @mouseover="difficulties.veryEasy = true" @mouseleave="difficulties.veryEasy = false" @click="openPopup('veryEasy')">Very easy</DarkBtn>
-            <DarkBtn class="w-56" @mouseover="difficulties.easy = true" @mouseleave="difficulties.easy = false" @click="openPopup('easy')">Easy</DarkBtn>
-            <DarkBtn class="w-56" @mouseover="difficulties.normal = true" @mouseleave="difficulties.normal = false" @click="openPopup('normal')">Normal</DarkBtn>
-            <DarkBtn class="w-56" @mouseover="difficulties.hard = true" @mouseleave="difficulties.hard = false" @click="openPopup('hard')">Hard</DarkBtn>
-            <DarkBtn class="w-56" @mouseover="difficulties.veryHard = true" @mouseleave="difficulties.veryHard = false" @click="openPopup('veryHard')">Very hard</DarkBtn>
-            <DarkBtn class="w-56" @mouseover="difficulties.absoluteMadman = true" @mouseleave="difficulties.absoluteMadman = false" @click="openPopup('absoluteMadman')">Absolute madman</DarkBtn>
+            <DarkBtn class="diffBtn" @mouseover="difficulties.noob = true" @mouseleave="difficulties.noob = false" @click="openPopup('noob')">Noob</DarkBtn>
+            <DarkBtn class="diffBtn" @mouseover="difficulties.veryEasy = true" @mouseleave="difficulties.veryEasy = false" @click="openPopup('veryEasy')">Very easy</DarkBtn>
+            <DarkBtn class="diffBtn" @mouseover="difficulties.easy = true" @mouseleave="difficulties.easy = false" @click="openPopup('easy')">Easy</DarkBtn>
+            <DarkBtn class="diffBtn" @mouseover="difficulties.normal = true" @mouseleave="difficulties.normal = false" @click="openPopup('normal')">Normal</DarkBtn>
+            <DarkBtn class="diffBtn" @mouseover="difficulties.hard = true" @mouseleave="difficulties.hard = false" @click="openPopup('hard')">Hard</DarkBtn>
+            <DarkBtn class="diffBtn" @mouseover="difficulties.veryHard = true" @mouseleave="difficulties.veryHard = false" @click="openPopup('veryHard')">Very hard</DarkBtn>
+            <DarkBtn class="diffBtn" @mouseover="difficulties.absoluteMadman = true" @mouseleave="difficulties.absoluteMadman = false" @click="openPopup('absoluteMadman')">Absolute madman</DarkBtn>
         </div>
     
         
@@ -144,6 +144,7 @@ const start = async() => {
 </template>
 
 <style scoped>
+/* transitions */
 .fade-enter-active, .fade-leave-active {
     transition: opacity 300ms ease-in-out;
 }
@@ -152,5 +153,19 @@ const start = async() => {
 }
 .fade-enter-to, .fade-leave-from {
     opacity: 1;
+}
+
+/* buttons */
+.diffBtn {
+    width: 14rem;
+    height: 3.5rem;
+}
+@media (min-width: 1280px) and (min-height: 850px) {
+    .diffBtn {
+        width: 16rem;
+        height: 4rem;
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+    }
 }
 </style>

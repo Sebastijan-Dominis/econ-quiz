@@ -4,7 +4,7 @@
 
 <template>
   <button
-    class="w-80 h-32 rounded-3xl font-5xl border border-2 border-brand text-wg bg-bgbtn md:font-bold max-xl:w-64 max-xl:h-28 max-lg:w-48 max-lg:h-20 max-md:w-32 max-md:h-12 lg:active:scale-[0.98] lg:hover:scale-[1.02] max-[400px]:w-24 max-[400px]:h-10"
+    class="w-32 h-12 md:w-40 md:h-16 lg:w-48 lg:h-20 xl:w-64 xl:h-28 2xl:w-80 2xl:h-32 rounded-3xl text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl border border-2 border-brand text-wg bg-bgbtn font-medium md:font-semibold lg:font-bold xl:font-extrabold 2xl:font-black lg:active:scale-[0.98] lg:hover:scale-[1.02] max-[400px]:w-24 max-[400px]:h-10 max-[400px]:text-sm"
   >
     <slot></slot>
   </button>

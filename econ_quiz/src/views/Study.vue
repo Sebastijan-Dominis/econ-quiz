@@ -22,7 +22,11 @@ watchEffect(() => {
 const sortedBy = ref('countryData')
 const isOpen = ref(false);
 const sorter = ref(null);
+const sorterOptions = ref(null);
 const onClickOutside = function(event) {
+  if(sorter.value && sorter.value.contains(event.target) && (!sorterOptions.value || (sorterOptions.value && !sorterOptions.value.contains(event.target))) ) {
+    isOpen.value = !isOpen.value;
+  }
   if(sorter.value && !sorter.value.contains(event.target)) {
     isOpen.value = false;
   }
@@ -80,46 +84,43 @@ const manageScreenSize = computed(() => {
     <img src="../assets/images/table.png" alt="a table" class="max-lg:hidden fixed bottom-0 right-0 w-56">
     <img src="../assets/gifs/tea.gif" alt="a cup of warm tea" class="max-lg:hidden fixed bottom-28 right-0 w-48">
 
-    <!-- cozy fireplace -->
-    <img src="" alt="candles" class="max-lg:hidden fixed bottom-80 left-0 w-56">
-
     <!-- the sorter  -->
-    <div ref="sorter" class="fixed top-6 right-10 border border-brand rounded-2xl border-2 text-wg bg-bgbtn">
-      <div class="w-24 md:w-36 p-3 md:p-4">
+    <div ref="sorter" class="fixed top-4 right-6 border border-brand rounded-2xl border-2 text-wg bg-bgbtn cursor-pointer">
+      <div class="w-24 p-3 md:w-36 md:p-4 lg:w-48 lg:p-6 xl:w-56 xl:p-8 2xl:w-64 2xl:p-10">
       <!-- Button to toggle sorter box -->
-      <button @click="isOpen = !isOpen" class="flex justify-between items-center w-full text-lg font-bold">
+      <button class="flex justify-between items-center w-full text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-bold">
         <span v-show="manageScreenSize">Sort By</span>
         <Dropdown :class="{'rotate-90': isOpen}"></Dropdown>
       </button>
 
     <!-- sorter options (hidden by default) -->
-        <div v-show="isOpen" class="mt-4 space-y-2">
+        <div ref="sorterOptions" v-show="isOpen" class="mt-4 xl:mt-6 space-y-2">
           <div class="flex items-center">
-            <input type="radio" id="sorter1" class="mr-2" name="sorter" value="countryData" checked v-model="sortedBy" />
-            <label for="sorter1" v-show="manageScreenSize">Country names A-Z</label>
-            <label for="sorter1" v-show="!manageScreenSize">A-Z</label>
+            <input type="radio" id="sorter1" class="sorterInput" name="sorter" value="countryData" checked v-model="sortedBy"/>
+            <label class="sorterLabel" for="sorter1" v-show="manageScreenSize">Country names A-Z</label>
+            <label class="sorterLabel" for="sorter1" v-show="!manageScreenSize">A-Z</label>
           </div>
           <div class="flex items-center">
-            <input type="radio" id="sorter2" class="mr-2" name="sorter" value="countryDataZA" v-model="sortedBy" />
-            <label for="sorter2" v-show="manageScreenSize">Country names Z-A</label>
-            <label for="sorter2" v-show="!manageScreenSize">Z-A</label>
+            <input type="radio" id="sorter2" class="sorterInput" name="sorter" value="countryDataZA" v-model="sortedBy" />
+            <label class="sorterLabel" for="sorter2" v-show="manageScreenSize">Country names Z-A</label>
+            <label class="sorterLabel" for="sorter2" v-show="!manageScreenSize">Z-A</label>
           </div>
           <div class="flex items-center">
-            <input type="radio" id="sorter3" class="mr-2" name="sorter" value="countryDataHL" v-model="sortedBy" />
-            <label for="sorter3" v-show="manageScreenSize">Value - biggest to smallest</label>
-            <label for="sorter3" v-show="!manageScreenSize">High-Low</label>
+            <input type="radio" id="sorter3" class="sorterInput" name="sorter" value="countryDataHL" v-model="sortedBy" />
+            <label class="sorterLabel" for="sorter3" v-show="manageScreenSize">Value - biggest to smallest</label>
+            <label class="sorterLabel" for="sorter3" v-show="!manageScreenSize">High-Low</label>
           </div>
           <div class="flex items-center">
-            <input type="radio" id="sorter4" class="mr-2" name="sorter" value="countryDataLH" v-model="sortedBy" />
-            <label for="sorter4" v-show="manageScreenSize">Value - smallest to biggest</label>
-            <label for="sorter4" v-show="!manageScreenSize">Low-High</label>
+            <input type="radio" id="sorter4" class="sorterInput" name="sorter" value="countryDataLH" v-model="sortedBy" />
+            <label class="sorterLabel" for="sorter4" v-show="manageScreenSize">Value - smallest to biggest</label>
+            <label class="sorterLabel" for="sorter4" v-show="!manageScreenSize">Low-High</label>
           </div>
         </div>
       </div>
     </div>
 
     <ul class="mt-16 lg:mt-28 mainData">
-      <li v-for="[country, value] of storeStudy[sortedBy].value" :key="country" class="flex mx-8 md:mx-40 lg:mx-56 xl:mx-72 2xl:mx-[500px] justify-between my-6 text-brand text-base md:text-xl xl:text-2xl 2xl:text-3xl font-bold items-center">
+      <li v-for="[country, value] of storeStudy[sortedBy].value" :key="country" class="flex mx-8 md:mx-44 lg:mx-56 xl:mx-72 2xl:mx-[500px] justify-between my-6 text-brand text-base md:text-xl xl:text-2xl 2xl:text-3xl font-bold items-center">
         <div>{{ country }}:</div> 
         <div>
           <div v-if="storeStudy.largeNumsDollars.has(originalValue)">
@@ -141,16 +142,71 @@ const manageScreenSize = computed(() => {
 </template>
 
 <style>
-  @media (max-width: 640px) and (max-height: 850px) {
-    .title {
-      font-size: 3rem;
-      line-height: 1;
-    }
-    .topic {
-      margin-top: 2.5rem;
-    }
-    .mainData {
-      margin-top: 3rem;
-    }
+.sorterInput {
+  cursor: pointer;
+}
+.sorterLabel {
+  padding-left: 0.5rem;
+  cursor: pointer;
+}
+
+/* small tablets */
+@media (min-width: 768px) {
+  .sorterInput {
+    scale: 1.1;
   }
+  .sorterLabel {
+    padding-left: 0.75rem;
+  }
+}
+
+/* tablets and small laptops */
+@media (min-width: 1024px) {
+  .sorterInput {
+    scale: 1.2;
+  }
+  .sorterLabel {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    padding-left: 1rem;
+  }
+}
+
+/* laptops */
+@media (min-width: 1280px) {
+  .sorterInput {
+    scale: 1.3;
+  }
+  .sorterLabel {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    padding-left: 1.25rem;
+  }
+}
+
+/* large screens */
+@media (min-width: 1536px) {
+  .sorterInput {
+    scale: 1.5;
+  }
+  .sorterLabel {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    padding-left: 1.5rem;
+  }
+}
+
+/* small - midsize phones */
+@media (max-width: 640px) and (max-height: 850px) {
+  .title {
+    font-size: 3rem;
+    line-height: 1;
+  }
+  .topic {
+    margin-top: 2.5rem;
+  }
+  .mainData {
+    margin-top: 3rem;
+  }
+}
 </style>
