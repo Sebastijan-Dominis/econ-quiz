@@ -53,7 +53,7 @@ const activateEditError = ref(false);
 const handleEdit = async() => {
     activatingEdit.value = true;
     const topicsRef = collection(db, "topics");
-    const q = query(topicsRef, where("displayName", "==", storeEditQuiz.chosenTopic));
+    const q = query(topicsRef, where("name", "==", storeEditQuiz.chosenTopic));
     console.log(storeEditQuiz.chosenTopic)
     try {
         const snapshot = await getDocs(q);
