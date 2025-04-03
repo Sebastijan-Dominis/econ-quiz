@@ -4,6 +4,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import musicFile from '../src/assets/music/chillLofiMusic.mp3';
 import { useStoreAuth } from './stores/storeAuth';
 import { useStoreStudy } from './stores/storeStudy';
+import { useStoreFAQ } from './stores/storeFAQ';
 
 // music
 const audio = ref(null);
@@ -38,6 +39,12 @@ onMounted(() => {
 const storeStudy = useStoreStudy();
 onMounted(() => {
   storeStudy.fetchQuizInfo();
+})
+
+// getting the FAQs
+const storeFAQ = useStoreFAQ();
+onMounted(() => {
+  storeFAQ.fetchFAQ();
 })
 </script>
 
