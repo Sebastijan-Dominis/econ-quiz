@@ -208,33 +208,33 @@ onUnmounted(() => {
             <!-- sorter -->
              <div>
                  <h1 class="sorterTitle">Sort by</h1>
-                 <div class="block">
+                 <div class="block cursor-pointer">
                      <input type="radio" id="sorter1" class="sorterInput" name="element" value="score" v-model="sortByValue">
                      <label for="sorter1" class="sorterLabel">Score</label>
                  </div>
-                 <div class="block">
+                 <div class="block cursor-pointer">
                      <input type="radio" id="sorter2" class="sorterInput" name="element" value="difficulty" v-model="sortByValue" >
                      <label for="sorter2" class="sorterLabel">Difficulty</label>
                  </div>
-                 <div class="block">
+                 <div class="block cursor-pointer">
                      <input type="radio" id="sorter3" class="sorterInput" name="element" value="timeTaken" v-model="sortByValue">
                      <label for="sorter3" class="sorterLabel">Time spent</label>
                  </div>
-                 <div class="block">
+                 <div class="block cursor-pointer">
                      <input type="radio" id="sorter4" class="sorterInput" name="element" value="timestamp" v-model="sortByValue" checked>
                      <label for="sorter4" class="sorterLabel">Taken on</label>
                  </div>
-                 <div class="block">
+                 <div class="block cursor-pointer">
                      <input type="radio" id="sorter5" class="sorterInput" name="element" value="leaderboardScore" v-model="sortByValue">
                      <label for="sorter5" class="sorterLabel">Leaderboard score</label>
                  </div>
                  
                  <h1 class="sorterTitle pt-12">Order</h1>
-                 <div class="block">
+                 <div class="block cursor-pointer">
                      <input type="radio" id="direction1" class="sorterInput" name="direction" value="desc" v-model="sortDirection" checked>
                      <label for="direction1" class="sorterLabel">Descending</label>
                  </div>
-                 <div class="block">
+                 <div class="block cursor-pointer">
                      <input type="radio" id="direction2" class="sorterInput" name="direction" value="asc" v-model="sortDirection">
                      <label for="direction2" class="sorterLabel">Ascending</label>
                  </div>
@@ -291,9 +291,9 @@ onUnmounted(() => {
     margin-top: 2rem;
 }
 .sorterLabel {
-    margin-left: 1rem;
+    padding-left: 1.75rem;
 }
-.sorterLabel, .sorterInput {
+.sorterLabel, .sorterInput, .filterInput {
     cursor: pointer;
 }
 

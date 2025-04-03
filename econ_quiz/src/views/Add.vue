@@ -242,17 +242,17 @@ onBeforeUnmount(() => {
                     <p class="text-brand text-xs font-thin mr-2">{{ quizInfo.indicator }}</p>
                 </button>
                 <div v-show="isOpen1" class="mt-4 space-y-2">
-                    <div class="flex items-center">
-                        <input type="radio" id="indicator1" class="mr-2" name="indicator" value="economic" v-model="quizInfo.indicator" />
-                        <label for="indicator1">economic</label>
+                    <div class="flex items-center cursor-pointer">
+                        <input class="cursor-pointer" type="radio" id="indicator1" name="indicator" value="economic" v-model="quizInfo.indicator" />
+                        <label class="pl-2 cursor-pointer" for="indicator1">economic</label>
                     </div>
-                    <div class="flex items-center">
-                        <input type="radio" id="indicator2" class="mr-2" name="indicator" value="demographic" v-model="quizInfo.indicator" />
-                        <label for="indicator2">demographic</label>
+                    <div class="flex items-center cursor-pointer">
+                        <input class="cursor-pointer" type="radio" id="indicator2" name="indicator" value="demographic" v-model="quizInfo.indicator" />
+                        <label class="pl-2 cursor-pointer" for="indicator2">demographic</label>
                     </div>
-                    <div class="flex items-center">
-                        <input type="radio" id="indicator3" class="mr-2" name="indicator" value="other" v-model="quizInfo.indicator" />
-                        <label for="indicator3">other</label>
+                    <div class="flex items-center cursor-pointer">
+                        <input class="cursor-pointer" type="radio" id="indicator3" name="indicator" value="other" v-model="quizInfo.indicator" />
+                        <label class="pl-2 cursor-pointer" for="indicator3">other</label>
                     </div>
                 </div>
             </div>
@@ -267,21 +267,21 @@ onBeforeUnmount(() => {
                     <p class="text-brand text-xs font-thin mr-2">{{ quizInfo.display }}</p>
                 </button>
                 <div v-show="isOpen2" class="mt-4 space-y-2">
-                    <div class="flex items-center">
-                        <input type="radio" id="display1" class="mr-2" name="display" value="smallNums" v-model="quizInfo.display" />
-                        <label for="display1">smallNums</label>
+                    <div class="flex items-center cursor-pointer">
+                        <input class="cursor-pointer" type="radio" id="display1" name="display" value="smallNums" v-model="quizInfo.display" />
+                        <label class="pl-2 cursor-pointer" for="display1">smallNums</label>
                     </div>
-                    <div class="flex items-center">
-                        <input type="radio" id="display2" class="mr-2" name="display" value="smallNumsPercentages" v-model="quizInfo.display" />
-                        <label for="display2">smallNumsPercentages</label>
+                    <div class="flex items-center cursor-pointer">
+                        <input class="cursor-pointer" type="radio" id="display2" name="display" value="smallNumsPercentages" v-model="quizInfo.display" />
+                        <label class="pl-2 cursor-pointer" for="display2">smallNumsPercentages</label>
                     </div>
-                    <div class="flex items-center">
-                        <input type="radio" id="display3" class="mr-2" name="display" value="largeNums" v-model="quizInfo.display" />
-                        <label for="display3">largeNums</label>
+                    <div class="flex items-center cursor-pointer">
+                        <input class="cursor-pointer" type="radio" id="display3" name="display" value="largeNums" v-model="quizInfo.display" />
+                        <label class="pl-2 cursor-pointer" for="display3">largeNums</label>
                     </div>
-                    <div class="flex items-center">
-                        <input type="radio" id="display4" class="mr-2" name="display" value="largeNumsDollars" v-model="quizInfo.display" />
-                        <label for="display4">largeNumsDollars</label>
+                    <div class="flex items-center cursor-pointer">
+                        <input class="cursor-pointer" type="radio" id="display4" name="display" value="largeNumsDollars" v-model="quizInfo.display" />
+                        <label class="pl-2 cursor-pointer" for="display4">largeNumsDollars</label>
                     </div>
                 </div>
             </div>
@@ -296,13 +296,13 @@ onBeforeUnmount(() => {
                     <p class="text-brand text-xs font-thin mr-2">{{ quizInfo.cannotOver100 }}</p>
                 </button>
                 <div v-show="isOpen3" class="mt-4 space-y-2">
-                    <div class="flex items-center">
-                        <input type="radio" id="cannotOver1001" class="mr-2" name="cannotOver100" :value="true" v-model="quizInfo.cannotOver100" />
-                        <label for="cannotOver1001">true</label>
+                    <div class="flex items-center cursor-pointer">
+                        <input class="cursor-pointer" type="radio" id="cannotOver1001" name="cannotOver100" :value="true" v-model="quizInfo.cannotOver100" />
+                        <label class="pl-2 cursor-pointer" for="cannotOver1001">true</label>
                     </div>
-                    <div class="flex items-center">
-                        <input type="radio" id="cannotOver1002" class="mr-2" name="cannotOver100" :value="false" v-model="quizInfo.cannotOver100" />
-                        <label for="cannotOver1002">false</label>
+                    <div class="flex items-center cursor-pointer">
+                        <input class="cursor-pointer" type="radio" id="cannotOver1002" name="cannotOver100" :value="false" v-model="quizInfo.cannotOver100" />
+                        <label class="pl-2 cursor-pointer" for="cannotOver1002">false</label>
                     </div>
                 </div>
             </div>
@@ -317,13 +317,13 @@ onBeforeUnmount(() => {
                     <p class="text-brand text-xs font-thin mr-2">{{ quizInfo.cannotBelow0 }}</p>
                 </button>
                 <div v-show="isOpen4" class="mt-4 space-y-2">
-                    <div class="flex items-center">
-                        <input type="radio" id="cannotBelow01" class="mr-2" name="cannotBelow0" :value="true" v-model="quizInfo.cannotBelow0" />
-                        <label for="cannotBelow01">true</label>
+                    <div class="flex items-center cursor-pointer">
+                        <input class="cursor-pointer" type="radio" id="cannotBelow01" name="cannotBelow0" :value="true" v-model="quizInfo.cannotBelow0" />
+                        <label class="pl-2 cursor-pointer" for="cannotBelow01">true</label>
                     </div>
-                    <div class="flex items-center">
-                        <input type="radio" id="cannotBelow02" class="mr-2" name="cannotBelow0" :value="false" v-model="quizInfo.cannotBelow0" />
-                        <label for="cannotBelow02">false</label>
+                    <div class="flex items-center cursor-pointer">
+                        <input class="cursor-pointer" type="radio" id="cannotBelow02" name="cannotBelow0" :value="false" v-model="quizInfo.cannotBelow0" />
+                        <label class="pl-2 cursor-pointer" for="cannotBelow02">false</label>
                     </div>
                 </div>
             </div>
