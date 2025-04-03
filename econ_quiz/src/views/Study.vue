@@ -3,7 +3,7 @@
 import PageTop from '../components/PageTop.vue';
 import { useRoute } from 'vue-router';
 import { useStoreStudy } from '../stores/storeStudy';
-import { ref, watchEffect, onMounted, onUnmounted, computed } from 'vue';
+import { ref, watchEffect, onMounted, onUnmounted, onBeforeUnmount, computed } from 'vue';
 import Dropdown from '../components/Dropdown.vue';
 
 // fetching the data
@@ -36,6 +36,17 @@ onMounted(() => {
 })
 onUnmounted(() => {
   document.removeEventListener('click', onClickOutside);
+})
+const closePopups = event => {
+    if(event.key === "Escape") {
+        isOpen.value = false;
+    }
+}
+onMounted(() => {
+    document.addEventListener("keydown", closePopups);
+})
+onBeforeUnmount(() => {
+    document.removeEventListener("keydown", closePopups);
 })
 
 // managing the sorted by button appearance depending on screen size

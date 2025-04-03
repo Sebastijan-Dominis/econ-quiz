@@ -2,7 +2,7 @@
 // imports
 import { useStoreAuth } from '../stores/storeAuth';
 import CenterMessage from '../components/CenterMessage.vue';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, onBeforeUnmount } from 'vue';
 import { db } from '../js/firebase';
 import { collection, getDocs, query, orderBy, limit, startAfter, where } from 'firebase/firestore';
 import PageTop from '../components/PageTop.vue';
@@ -25,6 +25,14 @@ const popupOpen = ref(false);
 const openPopup = () => {
     popupOpen.value = true;
 }
+const closePopups = event => {
+    if(event.key === "Escape") {
+        popupOpen.value = false;
+    }
+}
+onMounted(() => {
+    document.addEventListener("keydown", closePopups);
+})
 const sortByValue = ref("timestamp");
 const sortDirection = ref("desc");
 const types = ref([...storeStudy.allTypes]);
@@ -45,7 +53,6 @@ const updateSelectedIndicators = (indicator, event) => {
         indicators.value = indicators.value.filter(i => i !== indicator);
     }
 }
-
 
 // disable the confirm button while fetching new data
 const disableConfirm = ref(false);
@@ -168,6 +175,7 @@ onMounted(() => {
 
 onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll);
+    document.removeEventListener("keydown", closePopups);
 });
 </script>
 

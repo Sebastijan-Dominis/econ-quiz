@@ -56,6 +56,52 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('click', onClickOutside);
 })
+const openDropdown = dropdown => {
+    switch (dropdown) {
+        case 1:
+            isOpen1.value = true;
+            isOpen2.value = false;
+            isOpen3.value = false;
+            isOpen4.value = false;
+            break;
+        case 2:
+            isOpen1.value = false;
+            isOpen2.value = true;
+            isOpen3.value = false;
+            isOpen4.value = false;
+            break;
+        case 3:
+            isOpen1.value = false;
+            isOpen2.value = false;
+            isOpen3.value = true;
+            isOpen4.value = false;
+            break;
+        case 4:
+            isOpen1.value= false;
+            isOpen2.value = false;
+            isOpen3.value = false;
+            isOpen4.value = true;
+            break;
+        default:
+            break;
+    }
+}
+const closeDropdownsAndPopups = event => {
+    if(event.key === "Escape") {
+        popupOpen.value = false;
+        isOpen1.value = false;
+        isOpen2.value = false;
+        isOpen3.value = false;
+        isOpen4.value = false;
+        storeEditQuiz.instructions = false;
+    }
+}
+onMounted(() => {
+    document.addEventListener("keydown", closeDropdownsAndPopups);
+})
+onBeforeUnmount(() => {
+    document.removeEventListener("keydown", closeDropdownsAndPopups);
+})
 
 // defining which years can be considered
 const currYear = ref(null);
@@ -191,7 +237,7 @@ onBeforeUnmount(() => {
                 <h2>indicator:</h2>
             </div>
             <div ref="dropdownMenu1" class="col-span-1">
-                <button type="button" @click="isOpen1 = !isOpen1" class="dropdownBtn">
+                <button type="button" @click="openDropdown(1)" class="dropdownBtn">
                     <Dropdown :class="{'rotate-90': isOpen1}" ></Dropdown>
                     <p class="text-brand text-xs font-thin mr-2">{{ quizInfo.indicator }}</p>
                 </button>
@@ -216,7 +262,7 @@ onBeforeUnmount(() => {
                 <h2>display:</h2>
             </div>
             <div ref="dropdownMenu2" class="col-span-1">
-                <button type="button" @click="isOpen2 = !isOpen2" class="dropdownBtn">
+                <button type="button" @click="openDropdown(2)" class="dropdownBtn">
                     <Dropdown :class="{'rotate-90': isOpen2}" ></Dropdown>
                     <p class="text-brand text-xs font-thin mr-2">{{ quizInfo.display }}</p>
                 </button>
@@ -245,7 +291,7 @@ onBeforeUnmount(() => {
                 <h2>cannotOver100:</h2>
             </div>
             <div ref="dropdownMenu3" class="col-span-1">
-                <button type="button" @click="isOpen3 = !isOpen3" class="dropdownBtn">
+                <button type="button" @click="openDropdown(3)" class="dropdownBtn">
                     <Dropdown :class="{'rotate-90': isOpen3}" ></Dropdown>
                     <p class="text-brand text-xs font-thin mr-2">{{ quizInfo.cannotOver100 }}</p>
                 </button>
@@ -266,7 +312,7 @@ onBeforeUnmount(() => {
                 <h2 class="">cannotBelow0:</h2>
             </div>
             <div ref="dropdownMenu4" class="col-span-1">
-                <button type="button" @click="isOpen4 = !isOpen4" class="dropdownBtn">
+                <button type="button" @click="openDropdown(4)" class="dropdownBtn">
                     <Dropdown :class="{'rotate-90': isOpen4}" ></Dropdown>
                     <p class="text-brand text-xs font-thin mr-2">{{ quizInfo.cannotBelow0 }}</p>
                 </button>
@@ -327,3 +373,5 @@ onBeforeUnmount(() => {
     }
 }
 </style>
+
+<!-- TODO: make the other dropdowns close when a new one opens -->

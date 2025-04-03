@@ -58,6 +58,18 @@ const quitNo = () => {
     popupOpen.value = false;
     finishQ.value = false;
 }
+const closePopups = event => {
+    if(event.key === "Escape") {
+        popupOpen.value = false;
+        finishQ.value = false;
+    }
+}
+onMounted(() => {
+    document.addEventListener("keydown", closePopups);
+})
+onBeforeUnmount(() => {
+    document.removeEventListener("keydown", closePopups);
+})
 
 // managing the quiz flow
 const start = ref(null);

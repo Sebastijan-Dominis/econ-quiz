@@ -29,7 +29,20 @@ const whatToDo = () => {
 </script>
 
 <template>
-    <DarkBtn @click="whatToDo" class="w-56 h-14 xl:w-64 xl:h-16 2xl:w-80 2xl:h-20">
-        <span class="mx-4 block text-center whitespace-pre-line xl:text-lg 2xl:text-xl">{{ label }}</span>
+    <DarkBtn @click="whatToDo" class="w-56 h-14 2xl:w-64 2xl:h-16 chooseBtn">
+        <span class="mx-4 block text-center whitespace-pre-line 2xl:text-lg chooseText">{{ label }}</span>
     </DarkBtn>
 </template>
+
+<style>
+@media (min-width: 1280px) and (max-height: 940px) {
+    .chooseBtn {
+        width: 14rem;
+        height: 3.5rem;
+    }
+    .chooseText {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+}
+</style>

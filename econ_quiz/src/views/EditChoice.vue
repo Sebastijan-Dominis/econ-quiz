@@ -4,7 +4,7 @@ import PageTop from '../components/PageTop.vue';
 import Choice from '../components/Choice.vue';
 import { useStoreEditQuiz } from '../stores/storeEditQuiz';
 import DarkBtn from '../components/DarkBtn.vue';
-import { ref, watchEffect, onBeforeUnmount } from 'vue';
+import { ref, watchEffect, onBeforeUnmount, onMounted } from 'vue';
 import Popup from '../components/Popup.vue';
 import { db } from '../js/firebase';
 import { collection, doc, getDocs, query, where, deleteDoc } from 'firebase/firestore';
@@ -112,6 +112,19 @@ const close = () => {
     document.removeEventListener('click', onClickOutside2);
     deletePopup.value = false;
 }
+
+const closePopups = event => {
+    if(event.key === "Escape") {
+        deletePopup.value = false;
+        storeEditQuiz.editOrDelete = false;
+    }
+}
+onMounted(() => {
+    document.addEventListener("keydown", closePopups);
+})
+onBeforeUnmount(() => {
+    document.removeEventListener("keydown", closePopups);
+})
 
 // cleaning up
 onBeforeUnmount(() => {

@@ -4,7 +4,7 @@ import PageTop from '../components/PageTop.vue';
 import { useRoute } from 'vue-router';
 import { useStoreStudy } from '../stores/storeStudy';
 import DarkBtn from '../components/DarkBtn.vue';
-import { reactive, ref, watchEffect } from 'vue';
+import { reactive, ref, watchEffect, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import Popup from '../components/Popup.vue';
 import { useStoreQuiz } from '../stores/storeQuiz';
@@ -27,7 +27,7 @@ const difficulties = reactive({
     absoluteMadman: false,
 })
 
-// close popup by clicking outside
+// popup
 const confirmation = ref(null);
 const dialog = ref(null);
 watchEffect(() => {
@@ -45,6 +45,17 @@ const onClickOutside2 = event => {
         document.removeEventListener('click', onClickOutside2);
     }
 }
+const closePopups = event => {
+    if(event.key === "Escape") {
+        showPopup.value = false;
+    }
+}
+onMounted(() => {
+    document.addEventListener("keydown", closePopups);
+})
+onBeforeUnmount(() => {
+    document.removeEventListener("keydown", closePopups);
+})
 
 // starting the quiz
 const router = useRouter();

@@ -2,7 +2,7 @@
 // imports
 import PageTop from '../components/PageTop.vue';
 import LBBtn from '../components/LBBtn.vue';
-import { onMounted, onUnmounted, ref, reactive } from 'vue';
+import { onMounted, onUnmounted, ref, reactive, onBeforeUnmount } from 'vue';
 import { db } from '../js/firebase';
 import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { useRouter } from 'vue-router';
@@ -101,6 +101,17 @@ const getLeaderboard = async (timeframe = "Past Month") => {
 
 // instructions
 const instructions = ref(false);
+const closePopups = event => {
+    if(event.key === "Escape") {
+        instructions.value = false;
+    }
+}
+onMounted(() => {
+    document.addEventListener("keydown", closePopups);
+})
+onBeforeUnmount(() => {
+    document.removeEventListener("keydown", closePopups);
+})
 
 // showing past month leaderboard immediately
 onMounted(() => {

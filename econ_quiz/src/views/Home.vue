@@ -3,7 +3,7 @@
 import BrandBtn from '../components/BrandBtn.vue';
 import DarkBtn from '../components/DarkBtn.vue';
 import Popup from '../components/Popup.vue';
-import { ref, watchEffect, onBeforeUnmount } from 'vue';
+import { ref, watchEffect, onBeforeUnmount, onMounted } from 'vue';
 import { useStoreAuth } from '../stores/storeAuth';
 import { useStoreQuiz } from '../stores/storeQuiz';
 import { useStoreStudy } from '../stores/storeStudy';
@@ -81,11 +81,21 @@ const chooseType = function(type) {
     storeQuiz.type = type;
     router.push(`/quiz-choice/${storeStudy.typesMap[type]}`);
 }
+const closePopups = event => {
+    if(event.key === "Escape") {
+        typePopup.value = false;
+        storeAuth.logoutq = false;
+    }
+} 
+onMounted(() => {
+    document.addEventListener('keydown', closePopups);
+})
 
 // cleaning up
 onBeforeUnmount(() => {
     document.removeEventListener('mousedown', onClickOutside);
     document.removeEventListener('click', onClickOutside2);
+    document.removeEventListener('keydown', closePopups)
 })
 </script>
 
@@ -137,7 +147,7 @@ onBeforeUnmount(() => {
                 <router-link :to="{name: 'study-choice'}"><DarkBtn class="smallBtn">Study</DarkBtn></router-link>
             </div>
             <div v-if="storeAuth.isLoggedIn">
-                <DarkBtn @click="openPopup">Logout</DarkBtn>
+                <DarkBtn @click="openPopup" class="smallBtn">Logout</DarkBtn>
             </div>
             <div v-else class="flex gap-4">
                 <router-link :to="{name: 'login'}"><DarkBtn class="smallBtn">Login</DarkBtn></router-link>
@@ -165,8 +175,8 @@ onBeforeUnmount(() => {
             </nav>
         </div>
 
-        <p class="absolute bottom-60 right-4 text-2xl text-brand font-normal max-xl:hidden">Got Questions?</p>
-        <router-link :to="{name: 'faq'}"><DarkBtn class="absolute bottom-44 right-8 max-xl:bottom-6">FAQ</DarkBtn></router-link>
+        <p class="absolute bottom-60 right-6 text-xl xl:text-2xl text-brand font-normal max-xl:hidden xl:bottom-[245px] xl:right-7 2xl:bottom-[260px] 2xl:right-10 gotQuestions">Got Questions?</p>
+        <router-link :to="{name: 'faq'}"><DarkBtn class="absolute bottom-44 right-8 max-xl:bottom-6 smallBtn">FAQ</DarkBtn></router-link>
         <img src="../assets/images/faq.png" alt="thinking man on a laptop" class="absolute bottom-0 right-0 w-64 max-xl:hidden">
 
     </div>
@@ -303,10 +313,14 @@ onBeforeUnmount(() => {
     .smallBtn {
         height: 4rem;
         width: 11rem;
+        font-size: 1.125rem;
+        line-height: 1.75rem;
     }
     .playBtn {
         height: 7rem;
         width: 16rem;
+        font-size: 2.25rem;
+        line-height: 2.5rem;
     }
 }
 
@@ -315,13 +329,23 @@ onBeforeUnmount(() => {
     .smallBtn {
         height: 3.5rem;
         width: 9rem;
+        font-size: 1rem;
+        line-height: 1.5rem;
     }
     .playBtn {
         height: 6rem;
         width: 14rem;
+        font-size: 1.875rem;
+        line-height: 2.25rem;
     }
     .welcomeMessage {
         margin-top: 0;
+    }
+    .gotQuestions {
+        right: 1.5rem;
+        bottom: 15rem;
+        font-size: 1.25rem;
+        line-height: 1.75rem;
     }
 }
 
@@ -334,10 +358,14 @@ onBeforeUnmount(() => {
     .smallBtn {
         height: 5rem;
         width: 13rem;
+        font-size: 1.25rem;
+        line-height: 1.75rem;
     }
     .playBtn {
         height: 9rem;
         width: 21rem;
+        font-size: 3rem;
+        line-height: 1;
     }
 }
 
@@ -346,10 +374,18 @@ onBeforeUnmount(() => {
     .smallBtn {
         height: 4rem;
         width: 11rem;
+        font-size: 1.125rem;
+        line-height: 1.75rem;
     }
     .playBtn {
         height: 7rem;
         width: 16rem;
+        font-size: 2.25rem;
+        line-height: 2.5rem;
+    }
+    .gotQuestions {
+        right: 1.75rem;
+        bottom: 245px;
     }
 }
 
@@ -358,10 +394,20 @@ onBeforeUnmount(() => {
     .smallBtn {
         height: 3.5rem;
         width: 9rem;
+        font-size: 1rem;
+        line-height: 1.5rem;
     }
     .playBtn {
         height: 6rem;
         width: 14rem;
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+    }
+    .gotQuestions {
+        right: 1.5rem;
+        bottom: 15rem;
+        font-size: 1.25rem;
+        line-height: 1.75rem;
     }
     .welcomeMessage {
         margin-top: 0;
@@ -406,10 +452,14 @@ onBeforeUnmount(() => {
     .smallSmallBtn {
         height: 4rem;
         width: 11rem;
+        font-size: 1.125rem;
+        line-height: 1.75rem;
     }
     .smallPlayBtn {
         height: 7rem;
         width: 16rem;
+        font-size: 2.25rem;
+        line-height: 2.5rem;
     }
     .smallWelcomeMessage {
         font-size: 2.25rem;
@@ -435,10 +485,14 @@ onBeforeUnmount(() => {
     .smallSmallBtn {
         height: 4rem;
         width: 11rem;
+        font-size: 1.125rem;
+        line-height: 1.75rem;
     }
     .smallPlayBtn {
         height: 7rem;
         width: 16rem;
+        font-size: 2.25rem;
+        line-height: 2.5rem;
     }
 }
 
@@ -455,10 +509,14 @@ onBeforeUnmount(() => {
     .smallSmallBtn {
         height: 5rem;
         width: 13rem;
+        font-size: 1.25rem;
+        line-height: 1.75rem;
     }
     .smallPlayBtn {
         height: 9rem;
         width: 20rem;
+        font-size: 3rem;
+        line-height: 1;
     }
 }
 
@@ -529,3 +587,5 @@ onBeforeUnmount(() => {
     }
 }
 </style>
+
+<!-- TODO: adjust button size on large screen so they look the same; add a functionality whereby popups close when a user clicks esc -->
