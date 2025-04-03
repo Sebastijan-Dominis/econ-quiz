@@ -291,7 +291,7 @@ onUnmounted(() => {
     margin-top: 2rem;
 }
 .sorterLabel {
-    padding-left: 1rem;
+    padding-left: 0.25rem;
 }
 .sorterLabel, .sorterInput, .filterInput {
     cursor: pointer;
@@ -318,6 +318,9 @@ onUnmounted(() => {
     .filterInput {
         margin-right: 0.25rem;
     }
+    .sorterLabel {
+        padding-left: 0.5rem;
+    }
 }
 
 /* ipads, small laptops */
@@ -341,6 +344,9 @@ onUnmounted(() => {
     }
     .filterInput {
         margin-right: 0.5rem;
+    }
+    .sorterLabel {
+        padding-left: 0.6rem;
     }
 }
 
@@ -366,6 +372,9 @@ onUnmounted(() => {
     .filterInput {
         margin-right: 0.75rem;
     }
+    .sorterLabel {
+        padding-left: 0.75rem;
+    }
 }
 
 /* big screens */
@@ -385,6 +394,9 @@ onUnmounted(() => {
     }
     .filterInput {
         margin-right: 1rem;
+    }
+    .sorterLabel {
+        padding-left: 1rem;
     }
 }
 </style>
