@@ -291,7 +291,7 @@ onUnmounted(() => {
     margin-top: 2rem;
 }
 .sorterLabel {
-    padding-left: 1.75rem;
+    padding-left: 1rem;
 }
 .sorterLabel, .sorterInput, .filterInput {
     cursor: pointer;
