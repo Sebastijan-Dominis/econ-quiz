@@ -12,6 +12,6 @@ const storeFAQ = useStoreFAQ();
     <ReturnBtn></ReturnBtn>
     <h1 class="text-brand text-4xl justify-self-center xl:text-5xl 2xl:text-6xl mb-16">FAQ</h1>
     <p v-for="faq in storeFAQ.faqs" class="text-lg text-brand mx-8 md:mx-16 lg:mx-28 xl:mx-40 2xl:mx-64 xl:text-xl 2xl:text-2xl">
-        {{ faq.q }}<br>{{ faq.a }}<br><br>
+        Q: {{ faq.q }}<br>A: {{ faq.a }}<br><br>
     </p>
 </template>
