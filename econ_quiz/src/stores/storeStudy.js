@@ -134,10 +134,10 @@ export const useStoreStudy = defineStore('storeStudy', {
                     this.error = null;
                     let page = 1;
                     let hasMoreData = true;
-        
+                    
                     while (hasMoreData) {
-                            const response = await fetch(`https://api.worldbank.org/v2/country/all/indicator/${chosenData}?date=${this.year[choice]}&format=json&page=${page}`, { signal });
-        
+                        const response = await fetch(`https://api.worldbank.org/v2/country/all/indicator/${chosenData}?date=${this.year[choice]}&format=json&page=${page}`, { signal });
+
                             if(signal.aborted) {
                                 console.log("Request was aborted after fetch, stopping execution...");
                                 return;
@@ -150,12 +150,12 @@ export const useStoreStudy = defineStore('storeStudy', {
                             }
         
                             const data = await response.json();
-        
+                            
                             if(signal.aborted) {
                                 console.log("Request was aborted after parsing JSON, stopping execution...");
                                 return;
                             }
-
+                            
                             if (data[1]) { // Ensure data[1] exists before accessing it
                                 // Loop through the data for each country
                                 data[1].forEach(country => {
@@ -180,12 +180,11 @@ export const useStoreStudy = defineStore('storeStudy', {
                     }
 
                     this.loading = false;
-        
+                    if(!this.countryData.value.length) return;
                     this.countryDataZA.value = [...this.countryData.value].reverse();
                     this.countryDataHL.value = [...this.countryData.value].sort((a, b) => b[1] - a[1]);
                     this.countryDataLH.value = [...this.countryData.value].sort((a, b) => a[1] - b[1]);
                     const n = this.countryDataHL.value.length;
-
                     // different m could be considered. lower will make it easier, while higher will make it harder for all manual input quizzes
                     const m = Math.round(n/2.5);
                     const upper = this.countryDataHL.value[Math.round(n/2)+m][1];

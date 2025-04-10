@@ -502,7 +502,7 @@ export const useStoreQuiz = defineStore('storeQuiz', {
 
                 // including only questions for countries appropriate considering the difficulty
                 const cleared = this.appropriate(difficulty);
-
+                
                 // update the data in storeStudy
                 this.storeStudy.countryData.value = cleared;
 
