@@ -1,0 +1,9 @@
+@startuml
+actor User
+participant "App" as App
+
+User -> App: Click on FAQ
+App -> User: Show FAQ
+User -> App: Click Return
+App -> User: Return to Homepage 
+@enduml

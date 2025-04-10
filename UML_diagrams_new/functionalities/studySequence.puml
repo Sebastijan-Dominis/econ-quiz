@@ -1,0 +1,18 @@
+@startuml
+actor User
+participant "App" as App
+participant "World Bank Data API" as API
+
+User -> App: Click Study
+App -> User: Ask for topic
+User -> App: Select topic
+App -> API: Request topic data (countries and values)
+API --> App: Return topic data
+App -> User: Display topic data and sort in the back
+User -> App: Request sorted data
+App -> User: Display sorted data
+User -> App: Click Return
+App -> User: Return to topic choice
+User -> App: Click Return
+App -> User: Return to Homepage
+@enduml

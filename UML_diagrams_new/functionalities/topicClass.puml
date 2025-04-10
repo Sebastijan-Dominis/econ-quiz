@@ -1,0 +1,13 @@
+@startuml
+class Topic {
+    name: String
+    displayName: String
+    shortName: String
+    key: String
+    year: Int
+    indicator: String
+    display: String
+    cannotOver100: Bool
+    cannotBelow0: Bool
+}
+@enduml

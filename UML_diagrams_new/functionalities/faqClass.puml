@@ -1,0 +1,6 @@
+@startuml
+class FAQ {
+    Q: String
+    A: String
+}
+@enduml

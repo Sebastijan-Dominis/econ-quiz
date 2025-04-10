@@ -4,7 +4,7 @@ import PageTop from '../components/PageTop.vue';
 import { useRoute } from 'vue-router';
 import { useStoreStudy } from '../stores/storeStudy';
 import DarkBtn from '../components/DarkBtn.vue';
-import { reactive, ref, watchEffect, onMounted, onBeforeUnmount } from 'vue';
+import { ref, watchEffect, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import Popup from '../components/Popup.vue';
 import { useStoreQuiz } from '../stores/storeQuiz';
@@ -15,17 +15,6 @@ const route = useRoute();
 
 // defining the title
 const storeStudy = useStoreStudy();
-
-// managing images display
-const difficulties = reactive({
-    noob: false,
-    veryEasy: false,
-    easy: false,
-    normal: false,
-    hard: false,
-    veryHard: false,
-    absoluteMadman: false,
-})
 
 // popup
 const confirmation = ref(null);

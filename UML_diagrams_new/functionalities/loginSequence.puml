@@ -1,0 +1,38 @@
+@startuml
+actor User
+participant "App" as App
+participant "Firebase Auth" as Auth
+participant "Firebase Email Service" as Email
+
+User -> App: Click Login
+
+alt Email & Password Login
+    User -> App: Enter credentials
+    App -> Auth: Sign in with email/password
+    alt Email verified
+        Auth --> App: Login success
+        App -> User: Redirect to Homepage
+    else Email not verified
+        Auth --> App: Login blocked
+        App -> User: Notify user that their email is not verified
+    end
+else Verification Email not Received
+    User -> App: Request another verification email
+    App -> User: Ask for email and password input
+    User -> App: Provide credentials
+    App -> Auth: Request another verification email to be sent to user
+    Auth -> Email: Request the service to resend the verification email to user
+    Email --> User: Resend verification email
+    App -> User: Notify user that email got sent
+else Forgot Password
+    User -> App: Request to change password
+    App -> User: Ask for email input
+    User -> App: Provide email
+    App -> Auth: Request for a password reset email to be sent to user
+    Auth -> Email: Request for a password reset email to be sent to user
+    Email --> User: Send password reset email
+    App -> User: Notify user that email got sent
+end
+User -> App: Click Return
+App -> User: Return to Homepage
+@enduml

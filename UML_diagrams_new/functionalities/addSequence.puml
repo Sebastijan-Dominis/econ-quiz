@@ -1,0 +1,14 @@
+@startuml
+actor Admin
+participant "App" as App
+participant "Firestore database" as DB
+
+Admin -> App: Click on Add
+App -> Admin: Request the form to be filled in
+Admin -> App: Fill in the form and click add
+App -> DB: Request the new topic to be saved
+DB --> App: Return success
+App -> Admin: Notify admin
+Admin -> App: Click OK
+App -> Admin: Return to the homepage
+@enduml

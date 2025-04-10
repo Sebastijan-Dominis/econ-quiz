@@ -1,0 +1,25 @@
+@startuml
+actor User
+participant "App" as App
+participant "Firebase Auth" as Auth
+participant "Firestore" as DB
+participant "Google OAuth" as Google
+
+User -> App: Click "Sign Up"
+
+alt Sign up with Email
+    User -> App: Enter email & password
+    App -> Auth: Create user (unverified)
+    Auth -> User: Send verification email
+    App -> DB: Create user document
+else Sign up with Google
+    User -> Google: Authenticate
+    Google --> App: Return user info
+    App -> Auth: Sign in with Google
+    App -> DB: Create user document (verified)
+else Request return 
+    User -> App: Click Return
+end
+
+App --> User: Return to Homepage
+@enduml

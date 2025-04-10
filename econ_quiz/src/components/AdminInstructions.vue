@@ -1,4 +1,4 @@
-<script setup>
+``<script setup>
 // imports
 import { useStoreEditQuiz } from '../stores/storeEditQuiz';
 import DarkBtn from './DarkBtn.vue';

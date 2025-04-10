@@ -2,7 +2,7 @@
 // imports
 import { useStoreAuth } from '../stores/storeAuth';
 import CenterMessage from '../components/CenterMessage.vue';
-import { ref, onMounted, onUnmounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { db } from '../js/firebase';
 import { collection, getDocs, query, orderBy, limit, startAfter, where } from 'firebase/firestore';
 import PageTop from '../components/PageTop.vue';

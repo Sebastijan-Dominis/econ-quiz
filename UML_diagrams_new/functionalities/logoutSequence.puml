@@ -1,0 +1,12 @@
+@startuml
+actor User
+participant "App" as App
+participant "Firebase Auth" as Auth
+
+User -> App: Request logout
+App -> User: Ask for confirmation
+User -> App: Confirm
+App -> Auth: Request to log the user out
+Auth --> App: Log the user out
+App -> User: Redirect to Homepage
+@enduml

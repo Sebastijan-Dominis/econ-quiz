@@ -1,0 +1,31 @@
+@startuml
+actor Admin
+participant "App" as App
+participant "Firestore database" as DB
+
+Admin -> App: Click on Edit/Delete
+App -> Admin: Request topic choice
+Admin -> App: Click on a topic
+App -> Admin: Ask edit or delete
+alt Edit
+    Admin -> App: Choose edit
+    App -> DB: Request current Data for the chosen topic
+    DB --> App: Return data
+    App -> Admin: Create a form and request it to be filled in
+    Admin -> App: Fill in the form and click Edit
+    App -> DB: Request the data to be updated/edited
+    DB --> App: Return success
+    App -> Admin: Notify admin
+    Admin -> App: Click OK
+    App -> Admin: Return to the homepage
+else Delete
+    Admin -> App: Choose delete
+    App -> Admin: Request confirmation
+    Admin -> App: Confirm delete
+    App -> DB: Request the deletion
+    DB --> App: Return success
+    App -> Admin: Notify admin
+    Admin -> App: Click OK
+    App -> Admin: Return to the homepage
+end
+@enduml

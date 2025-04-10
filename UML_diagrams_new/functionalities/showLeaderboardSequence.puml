@@ -1,0 +1,16 @@
+@startuml
+actor User
+participant "App" as App
+participant "Firestore Database" as DB
+
+User -> App: Click on Leaderboard
+App -> DB: Request all users' results for Past Month (Default)
+DB --> App: Return all users' results for Past Month
+App -> User: Calculate, save and display top 10 users' usernames and results
+User -> App: Choose another period (Past Year or All Time)
+App -> DB: Request all users' results for a chosen period
+DB --> App: Return all users' results for a chosen period
+App -> User: Calculate, save and display top 10 users' usernames and results
+User -> App: Click Return
+App -> User: Return to Homepage
+@enduml

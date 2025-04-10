@@ -1,0 +1,476 @@
+@startuml
+' left to right direction
+
+' views
+class App {
+    +audio: Audio | null
+    +playing: Bool
+}
+
+class Home {
+    +route: "/"
+    +logoutYes(): void
+    +logoutNo(): void
+    +username: String
+    +hello: String
+    +typeHello(): void
+    +confirmation: RefObject<HTMLDivElement> | null
+    +dialog: RefObject<HTMLDivElement> | null
+    +typePopup: Bool
+    +hoverType: String | null
+}
+
+class Results {
+    +results: List<Object>
+    +loading: Bool
+    +noMoreResults: Bool
+    +lastVisible: DocumentSnapshot<Result> | null
+    +pageSize: Int
+    +popupOpen: Bool
+    +openPopup(): void
+    +closePopups(event: event): void
+    +sortByValue: String
+    +sortDirection: String
+    +types: List<String>
+    +indicators: List<String>
+    +updateSelectedTypes(type: String, event: event): void
+    +updateSelectedIndicators(indicator: String, event: event): void
+    +disableConfirm: Bool
+    +confirm(): void
+    +fetchResults(direction: String, element: String, types: List<String> | undefined, indicators: List<String> | undefined): void
+    +onScroll(direction: String, element: String): void
+    +handleScroll(): void
+}
+
+class Leaderboard {
+    +activeBtn: String
+    +setActive(label: String): void
+    +leaderboardMonth: List<Object> | null
+    +leaderboardYear: List<Object> | null
+    +leaderboardAllTime: List<Object> | null
+    +gold: String
+    +silver: String
+    +bronze: String
+    +loading: Bool
+    +loaded: Bool
+    +getLeaderboard(timeframe: String): void
+    +instructions: Bool
+    +closePopups: void
+}
+
+class StudyChoice
+
+class Study {
+    +originalValue: String | null
+    +sortedBy: String
+    +isOpen: Bool
+    +sorter: RefObject<HTMLDivElement> | null
+    +sorterOptions: RefObject<HTMLDivElement> | null
+    +onClickOutside(event: event): void
+    +closePopups(event: event): void
+    +screenSize: Float
+    +scrolled: Float
+    +resized(): void
+    +scroll(): void
+    +manageScreenSize: Bool
+}
+
+class FAQ
+
+class Signup {
+    +popup: Bool
+    +validatePassword(password: String, message: Bool): void
+    +credentials: Object
+    +credentialsCheck: Object
+    +emailGood: Bool
+    +checkEmail(): void
+    +emailConfirm: Bool
+    +checkEmailConfirm(): void
+    +passwordGood: Bool
+    +checkPassword(): void
+    +passwordConfirm: Bool
+    +checkPasswordConfirm(): void
+    +usernameGood: Bool
+    +checkUsername(): void
+    +onSubmit(): void
+}
+
+class Login {
+    credentials: Object
+}
+
+class Resend {
+    credentials: Object
+}
+
+class Reset {
+    email: String
+}
+
+class QuizChoice
+
+class QuizDifficultyChoice {
+    +confirmation: RefObject<HTMLDivElement> | null
+    +dialog: RefObject<HTMLDivElement> | null
+    +onClickOutside(event: event): void
+    +onClickOutside2(event: event): void
+    +closePopups(event: event): void
+    +showPopup: Bool
+    +difficulty: String
+    +year: Int
+    +openPopup(chosenDifficulty: String): void
+    +onDecline(): void
+    +start(): voide
+    +activeDifficulty: String | null
+    +difficultyLevels: List<String>
+    +formatLabel: Object
+}
+
+class Quiz {
+    +originalValue: String
+    +popupOpen: Bool
+    +finishQ: Bool
+    +confirmation: RefObject<HTMLDivElement> | null
+    +dialog: RefObject<HTMLDivElement> | null
+    +onClickOutside(): void
+    +onClickOutside2(event: event): void
+    +openPopup(): void
+    +quitYes(): void
+    +quitNo(): void
+    +closePopups(event: event): void
+    +start: Date | null
+    +end: Date | null
+    +curr: Int
+    +usersChoice: List<Object>
+    +countdownNum: Bool
+    +countdownInterval: Interval | null
+    +countdown(): void
+    +questionTimer: Interval | null
+    +firstInterval: Interval | null
+    +secondInterval: Interval | null
+    +first: Audio | null
+    +second: Audio | null
+    +nextQ(): void
+    +prevQ(): void
+    +chosenNumber: List<Float | Int>
+    +formattedNumber: String
+    +nextQMan(): void
+    +prevQMan(): void
+    +done: Bool
+    +openFinish(): void
+    +savingFnDone: Bool
+    +finish(): void
+}
+
+class Add {
+    +quizInfo: Object
+    +isOpen1: Bool
+    +isOpen2: Bool
+    +isOpen3: Bool
+    +isOpen4: Bool
+    +dropdownMenu1: Bool
+    +dropdownMenu2: Bool
+    +dropdownMenu3: Bool
+    +dropdownMenu4: Bool
+    +onClickOutside(event: event): void
+    +openDropdown(dropdown: Int): void
+    +closeDropdownsAndPopups(event: event): void
+    +currYear: Int
+    +minYear: Int
+    +maxYear: Int
+    +popupOpen: Bool
+    +confirmation: RefObject<HTMLDivElement> | null
+    +dialog: RefObject<HTMLDivElement> | null
+    +onClickOutsidePopup(): void
+    +onClickOutsidePopup2(event: event): void
+    +openPopup(): void
+    +adding: Bool
+    +create(): void
+    +close(): void
+    +finalMessage: Bool
+    +finalMessageText: String
+}
+
+class EditChoice {
+    +deletePopup: Bool
+    +confirmation: RefObject<HTMLDivElement> | null
+    +dialog1: RefObject<HTMLDivElement> | null
+    +dialog2: RefObject<HTMLDivElement> | null
+    +onClickOutsideChoice(): void
+    +onClickOutsideChoice2(): void
+    +onClickOutside(): void
+    +onClickOutside2(event: event): void
+    +activatingEdit: Bool
+    +activateEditError: Bool
+    +handleEdit(): void
+    +handleDelete(): void
+    +deleting: Bool
+    +deletedMessage: Bool
+    +deleteTopic(): void
+    +close(): void
+    +closePopups(): void
+}
+
+class Edit {
+    quizInfo: Object
+    +isOpen1: Bool
+    +isOpen2: Bool
+    +isOpen3: Bool
+    +isOpen4: Bool
+    +dropdownMenu1: Bool
+    +dropdownMenu2: Bool
+    +dropdownMenu3: Bool
+    +dropdownMenu4: Bool
+    +onClickOutside(event: event): void
+    +openDropdown(dropdown: Int): void
+    +closeDropdownsAndPopups(event: event): void
+    +currYear: Int
+    +minYear: Int
+    +maxYear: Int
+    +popupOpen: Bool
+    +confirmation: RefObject<HTMLDivElement> | null
+    +dialog: RefObject<HTMLDivElement> | null
+    +onClickOutsidePopup(): void
+    +onClickOutsidePopup2(event: event): void
+    +openPopup(): void
+    +editing: Bool
+    +edit(): void
+    +close(): void
+    +finalMessage: Bool
+    +finalMessageText: String
+}
+
+' stores
+class storeAuth {
+    +user: user
+    +loading: Bool
+    +isLoggedIn: Bool
+    +isAdmin: Bool
+    +logoutq: Bool
+    +init(): void
+    +registerUser(credentials: Object): void
+    +loginUser(credentials: Object): void
+    +resendVerificationEmail(credentials: Object): void
+    +logoutUser(): void
+    +signInWithGoogle(): void
+    +resetPassword(email: String): void
+}
+
+class storeEditQuiz {
+    +editOrDelete: Bool
+    +chosenTopic: String | null
+    +topicID: String
+    +instructions: Bool
+    +currTopic: Object
+}
+
+class storeFAQ {
+    +faqs: List<Object>
+    +fetchFAQ(): void
+}
+
+class storeQuiz {
+    +type: String | null
+    +questions: List<Object>
+    +correctAnswers: Int
+    +manualScore: Float | null
+    +loading: Bool
+    +error: Bool
+    +multipliers: Object
+    +closeValues: Object
+    +big: Bool
+    +difficultiesMap: Object
+    +difficultiesMapReverse: Object
+    +typeFactors: Object
+    +difficultiesFactors: Object
+    +shuffle(array: List): List
+    +random(min: Float | Int, max: Float | Int, decimals: Int): Int
+    +addOrSubtract(number: Float | Int): Float | Int
+    +checkIfTooClose(answer: Float | Int, difficulty: String, same: List<Float | Int>): Float | Int
+    +appropriate(difficulty: String): List<Object>
+    +preventIllogical(answer: Float | Int, choice: String, same: List<Float | Int>): Float | Int
+    +generateQuestionsMCT(chosenCountries: List<Object>, choice: String, difficulty: String): void
+    +generateQuestionsMI(chosenCountries: List<Object>, choice: String): void
+    +createQuiz(type: String, choice: String, difficulty: String): void
+}
+
+class storeStudy {
+    +countryData: List<Object>
+    +countryDataZA: List<Object>
+    +countryDataHL: List<Object>
+    +countryDataLH: List<Object>
+    +loading: Bool
+    +error: Bool
+    +nonCountryNames: List<String>
+    +year: Object
+    +choiceMap: Object
+    +reverseChoiceMap: Object
+    +largeNumsDollars: List<String>
+    +smallNumsDollars: List<String>
+    +largeNums: List<String>
+    +smallNums: List<String>
+    +cannotOver100: List<String>
+    +cannotBelow0: List<String>
+    +chosenDataMap: Object
+    +columns: List<List<String>>
+    +allTopics: List<String>
+    +allTypes: List<String>
+    +typesMap: Object
+    +economic: List<String>
+    +demographic: List<String>
+    +other: List<String>
+    +indicators: List<String>
+    +veryHardCountries: List<String>
+    +hardCountries: List<String>
+    +mediumCountries: List<String>
+    +easyCountries: List<String>
+    +veryEasyCountries: List<String>
+    +manualLimit: Float | Int | null
+    +fetchQuizInfo(): void
+    +fetchData(choice: String): void
+    +shuffleCountryData(): void
+}
+
+' composable
+class useBack
+
+' components
+class AdminInstructions
+
+class BrandBtn
+
+class CenterMessage
+
+class Choice {
+    +titles: List<String>
+}
+
+class ChooseBtn {
+    +whatToDo(): void
+}
+
+class DarkBtn
+
+class Dropdown
+
+class InstructionsBtn
+
+class LBBtn
+
+class NavBtn
+
+class PageTop
+
+class Popup {
+    +confirmation: RefObject<HTMLDivElement> | null
+}
+
+class QuizBtn
+
+class ReturnBtn
+
+' relations
+App o-- storeAuth
+App o-- storeStudy
+App o-- storeFAQ
+
+Add o-- ReturnBtn
+Add o-- Dropdown
+Add o-- DarkBtn
+Add o-- Popup
+Add o-- CenterMessage
+Add o-- AdminInstructions
+Add o-- InstructionsBtn
+Add o-- storeEditQuiz
+
+Edit o-- ReturnBtn
+Edit o-- Dropdown
+Edit o-- DarkBtn
+Edit o-- Popup
+Edit o-- CenterMessage
+Edit o-- AdminInstructions
+Edit o-- InstructionsBtn
+Edit o-- storeEditQuiz
+
+EditChoice o-- PageTop
+EditChoice o-- Choice
+EditChoice o-- DarkBtn
+EditChoice o--Popup
+EditChoice o-- CenterMessage
+EditChoice o-- storeEditQuiz
+
+FAQ o-- storeFAQ
+FAQ o-- ReturnBtn
+
+Home o-- BrandBtn
+Home o-- DarkBtn
+Home o-- Popup
+Home o-- storeAuth
+Home o-- storeQuiz
+Home o-- storeStudy
+
+Leaderboard o-- PageTop
+Leaderboard o-- LBBtn
+Leaderboard o-- InstructionsBtn
+Leaderboard o-- DarkBtn
+
+Login o-- storeAuth
+
+Quiz o-- storeQuiz
+Quiz o-- QuizBtn
+Quiz o-- NavBtn
+Quiz o-- Popup
+Quiz o-- storeStudy
+Quiz o-- CenterMessage
+Quiz o-- storeAuth
+
+QuizChoice o-- Choice
+QuizChoice o-- PageTop
+
+QuizDifficultyChoice o-- PageTop
+QuizDifficultyChoice o-- storeStudy
+QuizDifficultyChoice o-- DarkBtn
+QuizDifficultyChoice o-- Popup
+QuizDifficultyChoice o-- storeQuiz
+QuizDifficultyChoice o-- CenterMessage
+
+Resend o-- ReturnBtn
+Resend o-- storeAuth
+
+Reset o-- ReturnBtn
+Reset o-- storeAuth
+
+Results o-- storeAuth
+Results o-- CenterMessage
+Results o-- PageTop
+Results o-- DarkBtn
+Results o-- storeQuiz
+Results o-- storeStudy
+
+Signup o-- DarkBtn
+Signup o-- storeAuth
+
+Study o-- PageTop
+Study o-- storeStudy
+Study o-- Dropdown
+
+StudyChoice o-- Choice
+StudyChoice o-- PageTop
+
+AdminInstructions o-- storeEditQuiz
+AdminInstructions o-- DarkBtn
+
+Choice *-- ChooseBtn
+Choice o-- storeStudy
+
+ChooseBtn o-- DarkBtn
+ChooseBtn o-- storeStudy
+ChooseBtn o-- storeEditQuiz
+
+PageTop o-- ReturnBtn
+
+Popup o-- DarkBtn
+Popup o-- BrandBtn
+
+ReturnBtn *-- useBack
+@enduml

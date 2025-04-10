@@ -1,0 +1,20 @@
+@startuml
+class User {
+    +username: String
+    +email: String
+    +results: List<Result>
+    +isAdmin: Bool
+}
+
+class Result {
+    +type: String
+    +topic: String
+    +difficulty: Int
+    +score: Float
+    +timeSpent: Int
+    +leaderboardScore: Int
+    +takenOn: Timestamp
+}
+
+User --> Result
+@enduml

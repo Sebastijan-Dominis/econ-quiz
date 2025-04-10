@@ -1,0 +1,45 @@
+@startuml
+left to right direction
+actor "User" as User
+actor "Logged-in User" as LoggedInUser
+actor "Admin" as Admin
+actor "App" as App
+
+User --> (View homepage)
+User --> (View FAQ)
+User --> (Login / Sign up)
+User --> (Reset password)
+User --> (Resend confirmation email)
+User --> (Use study section)
+User --> (View leaderboard)
+(Use study section) --> (Pick topic to study)
+(Pick topic to study) --> (Sort data to study)
+User --> (Play quiz)
+(Play quiz) --> (Choose quiz type)
+(Choose quiz type) --> (Choose topic)
+(Choose topic) --> (Choose difficulty)
+(Choose difficulty) --> (Start quiz)
+(Start quiz) --> (End quiz)
+(Start quiz) --> (Quit quiz)
+
+LoggedInUser --> (Logout)
+LoggedInUser --> (View past results)
+(View past results) --> (Sort/filter results)
+(View leaderboard) --> (Filter by time range)
+
+Admin --> (Add topic)
+Admin --> (Edit topic)
+Admin --> (Delete topic)
+
+App --> (Fetch quiz data)
+App --> (Fetch API data)
+App --> (Generate quiz)
+App --> (Save results)
+App --> (Fetch past results)
+App --> (Fetch leaderboard data)
+App --> (Send an email)
+
+' Inheritance arrows
+LoggedInUser -|> User
+Admin -|> LoggedInUser
+@enduml

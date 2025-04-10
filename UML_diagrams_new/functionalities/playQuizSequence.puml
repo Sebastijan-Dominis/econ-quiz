@@ -1,0 +1,31 @@
+@startuml
+actor User
+participant "App" as App
+participant "World Bank Data API" as API
+participant "Firestore Database" as DB
+
+User -> App: Click Play now
+App -> User: Ask for quiz type
+User -> App: Select quiz type (e.g., Multiple Choice)
+App -> User: Ask for topic
+User -> App: Select topic (e.g., GDP Nominal p/c)
+App -> User: Ask for difficulty
+User -> App: Select difficulty (e.g., Hard)
+App -> User: Ask for confirmation
+User -> App: Confirm 
+
+App -> API: Request topic data (countries and values)
+API --> App: Return topic data
+
+App -> User: Generate and start quiz
+User -> App: Answer questions and end quiz
+
+alt Logged-in User
+    App -> DB: Save results
+    DB --> App: Return success
+end
+
+App -> User: Show results
+User -> App: Click Ok
+App -> User: Return to Homepage
+@enduml

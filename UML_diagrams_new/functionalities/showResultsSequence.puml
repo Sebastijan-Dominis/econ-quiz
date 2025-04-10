@@ -1,0 +1,16 @@
+@startuml
+actor User
+participant "App" as App
+participant "Firestore Database" as DB
+
+User -> App: Click Results
+App -> DB: Request user's results
+DB --> App: Return user's results
+App -> User: Display user's results
+User -> App: Request sorted and filtered results
+App -> DB: Request sorted and filtered results
+DB --> App: Return sorted and filtered results
+App -> User: Display sorted and filtered results
+User -> App: Click Return
+App -> User: Return to Homepage
+@enduml
