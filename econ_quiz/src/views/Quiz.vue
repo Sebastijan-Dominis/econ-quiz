@@ -310,16 +310,16 @@ onBeforeUnmount(() => {
         :class="usersChoice[curr] === option ? 'chosenAnswer' : ''"
         @mousedown="chooseAnswer(option)">
             <div v-if="storeStudy.largeNumsDollars.has(originalValue)">
-              <span>${{ option.toLocaleString() }}</span>
+                <span>${{ option.toLocaleString() }}</span>
             </div>
             <div v-if="storeStudy.smallNumsPercentages.has(originalValue)">
-              <span>{{ option }}%</span>
+                <span>{{ option }}%</span>
             </div>
             <div v-if="storeStudy.largeNums.has(originalValue)">
-              <span>{{ option.toLocaleString() }}</span>
+                <span>{{ option.toLocaleString() }}</span>
             </div>
             <div v-if="storeStudy.smallNums.has(originalValue)">
-              <span>{{ option }}</span>
+                <span>{{ option }}</span>
             </div>
         </QuizBtn>
         </div>
@@ -327,7 +327,7 @@ onBeforeUnmount(() => {
         <!-- manual input quizzes -->
         <div v-if="storeQuiz.type === 'Manual Input'" class="mt-12 md:mt-16 lg:mt-20 xl:mt-24 2xl:mt-28 flex flex-col items-center">
             <h2 class="manualNumber">
-              <span>{{ formattedNumber }}</span>
+                <span>{{ formattedNumber }}</span>
             </h2>
             <input type="number" v-model="chosenNumber[curr]" class="p-2 mt-8 text-lg md:mt-12 md:p-3 md:text-xl lg:mt-16 lg:p-4 lg:text-2xl xl:mt-24 xl:p-6 xl:text-3xl 2xl:mt-32 2xl:p-8 2xl:text-4xl font-bold border border-brand border-2 2xl:border-4 rounded-full text-center appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-moz-appearance:textfield] manualInputField">
         </div>
@@ -355,7 +355,11 @@ onBeforeUnmount(() => {
         <div v-if="popupOpen">
             <Popup ref="dialog" @confirm="quitYes" @decline="quitNo">Are you sure you want to quit?</Popup>
         </div>
+        <div class="fixed bottom-4 max-xl:left-[50%] max-xl:translate-x-[-50%] text-brand font-bold md:bottom-12 md:text-2xl lg:bottom-20 lg:text-3xl xl:top-14 xl:right-12">
+            {{curr}}/20
+        </div>    
     </div>
+
 
     <!-- countdown -->
     <div v-if="storeQuiz.type === 'Timed' && !done" class="square hithere fixed top-8 right-12">{{ countdownNum }}</div>
@@ -369,9 +373,10 @@ onBeforeUnmount(() => {
     <CenterMessage v-if="done && storeQuiz && !savingFnDone">Loading your results...</CenterMessage>
 
     <!-- display results for multiple choice and timed quizzes -->
-    <div v-if="done && !storeQuiz.error && savingFnDone && storeQuiz.type !== 'Manual Input'" class="flex flex-col text-center items-center justify-center pt-12 px-24 2xl:pt-20">
-        <h1 class="text-2xl text-brand font-bold 2xl:text-3xl">You have answered {{ storeQuiz.correctAnswers }} out of {{ storeQuiz.questions.length-1 }} questions correctly!</h1>
-        <NavBtn @click="router.push('/')" :class="'mt-24 2xl:mt-32'">Ok</NavBtn>
+    <div v-if="done && !storeQuiz.error && savingFnDone && storeQuiz.type !== 'Manual Input'" class="flex flex-col h-[100vh] text-center items-center justify-evenly px-12 lg:px-24">
+            <h1 class="text-xl md:text-2xl lg:text-3xl text-brand font-bold 2xl:text-4xl">You have answered {{ storeQuiz.correctAnswers }} out of {{ storeQuiz.questions.length-1 }} questions correctly!</h1>
+            <p class="text-brand text-sm md:text-base lg:text-xl 2xl:text-2xl mt-8 2xl:mt-12">You can check real values in the Study section</p>
+        <NavBtn @click="router.push('/')">Ok</NavBtn>
     </div>
     
     <!-- display results for manual input quizzes -->

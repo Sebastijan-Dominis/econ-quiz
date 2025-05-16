@@ -126,7 +126,8 @@ const onSubmit = function() {
 
 <template>
     <!-- popup -->
-    <div v-if="popup" class="fixed top-1/2 transform -translate-y-[50%] left-1/2 -translate-x-[50%] bg-bgpopup w-80 h-[400px] md:w-96 z-10 rounded-2xl border border-2 border-brand flex flex-col items-center justify-center">
+     <div v-if="popup" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-85 z-10"></div>
+    <div v-if="popup" class="fixed top-1/2 transform -translate-y-[50%] left-1/2 -translate-x-[50%] bg-bgpopup w-80 h-[75vh] md:w-96 z-10 rounded-2xl border border-2 border-brand flex flex-col items-center justify-evenly z-20">
         <div class="px-12 pb-6 md:text-lg text-brand">
             <h1 class="flex justify-center text-xl md:text-2xl font-bold mb-2">Note:</h1> 
             <p>- <b><i>Password</i></b> should be between <b>8</b> and <b>20</b> characters and contain at least one <b>uppercase</b> letter, one <b>lowercase</b> letter, one <b>number</b> and one <b>special character</b> </p>

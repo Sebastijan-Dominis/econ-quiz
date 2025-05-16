@@ -165,26 +165,6 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                 else return (Number(number) - change).toFixed(2);
             }
         },
-        
-        // prevents values that are too similar to each, thus implying an answer, but still doesn't create an overly wide range of values for the difficulty in question
-        checkIfTooClose(answer, difficulty, same) {
-            if(difficulty === "absoluteMadman") return answer;
-            const lowerFactor = this.closeValues[difficulty].lowerFactor;
-            const higherFactor = this.closeValues[difficulty].higherFactor;
-            for(const existingAnswer of same) {
-                const low = answer * lowerFactor;
-                const high = answer * higherFactor;
-
-                if(existingAnswer > low && existingAnswer < high) {
-                    const rand = Math.random();
-                    answer = rand >= 0.5 ? answer * lowerFactor : answer * higherFactor;
-
-                    return this.checkIfTooClose(answer, difficulty, same);
-                }
-            }
-            
-            return this.big ? Math.round(answer) : Number(answer).toFixed(2);
-        },
 
         // adds only countries appropriate for the difficulty level
         appropriate(difficulty) {
@@ -366,49 +346,68 @@ export const useStoreQuiz = defineStore('storeQuiz', {
             }
             return cleared;
         },
-
-        // prevents equal values as options, illogical options and options too close to each so that it's obvious they are false
+        
+        // prevents options that make no sense, or are too obvious
         preventIllogical(answer, choice, same) {
-            // prevents values over 100 where they are not possible
-            if (this.storeStudy.cannotOver100.has(choice) && answer >= 100) {
-                if (this.big) answer = '100';
-                else answer = '100.00';
+            const over100Restricted = this.storeStudy.cannotOver100.has(choice);
+            const under0Restricted = this.storeStudy.cannotBelow0.has(choice);
+            const lifeExpectancy = choice === "Life expectancy";
 
-                // prevents same values as options
-                while (same.has(answer)) {
-                    const diminish = this.random(0.01, 9, 2);
-                    if (this.big) answer = Math.round(Number(answer - diminish));
-                    else answer = Number(answer - diminish).toFixed(2);
-                }
-            }
-            // prevents values below 0 where they are not possible
-            if (this.storeStudy.cannotBelow0.has(choice) && answer <= 0) {
-                if (this.big) answer = '100';
-                else answer = '100.00';
+            let value = Number(answer);
+            let attempts = 0;
 
-                // prevents same values as options
-                while (same.has(answer)) {
-                    const increase = this.random(0.01, 9, 2);
-                    if (this.big) answer = Math.round(Number(answer + increase));
-                    else answer = Number(answer + increase).toFixed(2);
+            while (true) {
+                // Clamp before formatting
+                if (over100Restricted && value > 100) value = 100;
+                if (under0Restricted && value < 0) value = 0;
+                if (lifeExpectancy && value > 120) value = 120;
+
+                let formatted = this.big ? Math.round(value).toString() : value.toFixed(2);
+
+                if (!same.has(formatted)) break;
+
+                const adjust = this.random(0.01, 5, 3);
+                const direction = Math.random() < 0.5 ? -1 : 1;
+                value += adjust * direction;
+
+                // Clamp after adjustment
+                if (over100Restricted && value > 100) value = 100;
+                if (under0Restricted && value < 0) value = 0;
+                if (lifeExpectancy && value > 120) value = 120;
+
+                attempts++;
+                if (attempts > 500) {
+                    console.warn("preventIllogical exceeded 500 attempts, forcing fallback value.");
+
+                    const fallbackAdjust = this.random(0.01, 10, 3);
+
+                    if (over100Restricted) {
+                        // Start from 100 and diminish by random 0.01 to 10
+                        value = 100 - fallbackAdjust;
+                    } else if (lifeExpectancy) {
+                        // Start from 120 and diminish by random 0.01 to 10
+                        value = 120 - fallbackAdjust;
+                    } else if (under0Restricted) {
+                        // Start from 0 and increase by random 0.01 to 10
+                        value = 0 + fallbackAdjust;
+                    } else {
+                        // Fallback generic nudge if no restrictions apply
+                        value = value + Math.random();
+                    }
+
+                    // Clamp one last time in case adjustment broke the limits
+                    if (over100Restricted && value > 100) value = 100;
+                    if (under0Restricted && value < 0) value = 0;
+                    if (lifeExpectancy && value > 120) value = 120;
+
+                    break;
                 }
             }
-            // prevents values over 120 for life expectancy
-            if (choice === "Life expectancy" && answer >= 120) {
-                if (this.big) answer = '120';
-                else answer = '120.00';
-                while (same.has(answer)) {
-                    const diminish = this.random(0.01, 9, 2);
-                    if (this.big) answer = Math.round(Number(answer - diminish));
-                    else answer = Number(answer - diminish).toFixed(2);
-                }
-            }
-            // prevents same values as options
-            while (same.has(answer)) {
-                answer = this.addOrSubtract(answer, choice);
-            }
-            return answer;
+
+            return this.big ? Math.round(value).toString() : value.toFixed(2);
         },
+
+
 
         // generating questions for multiple choice and timed quizzes
         generateQuestionsMCT(chosenCountries, choice, difficulty) {
@@ -438,16 +437,8 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                     if (this.big) answer = Math.round(answer);
                     else answer = Number(answer).toFixed(2);
 
-                    // checks if the false options are too close to each other to prevent them being obviously wrong
-                    let oldAnswer = answer;
-                    answer = this.checkIfTooClose(answer, difficulty, same);
-
-                    // making sure options are logical and not too close to each other in terms of value
-                    while(oldAnswer !== answer) {
-                        answer = this.preventIllogical(answer, choice, same);
-                        oldAnswer = answer;
-                        answer = this.checkIfTooClose(answer, difficulty, same);
-                    }
+                    // prevents illogical values
+                    answer = this.preventIllogical(answer, choice, same)
 
                     same.add(answer);
                     options.push(answer);
