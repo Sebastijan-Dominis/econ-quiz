@@ -441,7 +441,7 @@ export const useStoreQuiz = defineStore('storeQuiz', {
                     answer = this.preventIllogical(answer, choice, same)
 
                     same.add(answer);
-                    options.push(answer);
+                    options.push(Number(answer));
                     i++;
                 }
 
