@@ -373,7 +373,7 @@ onBeforeUnmount(() => {
     <CenterMessage v-if="done && storeQuiz && !savingFnDone">Loading your results...</CenterMessage>
 
     <!-- display results for multiple choice and timed quizzes -->
-    <div v-if="done && !storeQuiz.error && savingFnDone && storeQuiz.type !== 'Manual Input'" class="flex flex-col h-[100vh] text-center items-center justify-evenly px-12 lg:px-24">
+    <div v-if="done && !storeQuiz.error && savingFnDone && storeQuiz.type !== 'Manual Input'" class="flex flex-col h-[100dvh] text-center items-center justify-evenly px-12 lg:px-24">
             <h1 class="text-xl md:text-2xl lg:text-3xl text-brand font-bold 2xl:text-4xl">You have answered {{ storeQuiz.correctAnswers }} out of {{ storeQuiz.questions.length-1 }} questions correctly!</h1>
             <p class="text-brand text-sm md:text-base lg:text-xl 2xl:text-2xl mt-8 2xl:mt-12">You can check real values in the Study section</p>
         <NavBtn @click="router.push('/')">Ok</NavBtn>

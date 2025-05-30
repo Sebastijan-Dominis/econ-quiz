@@ -1,25 +1,27 @@
 <script setup>
 // imports
-import PageTop from '../components/PageTop.vue';
-import LBBtn from '../components/LBBtn.vue';
-import { onMounted, onUnmounted, ref, reactive, onBeforeUnmount } from 'vue';
-import { db } from '../js/firebase';
-import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
-import { useRouter } from 'vue-router';
-import InstructionsBtn from '../components/InstructionsBtn.vue';
-import DarkBtn from '../components/DarkBtn.vue';
+import PageTop from "../components/PageTop.vue";
+import LBBtn from "../components/LBBtn.vue";
+import { onMounted, onUnmounted, ref, reactive, onBeforeUnmount } from "vue";
+import { db } from "../js/firebase";
+import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
+import { useRouter } from "vue-router";
+import InstructionsBtn from "../components/InstructionsBtn.vue";
+import DarkBtn from "../components/DarkBtn.vue";
 
 const router = useRouter();
 
 // filtering choice
-const activeBtn = ref('Past Month');
-const setActive = function(label) {
+const activeBtn = ref("Past Month");
+const setActive = function (label) {
   activeBtn.value = label;
-  if(label === "Past Year" && !leaderboardYear.value ||
-    label === "All Time" && !leaderboardAllTime.value) {
+  if (
+    (label === "Past Year" && !leaderboardYear.value) ||
+    (label === "All Time" && !leaderboardAllTime.value)
+  ) {
     getLeaderboard(label);
   }
-}
+};
 
 const leaderboardMonth = ref(null);
 const leaderboardYear = ref(null);
@@ -28,8 +30,8 @@ const leaderboardAllTime = ref(null);
 const dataMap = reactive({
   "Past Month": leaderboardMonth,
   "Past Year": leaderboardYear,
-  "All Time": leaderboardAllTime
-})
+  "All Time": leaderboardAllTime,
+});
 
 const gold = ref(null);
 const silver = ref(null);
@@ -41,7 +43,7 @@ const loaded = ref(false);
 const getLeaderboard = async (timeframe = "Past Month") => {
   loaded.value = false;
   loading.value = true;
-  
+
   const resultsRef = collection(db, "results");
   const now = new Date();
   let timeLimit;
@@ -63,37 +65,39 @@ const getLeaderboard = async (timeframe = "Past Month") => {
   try {
     const querySnapshot = await getDocs(q);
     const userTopScores = new Map();
-  
+
     querySnapshot.forEach((doc) => {
       const { username, leaderboardScore } = doc.data();
-      if (!userTopScores.has(username) || userTopScores.get(username) < leaderboardScore) {
+      if (
+        !userTopScores.has(username) ||
+        userTopScores.get(username) < leaderboardScore
+      ) {
         userTopScores.set(username, leaderboardScore);
       }
     });
-  
-    
+
     const leaderboard = [...userTopScores.entries()]
-    .map(([username, score]) => ({ username, leaderboardScore: score }))
-    .sort((a, b) => b.leaderboardScore - a.leaderboardScore)
-    .slice(0, 10); 
-    
-    if(timeframe === "Past Month") leaderboardMonth.value = leaderboard;
-    else if(timeframe === "Past Year") leaderboardYear.value = leaderboard;
-    else if(timeframe === "All Time") leaderboardAllTime.value = leaderboard;
-    if(leaderboard.length) {
+      .map(([username, score]) => ({ username, leaderboardScore: score }))
+      .sort((a, b) => b.leaderboardScore - a.leaderboardScore)
+      .slice(0, 10);
+
+    if (timeframe === "Past Month") leaderboardMonth.value = leaderboard;
+    else if (timeframe === "Past Year") leaderboardYear.value = leaderboard;
+    else if (timeframe === "All Time") leaderboardAllTime.value = leaderboard;
+    if (leaderboard.length) {
       gold.value = leaderboard[0].username;
     }
-    if(leaderboard.length >= 2) {
+    if (leaderboard.length >= 2) {
       silver.value = leaderboard[1].username;
     }
-    if(leaderboard.length >= 3) {
+    if (leaderboard.length >= 3) {
       bronze.value = leaderboard[2].username;
     }
     loaded.value = true;
-  } catch(error) {
+  } catch (error) {
     alert("An error occurred while fetching the scores.");
     console.error(error);
-    router.push('/');
+    router.push("/");
   } finally {
     loading.value = false;
   }
@@ -101,22 +105,22 @@ const getLeaderboard = async (timeframe = "Past Month") => {
 
 // instructions
 const instructions = ref(false);
-const closePopups = event => {
-    if(event.key === "Escape") {
-        instructions.value = false;
-    }
-}
+const closePopups = (event) => {
+  if (event.key === "Escape") {
+    instructions.value = false;
+  }
+};
 onMounted(() => {
-    document.addEventListener("keydown", closePopups);
-})
+  document.addEventListener("keydown", closePopups);
+});
 onBeforeUnmount(() => {
-    document.removeEventListener("keydown", closePopups);
-})
+  document.removeEventListener("keydown", closePopups);
+});
 
 // showing past month leaderboard immediately
 onMounted(() => {
   getLeaderboard("Past Month");
-})
+});
 
 // cleaning up
 onUnmounted(() => {
@@ -125,45 +129,79 @@ onUnmounted(() => {
   leaderboardAllTime.value = null;
   loading.value = false;
   loaded.value = false;
-})
+});
 </script>
 
 <template>
-    <PageTop>Leaderboard</PageTop>
-    <div class="flex justify-evenly mt-[10vh]">
-        <LBBtn
+  <PageTop>Leaderboard</PageTop>
+  <div class="flex justify-evenly mt-[10dvh]">
+    <LBBtn
       v-for="label in ['Past Month', 'Past Year', 'All Time']"
       :key="label"
-      :class="activeBtn === label ? 'active' : 'passive', loading ? 'disabled': ''"
+      :class="
+        (activeBtn === label ? 'active' : 'passive', loading ? 'disabled' : '')
+      "
       @click="setActive(label)"
     >
       {{ label }}
     </LBBtn>
-    </div>
+  </div>
 
-    <InstructionsBtn @click="instructions = true"></InstructionsBtn>
-    <div v-show="instructions">
-      <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-95"></div>
-      <div class="fixed top-0 left-1/2 transform -translate-x-1/2 w-full h-[90vh] overflow-y-auto text-brand mt-16 pl-32 max-md:px-4 container">
-        <h1 class="text-3xl text-center title">How are scores calculated?</h1>
-        <p class="text-2xl mt-16 textInstructions">Scores take into account the type of quiz, difficulty and score of that particular quiz. That score is multiplied with two factors that reward good results on harder quizzes.<br><br>Timed and Manual Input quizzes give you 1.3x score. This represents the first factor.<br><br>The second factor comes from difficulty. Very easy difficulty gives you 1.3x score, easy gives 1.6x, normal gives 1.9x, hard gives 2.2x, very hard gives 2.5x, and absolute madman gives 2.8x.<br><br>The highest possible score is 100 x 1.3 x 2.8 = 364. The lowest possible score is 0.<br><br>Life expectancy scores are "nerfed" because they are relatively easier than the rest, so they are multiplied by 0.65.<br><br>Only one score per user can appear on the leaderboard, so your highest score for the chosen period (month/year/all-time) is displayed.</p>
-        <div class="flex justify-center">
-          <DarkBtn @click="instructions = false" class="mt-16 ">Close</DarkBtn>
-        </div>
+  <InstructionsBtn @click="instructions = true"></InstructionsBtn>
+  <div v-show="instructions">
+    <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-95"></div>
+    <div
+      class="fixed top-0 left-1/2 transform -translate-x-1/2 w-full h-[90dvh] overflow-y-auto text-brand mt-16 pl-32 max-md:px-4 container"
+    >
+      <h1 class="text-3xl text-center title">How are scores calculated?</h1>
+      <p class="text-2xl mt-16 textInstructions">
+        Scores take into account the type of quiz, difficulty and score of that
+        particular quiz. That score is multiplied with two factors that reward
+        good results on harder quizzes.<br /><br />Timed and Manual Input
+        quizzes give you 1.3x score. This represents the first factor.<br /><br />The
+        second factor comes from difficulty. Very easy difficulty gives you 1.3x
+        score, easy gives 1.6x, normal gives 1.9x, hard gives 2.2x, very hard
+        gives 2.5x, and absolute madman gives 2.8x.<br /><br />The highest
+        possible score is 100 x 1.3 x 2.8 = 364. The lowest possible score is
+        0.<br /><br />Life expectancy scores are "nerfed" because they are
+        relatively easier than the rest, so they are multiplied by 0.65.<br /><br />Only
+        one score per user can appear on the leaderboard, so your highest score
+        for the chosen period (month/year/all-time) is displayed.
+      </p>
+      <div class="flex justify-center">
+        <DarkBtn @click="instructions = false" class="mt-16">Close</DarkBtn>
       </div>
     </div>
+  </div>
 
-    <div v-if="loading" class="flex justify-center mt-28 text-3xl text-brand font-bold">
-      Loading...
+  <div
+    v-if="loading"
+    class="flex justify-center mt-28 text-3xl text-brand font-bold"
+  >
+    Loading...
+  </div>
+
+  <div
+    v-if="loaded"
+    class="mt-[10dvh] px-[20vw] md:px-[30vw] flex flex-col gap-4"
+  >
+    <div
+      v-for="user in dataMap[activeBtn]"
+      class="flex justify-between text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl font-bold"
+      :class="{
+        'text-[#ffd700]': gold === user.username,
+        'text-[#c0c0c0]': silver === user.username,
+        'text-[#cd7f32]': bronze === user.username,
+        'text-brand':
+          gold !== user.username &&
+          silver !== user.username &&
+          bronze !== user.username,
+      }"
+    >
+      <p>{{ user.username }}:</p>
+      <p>{{ user.leaderboardScore }}</p>
     </div>
-
-    <div v-if="loaded" class="mt-[10vh] px-[20vw] md:px-[30vw] flex flex-col gap-4">
-      <div v-for="user in dataMap[activeBtn]" class="flex justify-between text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl font-bold" :class="{'text-[#ffd700]': gold === user.username, 'text-[#c0c0c0]' : silver === user.username, 'text-[#cd7f32]': bronze === user.username, 'text-brand': gold !== user.username && silver !== user.username && bronze !== user.username}">
-        <p>{{ user.username }}:</p>
-        <p>{{ user.leaderboardScore }}</p>
-      </div>
-    </div>
-
+  </div>
 </template>
 
 <style scoped>
@@ -171,7 +209,7 @@ onUnmounted(() => {
   color: var(--bg);
   background-color: var(--brand);
 }
-@media (max-width:640px) {
+@media (max-width: 640px) {
   .textInstructions {
     font-size: 1.25rem;
     line-height: 1.75rem;

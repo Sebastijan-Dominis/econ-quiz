@@ -101,7 +101,7 @@ onBeforeUnmount(() => {
 
 <template>
     <!-- Small screens -->
-    <div class="h-[100vh] flex flex-col justify-between text-brand lg:hidden">
+    <div class="h-[100dvh] flex flex-col justify-between text-brand lg:hidden">
         <h1 class="smallWelcomeMessage">Welcome to Econ Quiz!</h1>
         <h2 v-show="!storeAuth.isLoggedIn" class="smallHelloMessage">You are not logged in. Log in to save your results!</h2>
         <h2 v-show="storeAuth.isLoggedIn" class="smallHelloMessage">{{ hello }}</h2>
