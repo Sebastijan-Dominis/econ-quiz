@@ -4,14 +4,17 @@ A playful, educational quiz web app that helps users test and improve their know
 
 Econ Quiz is built with modern web tooling and designed to be fast, responsive, and easy to extend. It includes a study mode, multiple quiz difficulties, user accounts (via Firebase), and an admin interface for adding or editing questions.
 
-**Contents of this README**
-- **Overview**: What this project is and who it's for.
-- **Features**: What the app currently provides.
-- **Tech Stack**: Libraries and tools used.
-- **Quick Start**: Install, run, and build instructions.
-- **Project Structure**: Where to find the important files.
-- **Design & Assets**: Notes about design resources included in the repo.
-- **Contributing**: How to help or submit changes.
+
+**Table of Contents**
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Quick Start (local development)](#quick-start-local-development)
+- [Build & Deploy](#build--deploy)
+- [Project Structure (high level)](#project-structure-high-level)
+- [Design & Assets](#design--assets)
+- [Screenshots](#screenshots)
+- [License](#license)
 
 ## Overview
 
@@ -50,6 +53,9 @@ npm run dev
 # Visit http://localhost:5173 in your browser
 ```
 
+#### Note
+The API key for Firebase is currently hardcoded to enable other developers simple and convenient testing of the code. This may change in the future if it gets abused.
+
 Available scripts (from `econ_quiz/package.json`):
 
 - `npm run dev` — run the dev server with Vite
@@ -85,7 +91,7 @@ This repository includes a `firebase.json` configuration (inside `econ_quiz/`) a
 	- `public/` — static assets
 	- `package.json` — project scripts & deps
 	- `vite.config.js`, `tailwind.config.js`, `postcss.config.js`
-- `FIGMA/`, `UML_diagrams_new/` — design and UML exports (reference only)
+- `FIGMA/`, `UML_diagrams_new/` — design and UML diagrams (reference only)
 
 For more details about design decisions, refer to `econ_quiz/design.md`.
 
@@ -129,7 +135,7 @@ Design guidelines and inspiration are stored in `econ_quiz/design.md` and includ
 
 - This repository includes a `LICENSE` file — please review it for terms of reuse.
 
-## Contributing
+**Contributing**
 
 - Found a bug or have a feature idea? Open an issue.
 - Want to contribute code? Fork the repo, create a feature branch, then open a pull request.
