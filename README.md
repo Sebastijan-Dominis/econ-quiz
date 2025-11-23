@@ -5,7 +5,7 @@ A playful, educational quiz web app that helps users test and improve their know
 Econ Quiz is built with modern web tooling and designed to be fast, responsive, and easy to extend. It includes a study mode, multiple quiz difficulties, user accounts (via Firebase), and an admin interface for adding or editing questions.
 
 
-**Table of Contents**
+## Table of Contents
 - [Overview](#overview)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
@@ -37,21 +37,30 @@ Econ Quiz provides an approachable way for learners to test their knowledge of e
 
 ## Quick Start (local development)
 
-Prerequisites: install `Node.js` (recommended v16+), and `npm`.
+### Prerequisites
+- Node.js (16+) with npm
 
-Clone the repo:
+### Clone the repository:
 ```bash
 git clone https://github.com/Sebastijan-Dominis/econ-quiz
 ```
 
-Open PowerShell and run:
-
-```powershell
+### Navigate to the econ_quiz folder
+```bash
 cd econ_quiz
-npm install
-npm run dev
-# Visit http://localhost:5173 in your browser
 ```
+
+### Install the dependencies
+```bash
+npm install
+```
+
+### Start the server
+```bash
+npm run dev
+```
+
+### Visit http://localhost:5173 in your browser
 
 #### Note
 The API key for Firebase is currently hardcoded to enable other developers simple and convenient testing of the code. This may change in the future if it gets abused.
@@ -137,8 +146,7 @@ Design guidelines and inspiration are stored in `econ_quiz/design.md` and includ
 
 **Contributing**
 
-- Found a bug or have a feature idea? Open an issue.
-- Want to contribute code? Fork the repo, create a feature branch, then open a pull request.
+- There are a few known bugs in this repository. You are welcome to fix them!
 - Follow existing code style (Vue 3 + Composition API, Pinia for state), and keep changes focused and well-documented.
 
 **Contact / Author**
