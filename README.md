@@ -54,7 +54,7 @@ npm install
 npm run dev
 ```
 
-### Visit http://localhost:5173 in your browser
+### Visit `http://localhost:5173` in your browser
 
 #### Note
 The API key for Firebase is currently hardcoded to enable other developers simple and convenient testing of the code. This may change in the future if it gets abused.
