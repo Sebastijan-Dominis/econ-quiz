@@ -36,14 +36,10 @@ Econ Quiz is built with modern web tooling and designed to be fast, responsive, 
 ### Prerequisites
 - Node.js (16+) with npm
 
-### Clone the repository:
+### Clone and navigate to the repository:
 ```bash
 git clone https://github.com/Sebastijan-Dominis/econ-quiz
-```
-
-### Navigate to the econ_quiz folder
-```bash
-cd econ_quiz
+cd econ-quiz
 ```
 
 ### Install the dependencies
