@@ -24,10 +24,11 @@ Econ Quiz is built with modern web tooling and designed to be fast, responsive, 
 
 ## Features
 
-- Study mode with topic and difficulty selection.
+- Study mode for each of the topics.
+- Topic, difficulty and quiz type selection.
 - Fun quizzes with scoring and results screens.
-- Leaderboard and user accounts (Firebase Authentication + Firestore).
-- Admin interface to add, edit, or remove questions.
+- Leaderboard, results overview, and user accounts (Firebase Authentication + Firestore).
+- Admin interface to add, edit, or remove quizzes.
 - Responsive UI built with Tailwind CSS and Vite for fast developer feedback.
 
 ## Quick Start (local development)
