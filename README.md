@@ -14,6 +14,8 @@ Econ Quiz is built with modern web tooling and designed to be fast, responsive, 
 - ["Scripts"](#scripts)
 - [Design & Assets](#design--assets)
 - [License](#license)
+- [Contributing](#contributing)
+- [Author & Contact](#author--contact)
 
 ## Tech Stack
 
@@ -72,32 +74,46 @@ The API key for Firebase is currently hardcoded to enable other developers simpl
 
 ## Screenshots
 
-![First page - logged out](screenshots/econ-quiz-1.png)
+### Main screen - logged out
+![Main screen - logged out](screenshots/econ-quiz-1.png)
 
-![First page - logged in](screenshots/econ-quiz-2.png)
+### Main screen - logged in
+![Main screen - logged in](screenshots/econ-quiz-2.png)
 
+### Study section
 ![Study section](screenshots/econ-quiz-3.png)
 
+### Results section
 ![Results section](screenshots/econ-quiz-4.png)
 
+### Leaderboard section
 ![Leaderboard section](screenshots/econ-quiz-12.png)
 
+### Quiz choice
 ![Quiz choice](screenshots/econ-quiz-5.png)
 
+### Quiz topic choice
 ![Quiz topic choice](screenshots/econ-quiz-11.png)
 
+### Difficulty choice
 ![Difficulty choice](screenshots/econ-quiz-6.png)
 
+### Timed quiz question
 ![Timed quiz question](screenshots/econ-quiz-7.png)
 
+### Difficulty choice
 ![Difficulty choice 2](screenshots/econ-quiz-8.png)
 
+### Multiple choice quiz question
 ![Multiple choice quiz question](screenshots/econ-quiz-9.png)
 
+### Manual input quiz question
 ![Manual input quiz question](screenshots/econ-quiz-13.png)
 
+### Adding a quiz
 ![Add quiz section](screenshots/econ-quiz-10.png)
 
+### Editing or deleting a quiz
 ![Edit or delete quiz section](screenshots/econ-quiz-14.png)
 
 ## Scripts
@@ -119,10 +135,11 @@ Design guidelines and inspiration are stored in `econ_quiz/design.md` and includ
 
 - This repository includes a `LICENSE` file — please review it for terms of reuse.
 
-**Contributing**
+## Contributing
 
 - There are a few known bugs in this repository. You are welcome to fix them!
 - Follow existing code style (Vue 3 + Composition API, Pinia for state), and keep changes focused and well-documented.
 
-**Contact / Author**
-- Author: repository owner (see repository metadata).
+## Author & Contact
+- Author: Sebastijan Dominis
+- Contact: sebastijan.dominis99@gmail.com
