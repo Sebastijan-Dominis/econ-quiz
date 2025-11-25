@@ -10,10 +10,10 @@ Econ Quiz is built with modern web tooling and designed to be fast, responsive, 
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Quick Start (local development)](#quick-start-local-development)
-- [Build & Deploy](#build--deploy)
 - [Project Structure (high level)](#project-structure-high-level)
-- [Design & Assets](#design--assets)
 - [Screenshots](#screenshots)
+- ["Scripts"](#scripts)
+- [Design & Assets](#design--assets)
 - [License](#license)
 
 ## Overview
@@ -65,30 +65,6 @@ npm run dev
 #### Note
 The API key for Firebase is currently hardcoded to enable other developers simple and convenient testing of the code. This may change in the future if it gets abused.
 
-Available scripts (from `econ_quiz/package.json`):
-
-- `npm run dev` — run the dev server with Vite
-- `npm run build` — build the production bundle
-- `npm run preview` — locally preview the production build
-- `npm run deploy` — installs deps, builds, and runs `firebase deploy` (requires Firebase CLI and project configured)
-
-## Build & Deploy
-
-To create a production build:
-
-```powershell
-cd econ_quiz
-npm run build
-```
-
-To preview the production build locally:
-
-```powershell
-npm run preview
-```
-
-This repository includes a `firebase.json` configuration (inside `econ_quiz/`) and a `deploy` script that runs `firebase deploy`. Ensure you have the Firebase CLI installed and are logged in before running `npm run deploy`.
-
 ## Project Structure (high level)
 
 - `econ_quiz/` — main application folder
@@ -101,8 +77,6 @@ This repository includes a `firebase.json` configuration (inside `econ_quiz/`) a
 	- `package.json` — project scripts & deps
 	- `vite.config.js`, `tailwind.config.js`, `postcss.config.js`
 - `FIGMA/`, `UML_diagrams_new/` — design and UML diagrams (reference only)
-
-For more details about design decisions, refer to `econ_quiz/design.md`.
 
 ## Screenshots
 
@@ -133,6 +107,15 @@ For more details about design decisions, refer to `econ_quiz/design.md`.
 ![Add quiz section](screenshots/econ-quiz-10.png)
 
 ![Edit or delete quiz section](screenshots/econ-quiz-14.png)
+
+## Scripts
+
+Available scripts (from `econ_quiz/package.json`):
+
+- `npm run dev` — run the dev server with Vite
+- `npm run build` — build the production bundle
+- `npm run preview` — locally preview the production build
+- `npm run deploy` — installs deps, builds, and runs `firebase deploy` (requires Firebase CLI and project configured)
 
 ## Design & Assets
 
