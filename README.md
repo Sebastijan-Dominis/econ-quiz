@@ -2,7 +2,7 @@
 
 A playful, educational quiz web app that helps users test and improve their knowledge of global economics — GDP, population, and other country-level data.
 
-Econ Quiz is built with modern web tooling and designed to be fast, responsive, and easy to extend. It includes a study mode, leaderboards, multiple quiz difficulties, quiz types, and quiz topics, user accounts (via Firebase), and an admin interface for adding or editing questions.
+Econ Quiz is built with modern web tooling and designed to be fast, responsive, and easy to extend. It includes a study mode, leaderboards, results overview, multiple quiz difficulties, quiz types, and quiz topics, user accounts (via Firebase), and an admin interface for adding or editing questions.
 
 
 ## Table of Contents
@@ -15,6 +15,13 @@ Econ Quiz is built with modern web tooling and designed to be fast, responsive, 
 - [Design & Assets](#design--assets)
 - [License](#license)
 
+## Tech Stack
+
+- Frontend: `Vue 3`, `Pinia`, `Vue Router`
+- Tooling: `Vite`, `Tailwind CSS`, `PostCSS`
+- Backend / Hosting: `Firebase` (Authentication, Firestore, Hosting)
+- Languages: `JavaScript` (ES modules)
+
 ## Features
 
 - Study mode with topic and difficulty selection.
@@ -22,13 +29,6 @@ Econ Quiz is built with modern web tooling and designed to be fast, responsive, 
 - Leaderboard and user accounts (Firebase Authentication + Firestore).
 - Admin interface to add, edit, or remove questions.
 - Responsive UI built with Tailwind CSS and Vite for fast developer feedback.
-
-## Tech Stack
-
-- Frontend: `Vue 3`, `Pinia`, `Vue Router`
-- Tooling: `Vite`, `Tailwind CSS`, `PostCSS`
-- Backend / Hosting: `Firebase` (Authentication, Firestore, Hosting)
-- Languages: `JavaScript` (ES modules)
 
 ## Quick Start (local development)
 
