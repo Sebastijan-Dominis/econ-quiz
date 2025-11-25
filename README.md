@@ -11,7 +11,7 @@ Econ Quiz is built with modern web tooling and designed to be fast, responsive, 
 - [Quick Start (local development)](#quick-start-local-development)
 - [Project Structure (high level)](#project-structure-high-level)
 - [Screenshots](#screenshots)
-- ["Scripts"](#scripts)
+- [Scripts](#scripts)
 - [Design & Assets](#design--assets)
 - [License](#license)
 - [Contributing](#contributing)
