@@ -4,12 +4,13 @@ A playful, educational quiz web app that helps users test and improve their know
 
 Econ Quiz is built with modern web tooling and designed to be fast, responsive, and easy to extend. It includes a study mode, leaderboards, results overview, multiple quiz difficulties, quiz types, and quiz topics, user accounts (via Firebase), and an admin interface for adding or editing questions.
 
+---
 
 ## Table of Contents
-- [Features](#features)
 - [Tech Stack](#tech-stack)
-- [Quick Start (local development)](#quick-start-local-development)
+- [Features](#features)
 - [Project Structure (high level)](#project-structure-high-level)
+- [Installation](#installation)
 - [Screenshots](#screenshots)
 - [Scripts](#scripts)
 - [Design & Assets](#design--assets)
@@ -17,12 +18,16 @@ Econ Quiz is built with modern web tooling and designed to be fast, responsive, 
 - [Contributing](#contributing)
 - [Author & Contact](#author--contact)
 
+---
+
 ## Tech Stack
 
 - Frontend: `Vue 3`, `Pinia`, `Vue Router`
 - Tooling: `Vite`, `Tailwind CSS`, `PostCSS`
 - Backend / Hosting: `Firebase` (Authentication, Firestore, Hosting)
 - Languages: `JavaScript` (ES modules)
+
+---
 
 ## Features
 
@@ -33,32 +38,7 @@ Econ Quiz is built with modern web tooling and designed to be fast, responsive, 
 - Admin interface to add, edit, or remove quizzes.
 - Responsive UI built with Tailwind CSS and Vite for fast developer feedback.
 
-## Quick Start (local development)
-
-### Prerequisites
-- Node.js (16+) with npm
-
-### Clone and navigate to the repository:
-```bash
-git clone https://github.com/Sebastijan-Dominis/econ-quiz
-cd econ-quiz
-```
-
-### Install the dependencies
-```bash
-npm install
-```
-
-### Start the server
-```bash
-npm run dev
-```
-
-### Use the app
-- You can access it on `http://localhost:5173` in your browser
-
-#### Note
-The API key for Firebase is currently hardcoded to enable other developers simple and convenient testing of the code. This may change in the future if it gets abused.
+---
 
 ## Project Structure (high level)
 
@@ -72,6 +52,37 @@ The API key for Firebase is currently hardcoded to enable other developers simpl
 	- `package.json` — project scripts & deps
 	- `vite.config.js`, `tailwind.config.js`, `postcss.config.js`
 - `FIGMA/`, `UML_diagrams_new/` — design and UML diagrams (reference only)
+
+---
+
+## Installation
+
+### Prerequisites
+- Node.js (16+) with npm
+
+### 1. Clone and navigate to the repository:
+```bash
+git clone https://github.com/Sebastijan-Dominis/econ-quiz
+cd econ-quiz
+```
+
+### 2. Install the dependencies
+```bash
+npm install
+```
+
+### 3. Start the server
+```bash
+npm run dev
+```
+
+### 4. Use the app
+- You can access it on `http://localhost:5173` in your browser
+
+#### Note
+The API key for Firebase is currently hardcoded to enable other developers simple and convenient testing of the code. This may change in the future if it gets abused.
+
+---
 
 ## Screenshots
 
@@ -117,6 +128,8 @@ The API key for Firebase is currently hardcoded to enable other developers simpl
 ### Editing or deleting a quiz
 ![Edit or delete quiz section](screenshots/econ-quiz-14.png)
 
+---
+
 ## Scripts
 
 Available scripts (from `econ_quiz/package.json`):
@@ -126,11 +139,15 @@ Available scripts (from `econ_quiz/package.json`):
 - `npm run preview` — locally preview the production build
 - `npm run deploy` — installs deps, builds, and runs `firebase deploy` (requires Firebase CLI and project configured)
 
+---
+
 ## Design & Assets
 
 The repo includes Figma exports and UML diagrams used during design. These are reference materials and can be large — you can ignore or exclude `FIGMA/` and `UML_diagrams_new/` when cloning if you don't need them.
 
 Design guidelines and inspiration are stored in `econ_quiz/design.md` and include color palettes, typography, and UX notes.
+
+---
 
 ## License
 
